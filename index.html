@@ -640,6 +640,53 @@
       font-size: 0.78rem;
     }
 
+    .lesson-card,
+    .formula-card {
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .formula-steps,
+    .court-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .formula-steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .formula-step {
+      padding: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.14);
+    }
+
+    .suit-hero {
+      display: grid;
+      grid-template-columns: 54px minmax(0, 1fr);
+      gap: 12px;
+      align-items: center;
+    }
+
+    @media (min-width: 680px) {
+      .court-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 380px) {
+      .formula-steps,
+      .mini-card-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .control-menu {
       margin: 0 0 14px;
       border: 1px solid var(--line);
@@ -815,6 +862,7 @@
 
   <script>
     const STORAGE_KEY = "tarotTrainerProgress.v1";
+    const DAILY_FOCUS_KEY = "tarotTrainerDailyFocus.v2";
 
     const majorArcana = [
       {
@@ -1362,6 +1410,61 @@
       }
     ];
 
+    const suitLessons = {
+      "Жезлы": {
+        element: "Огонь",
+        formula: "Я хочу, я действую, я зажигаю.",
+        about: "Жезлы говорят об энергии, инициативе, страсти, амбициях, творчестве, действиях, смелости и внутреннем огне.",
+        light: "Вдохновение, движение, решимость, лидерство, энтузиазм и живость.",
+        shadow: "Спешка, выгорание, конфликтность, нетерпение и желание продавить ситуацию силой.",
+        reading: "Жезлы показывают, где есть импульс, желание действовать или борьба за направление. Их вопрос: куда идет сила?",
+        questions: ["чего я хочу?", "куда направить энергию?", "где нужна смелость?", "где я перегорел?", "что меня зажигает?"],
+        association: "Жезлы похожи на костер: он согревает, освещает путь и собирает людей, но без внимания может сжечь лишнее.",
+        story: "Туз дает искру. Двойка выбирает направление. Тройка видит перспективу. Четверка празднует результат. Пятерка встречает конкуренцию. Шестерка получает признание. Семерка защищает свое. Восьмерка ускоряет события. Девятка держится после испытаний. Десятка показывает перегруз. Паж учится огню. Рыцарь несется вперед. Королева вдохновляет. Король управляет силой.",
+        sphere: "действие, энергия, инициатива",
+        trainingLabel: "Тренировать Жезлы"
+      },
+      "Кубки": {
+        element: "Вода",
+        formula: "Я чувствую, я принимаю, я соединяюсь.",
+        about: "Кубки говорят о чувствах, отношениях, близости, эмпатии, интуиции, мечтах, привязанности и внутреннем отклике.",
+        light: "Любовь, доверие, мягкость, вдохновение, эмоциональная честность и способность быть рядом.",
+        shadow: "Иллюзии, зависимость от эмоций, обиды, растворение в другом человеке и уход от реальности в мечты.",
+        reading: "Кубки показывают эмоциональный слой ситуации. Их вопрос: что я чувствую и чего хочет сердце?",
+        questions: ["что я чувствую?", "где нужна близость?", "где я идеализирую?", "где проявить мягкость?", "какие отношения питают меня?"],
+        association: "Кубки похожи на воду: она поит, успокаивает и соединяет, но без берегов может затопить все вокруг.",
+        story: "Туз открывает сердце. Двойка создает связь. Тройка делится радостью. Четверка устает от доступного. Пятерка переживает потерю. Шестерка вспоминает прошлое. Семерка теряется в вариантах. Восьмерка уходит от того, что не питает. Девятка наслаждается желанием. Десятка показывает полноту. Паж учится чувствовать. Рыцарь несет романтический импульс. Королева понимает глубоко. Король держит эмоции спокойно.",
+        sphere: "чувства, отношения, внутренний отклик",
+        trainingLabel: "Тренировать Кубки"
+      },
+      "Мечи": {
+        element: "Воздух",
+        formula: "Я думаю, я называю, я выбираю.",
+        about: "Мечи говорят о мыслях, словах, решениях, конфликтах, анализе, правде, напряжении, ясности и ментальных ловушках.",
+        light: "Ясность, честность, ум, способность принять решение, точная формулировка и освобождение от иллюзий.",
+        shadow: "Тревожность, жесткость, холодность, споры, самокритика и зацикленность на мыслях.",
+        reading: "Мечи показывают, где ситуация проходит через голову, слова, спор или выбор. Их вопрос: какая правда должна быть названа?",
+        questions: ["что я думаю?", "где нужна ясность?", "какой разговор пора провести?", "где я себя накручиваю?", "какое решение принять?"],
+        association: "Мечи похожи на острый нож: им можно аккуратно отрезать лишнее, но можно и ранить, если махать без осознанности.",
+        story: "Туз дает ясную мысль. Двойка избегает выбора. Тройка переживает боль. Четверка уходит в паузу. Пятерка показывает конфликт. Шестерка ведет к спокойствию. Семерка действует осторожно. Восьмерка чувствует ограничение. Девятка показывает тревогу. Десятка завершает тяжелый цикл. Паж наблюдает. Рыцарь резко идет к цели. Королева видит правду. Король принимает ясные решения.",
+        sphere: "мысли, слова, решения",
+        trainingLabel: "Тренировать Мечи"
+      },
+      "Пентакли": {
+        element: "Земля",
+        formula: "Я создаю, я укрепляю, я воплощаю.",
+        about: "Пентакли говорят о теле, деньгах, работе, навыках, быте, времени, устойчивости, результате и материальном мире.",
+        light: "Надежность, практичность, рост, забота о теле и ресурсах, мастерство и терпение.",
+        shadow: "Застой, жадность, страх потерять, чрезмерная осторожность и зависимость от комфорта.",
+        reading: "Пентакли показывают практику: ресурсы, тело, быт, работу и результаты. Их вопрос: что можно сделать и укрепить?",
+        questions: ["что реально работает?", "где мой ресурс?", "как укрепить результат?", "что требует терпения?", "где пора к практике?"],
+        association: "Пентакли похожи на сад: его нельзя вырастить одним желанием. Нужны земля, время, уход и регулярность.",
+        story: "Туз дает шанс в реальности. Двойка балансирует ресурсы. Тройка строит мастерство. Четверка удерживает накопленное. Пятерка ощущает нехватку. Шестерка учится обмену. Семерка ждет роста. Восьмерка оттачивает навык. Девятка наслаждается самостоятельностью. Десятка показывает систему. Паж учится делу. Рыцарь идет надежно. Королева выращивает ресурс. Король управляет результатом.",
+        sphere: "практика, ресурсы, тело и результат",
+        trainingLabel: "Тренировать Пентакли"
+      }
+    };
+
     const ranks = [
       {
         key: "ace",
@@ -1519,6 +1622,54 @@
       }
     ];
 
+    const numberLessons = [
+      { rank: "Туз", meaning: "начало, шанс, искра", question: "какая новая возможность появляется?", example: "В Жезлах это искра действия, в Кубках - открытие сердца, в Мечах - ясная мысль, в Пентаклях - шанс в реальности." },
+      { rank: "2", meaning: "выбор, баланс, два полюса", question: "между чем я выбираю?", example: "В Кубках это связь, в Мечах - сложный выбор, в Пентаклях - баланс ресурсов." },
+      { rank: "3", meaning: "рост, взаимодействие, первые результаты", question: "что уже начало развиваться?", example: "В Жезлах это перспектива, в Кубках - радость вместе, в Пентаклях - совместное мастерство." },
+      { rank: "4", meaning: "структура, стабильность, пауза", question: "где нужна опора или остановка?", example: "В Жезлах это первый праздник, в Кубках - эмоциональная закрытость, в Мечах - отдых, в Пентаклях - удержание." },
+      { rank: "5", meaning: "конфликт, нехватка, проверка", question: "что сейчас напряжено?", example: "В Жезлах это конкуренция, в Кубках - переживание потери, в Мечах - спор, в Пентаклях - нехватка." },
+      { rank: "6", meaning: "восстановление, обмен, движение к гармонии", question: "как возвращается равновесие?", example: "В Мечах это путь к спокойствию, в Пентаклях - обмен, в Кубках - теплое воспоминание." },
+      { rank: "7", meaning: "испытание, стратегия, защита", question: "что я защищаю и зачем?", example: "В Жезлах это защита позиции, в Кубках - выбор среди образов, в Мечах - осторожная стратегия, в Пентаклях - терпение." },
+      { rank: "8", meaning: "процесс, навык, повторение", question: "какой процесс требует регулярности?", example: "В Пентаклях это ремесло, в Жезлах - ускорение, в Кубках - уход от того, что не питает." },
+      { rank: "9", meaning: "зрелость, личный итог, самостоятельность", question: "какой опыт уже созрел?", example: "В Кубках это исполнение желания, в Мечах - тревожный итог, в Пентаклях - самостоятельность." },
+      { rank: "10", meaning: "завершение, полнота, переход к новому циклу", question: "что пора завершить?", example: "В Жезлах это перегруз, в Кубках - эмоциональная полнота, в Мечах - конец тяжелого цикла, в Пентаклях - система." }
+    ];
+
+    const courtLessons = [
+      { rank: "Паж", role: "ученик стихии, первое знакомство, сигнал, любопытство", behavior: "учусь, спрашиваю, пробую" },
+      { rank: "Рыцарь", role: "движение стихии, импульс, активное проявление", behavior: "иду вперед и несу качество масти в действие" },
+      { rank: "Королева", role: "внутреннее владение стихией, зрелое принятие, атмосфера", behavior: "создаю пространство и проживаю качество изнутри" },
+      { rank: "Король", role: "внешнее управление стихией, решение, ответственность", behavior: "управляю качеством масти и беру ответственность" }
+    ];
+
+    const courtCards = [
+      ["Паж Жезлов", "учусь действовать и зажигаться."],
+      ["Рыцарь Жезлов", "несусь вперед, иногда слишком быстро."],
+      ["Королева Жезлов", "излучаю уверенность и вдохновляю."],
+      ["Король Жезлов", "управляю энергией и веду за собой."],
+      ["Паж Кубков", "учусь чувствовать и открываться."],
+      ["Рыцарь Кубков", "несу романтический или эмоциональный импульс."],
+      ["Королева Кубков", "глубоко чувствую и понимаю."],
+      ["Король Кубков", "держу эмоции зрело и спокойно."],
+      ["Паж Мечей", "учусь думать, спрашивать и наблюдать."],
+      ["Рыцарь Мечей", "быстро иду за мыслью, иногда резко."],
+      ["Королева Мечей", "вижу правду и отделяю лишнее."],
+      ["Король Мечей", "принимаю ясные решения."],
+      ["Паж Пентаклей", "учусь практическому делу."],
+      ["Рыцарь Пентаклей", "двигаюсь медленно, но надежно."],
+      ["Королева Пентаклей", "выращиваю ресурс и заботу."],
+      ["Король Пентаклей", "управляю материальным результатом."]
+    ];
+
+    const dailyFocuses = [
+      "Сегодня потренируй масти: попробуй отличить Жезлы от Мечей.",
+      "Сегодня выбери одну карту и опиши ее одним словом.",
+      "Сегодня собери значение карты через формулу: масть + число + позиция.",
+      "Сегодня пройди 5 вопросов по придворным картам.",
+      "Сегодня открой одну масть и прочитай ее мини-историю от Туза до Короля.",
+      "Сегодня сделай расклад и сформулируй ответ без мистического пафоса."
+    ];
+
     function buildMinorDeck() {
       return suits.flatMap((suit) => ranks.map((rank) => ({
         id: `${suit.key}-${rank.key}`,
@@ -1669,6 +1820,41 @@
         makers: ["suitElement", "majorMinor"]
       },
       {
+        id: "suitsStudy",
+        title: "Масти",
+        description: "Отличай Жезлы, Кубки, Мечи и Пентакли по сфере жизни.",
+        label: "масти",
+        makers: ["suitSphere"]
+      },
+      {
+        id: "numbersStudy",
+        title: "Числа",
+        description: "Повторяй этапы от Туза до 10: начало, выбор, рост, проверка и завершение.",
+        label: "числа",
+        makers: ["numberMeaning"]
+      },
+      {
+        id: "courtStudy",
+        title: "Придворные",
+        description: "Разбирай Пажей, Рыцарей, Королев и Королей как роли поведения.",
+        label: "роли",
+        makers: ["courtRole"]
+      },
+      {
+        id: "formulaStudy",
+        title: "Собери значение",
+        description: "Тренируй части формулы: масть, число или ранг. Полная сборка появится следующим шагом.",
+        label: "формула",
+        makers: ["suitSphere", "numberMeaning", "courtRole"]
+      },
+      {
+        id: "suitFocus",
+        title: "Одна масть",
+        description: "Фокус на выбранной масти из раздела «Масти».",
+        label: "фокус",
+        makers: ["suitFocus", "suitSphere"]
+      },
+      {
         id: "story",
         title: "Истории и советы",
         description: "Ситуации из жизни, совет карты и выбор смысла по контексту.",
@@ -1711,7 +1897,7 @@
       },
       {
         title: "Этика и безопасность",
-        text: "Не используй карты как обещание точного будущего. Лучше относиться к ним как к инструменту обучения, самоанализа и разговора с собой. Для медицинских, юридических и финансовых решений нужны профильные специалисты."
+        text: "Не пугай человека картами, не делай категоричных обещаний, не заменяй раскладом помощь специалистов. Используй расклад как способ размышления, а не как приговор, и формулируй вопросы спокойно."
       }
     ];
 
@@ -1748,8 +1934,8 @@
           "Мечи: воздух, мысли, конфликты, ясность.",
           "Пентакли: земля, тело, деньги, быт, результат."
         ],
-        practice: "Пройди тренировку «Масти и структура» на 10 вопросов.",
-        action: { type: "training", mode: "structure", total: 10, label: "Начать 10 вопросов" }
+        practice: "Открой раздел «Масти», прочитай 4 формулы и пройди тренировку по мастям.",
+        action: { type: "route", route: "suits", label: "Открыть Масти" }
       },
       {
         day: 4,
@@ -1759,8 +1945,8 @@
           "Туз - начало, 2 - выбор, 3 - рост, 4 - стабильность, 5 - напряжение.",
           "6 - восстановление, 7 - проверка, 8 - процесс, 9 - зрелость, 10 - завершение."
         ],
-        practice: "Открой любую масть и пройди от Туза до 10 как историю.",
-        action: { type: "cardsFilter", filter: "Жезлы", label: "Открыть Жезлы" }
+        practice: "Открой блок «Числа младших арканов» и пройди от Туза до 10 как историю этапов.",
+        action: { type: "route", route: "suits", label: "Открыть числа" }
       },
       {
         day: 5,
@@ -1772,18 +1958,18 @@
           "Королева - зрелое внутреннее владение стихией.",
           "Король - внешнее управление стихией."
         ],
-        practice: "Выбери одну масть и сравни четыре придворные карты.",
-        action: { type: "cardsFilter", filter: "Кубки", label: "Открыть Кубки" }
+        practice: "Сравни Пажа, Рыцаря, Королеву и Короля в одной масти.",
+        action: { type: "training", mode: "courtStudy", total: 5, label: "Тренировать придворные" }
       },
       {
         day: 6,
-        title: "Три карты как история",
-        goal: "Научиться связывать карты, а не читать их по отдельности.",
+        title: "Масть + число + позиция",
+        goal: "Научиться собирать значение младшего аркана как формулу.",
         theory: [
-          "Расклад читается как связный рассказ.",
-          "Сначала назови роли карт, потом соедини их человеческим языком."
+          "Масть отвечает за сферу, число или ранг - за этап или роль.",
+          "Позиция в раскладе показывает, куда применить значение."
         ],
-        practice: "Собери тренировочный расклад на 3 карты плюс совет и напиши короткую трактовку.",
+        practice: "Собери тренировочный расклад и попробуй назвать у каждой младшей карты масть и число.",
         action: { type: "route", route: "spread", label: "Открыть расклад" }
       },
       {
@@ -1807,6 +1993,7 @@
       filter: "all",
       selectedCardId: null,
       selectedTrainingMode: "mixed",
+      selectedTrainingSuit: "",
       training: null,
       pathCards: [],
       spread: null,
@@ -1970,6 +2157,45 @@
       }[char]));
     }
 
+    function getSuitLesson(label) {
+      return suitLessons[label] || null;
+    }
+
+    function getNumberLesson(rank) {
+      return numberLessons.find((item) => item.rank === rank) || null;
+    }
+
+    function getCourtLesson(rank) {
+      return courtLessons.find((item) => item.rank === rank) || null;
+    }
+
+    function getRankLesson(rank) {
+      return getNumberLesson(rank) || getCourtLesson(rank);
+    }
+
+    function minorCards() {
+      return deck.filter((card) => card.type === "minor");
+    }
+
+    function courtDeck() {
+      return deck.filter((card) => ["Паж", "Рыцарь", "Королева", "Король"].includes(card.rank));
+    }
+
+    function getDailyFocus() {
+      const today = new Date().toISOString().slice(0, 10);
+      try {
+        const saved = JSON.parse(localStorage.getItem(DAILY_FOCUS_KEY) || "{}");
+        if (saved.date === today && Number.isInteger(saved.index)) {
+          return dailyFocuses[saved.index % dailyFocuses.length];
+        }
+        const index = Math.floor(Math.random() * dailyFocuses.length);
+        localStorage.setItem(DAILY_FOCUS_KEY, JSON.stringify({ date: today, index }));
+        return dailyFocuses[index];
+      } catch (error) {
+        return sample(dailyFocuses);
+      }
+    }
+
     function getWrongOptions(correctCard, sourceDeck = deck, amount = 3) {
       return shuffled(sourceDeck.filter((card) => card.id !== correctCard.id)).slice(0, amount);
     }
@@ -2058,6 +2284,7 @@
       const views = {
         home: renderHome,
         cards: renderCards,
+        suits: renderSuits,
         fool: renderFoolPath,
         training: renderTraining,
         path: renderLearningPath,
@@ -2077,6 +2304,7 @@
     function renderHome() {
       const stats = getStats();
       const pathStats = getLearningPathStats();
+      const focus = getDailyFocus();
       return `
         <section class="view hero">
           <p class="eyebrow">Маленькая школа Таро в кармане</p>
@@ -2106,6 +2334,19 @@
             <button class="btn primary" type="button" data-start-training="5">Начать тренировку</button>
           </section>
 
+          <section class="panel panel-pad magic-card">
+            <p class="eyebrow">Сегодняшний учебный фокус</p>
+            <h3>${focus}</h3>
+            <p class="muted">Один маленький фокус на день помогает не теряться среди режимов.</p>
+          </section>
+
+          <section class="panel panel-pad">
+            <p class="eyebrow">Версия 2: учим систему</p>
+            <h3>Младшие арканы теперь проще собирать</h3>
+            <p class="muted">Приложение помогает понимать карты через масти, числа и придворные роли: сфера жизни + этап развития + позиция в раскладе.</p>
+            <button class="btn primary" type="button" data-route="suits">Изучить масти и числа</button>
+          </section>
+
           <section class="panel path-overview magic-card">
             <div>
               <p class="eyebrow">Учебный маршрут</p>
@@ -2125,6 +2366,7 @@
             <h2>Быстрые режимы</h2>
             <div class="quick-grid">
               <button class="btn" type="button" data-route="path">Маршрут</button>
+              <button class="btn" type="button" data-route="suits">Масти</button>
               <button class="btn" type="button" data-route="cards">Карты</button>
               <button class="btn" type="button" data-route="training">Викторина</button>
               <button class="btn" type="button" data-route="fool">Путь Шута</button>
@@ -2166,6 +2408,14 @@
               <p class="muted">Компактный справочник всей колоды. Нажми на карту, чтобы учить ее через смысл, образ и вопрос к себе.</p>
             </div>
           </div>
+
+          <details class="control-menu">
+            <summary>Учебная система младших арканов</summary>
+            <div class="control-menu-content">
+              <p class="muted">Если карта младшая, собирай ее по формуле: масть + число/ранг + позиция в раскладе.</p>
+              <button class="btn primary" type="button" data-route="suits">Открыть Масти, числа и придворные</button>
+            </div>
+          </details>
 
           <div class="filters" aria-label="Фильтры карт">
             ${filters.map(([id, label]) => `
@@ -2213,6 +2463,7 @@
           </div>
 
           <div class="info-grid">
+            ${renderCardBreakdown(card)}
             ${renderNote("Простое значение", card.meaning)}
             ${renderNote("Теневая сторона", card.shadow)}
             ${renderNote("Совет карты", card.advice)}
@@ -2255,6 +2506,165 @@
       `;
     }
 
+    function renderCardBreakdown(card) {
+      if (card.type === "major") {
+        return `
+          <div class="note">
+            <h3>Логика старшего аркана</h3>
+            <p class="muted"><strong>Этап Пути Шута:</strong> ${card.journey.title}.</p>
+            <p class="muted"><strong>Главный урок:</strong> ${card.journey.lesson}</p>
+            <p class="muted"><strong>Вопрос к себе:</strong> ${card.journey.question}</p>
+          </div>
+        `;
+      }
+
+      const suitLesson = getSuitLesson(card.suit);
+      const rankLesson = getRankLesson(card.rank);
+      const rankText = rankLesson
+        ? ("meaning" in rankLesson ? rankLesson.meaning : rankLesson.role)
+        : "роль или этап карты";
+      return `
+        <div class="note">
+          <h3>Собираем младший аркан</h3>
+          <p class="muted"><strong>Масть:</strong> ${card.suit} - ${suitLesson ? suitLesson.sphere : card.groupLabel}.</p>
+          <p class="muted"><strong>${getCourtLesson(card.rank) ? "Ранг" : "Число"}:</strong> ${card.rank} - ${rankText}.</p>
+          <p class="muted"><strong>Собранное значение:</strong> ${card.name} говорит о ситуации, где ${card.meaning.toLowerCase()}</p>
+        </div>
+      `;
+    }
+
+    function renderMinorFormula() {
+      return `
+        <section class="panel panel-pad magic-card">
+          <p class="eyebrow">Формула младших арканов</p>
+          <h2>Масть + число/ранг + позиция</h2>
+          <div class="formula-steps">
+            <div class="formula-step"><strong>Масть</strong><p class="muted">Отвечает за сферу жизни: действие, чувства, мысли или практику.</p></div>
+            <div class="formula-step"><strong>Число</strong><p class="muted">Показывает этап развития: начало, выбор, рост, проверку или завершение.</p></div>
+            <div class="formula-step"><strong>Ранг</strong><p class="muted">У придворных карт показывает тип поведения или роль.</p></div>
+            <div class="formula-step"><strong>Позиция</strong><p class="muted">Подсказывает, куда применить значение в раскладе.</p></div>
+          </div>
+          <details class="control-menu">
+            <summary>Примеры формулы</summary>
+            <div class="control-menu-content">
+              ${renderNote("Пятерка Кубков", "Кубки - чувства. Пятерка - напряжение и переживание. В позиции «на что обратить внимание» карта говорит: не застревай только в потере, посмотри, что еще осталось.")}
+              ${renderNote("Восьмерка Пентаклей", "Пентакли - практика и работа. Восьмерка - процесс и повторение. В позиции «совет» карта говорит: улучшай навык маленькими регулярными шагами.")}
+              ${renderNote("Рыцарь Жезлов", "Жезлы - энергия и действие. Рыцарь - движение и импульс. В позиции «риск» карта говорит: не перепутай смелость со спешкой.")}
+            </div>
+          </details>
+        </section>
+      `;
+    }
+
+    function renderSuitLesson(label) {
+      const lesson = getSuitLesson(label);
+      const suit = suits.find((item) => item.label === label);
+      return `
+        <details class="day-card">
+          <summary>
+            <span class="sigil" aria-hidden="true">${suit.symbol}</span>
+            <span>
+              <strong>${label}</strong>
+              <span class="meta"><span>${lesson.element}</span><span>${lesson.formula}</span></span>
+            </span>
+            <span class="day-status">читать</span>
+          </summary>
+          <div class="day-content">
+            <div class="suit-hero">
+              <div class="big-sigil" aria-hidden="true">${suit.symbol}</div>
+              <div>
+                <h3>${label}: ${lesson.formula}</h3>
+                <p class="muted">${lesson.about}</p>
+              </div>
+            </div>
+            <div class="info-grid">
+              ${renderNote("Светлая сторона", lesson.light)}
+              ${renderNote("Теневая сторона", lesson.shadow)}
+              ${renderNote("Как читать в раскладе", lesson.reading)}
+              ${renderNote("Бытовая ассоциация", lesson.association)}
+            </div>
+            <details class="control-menu">
+              <summary>Типичные вопросы</summary>
+              <div class="control-menu-content">
+                ${lesson.questions.map((question) => `<span class="chip">${question}</span>`).join("")}
+              </div>
+            </details>
+            ${renderNote("Мини-история от Туза до Короля", lesson.story)}
+            <div class="button-row">
+              <button class="btn" type="button" data-cards-filter="${label}">Показать карты масти</button>
+              <button class="btn primary" type="button" data-train-suit="${label}">${lesson.trainingLabel}</button>
+            </div>
+          </div>
+        </details>
+      `;
+    }
+
+    function renderNumberLessons() {
+      return `
+        <details class="control-menu" open>
+          <summary>Числа младших арканов</summary>
+          <div class="control-menu-content">
+            ${numberLessons.map((item) => `
+              <div class="lesson-card">
+                <h3>${item.rank}: ${item.meaning}</h3>
+                <p class="muted"><strong>Вопрос:</strong> ${item.question}</p>
+                <p class="muted">${item.example}</p>
+              </div>
+            `).join("")}
+            <button class="btn primary" type="button" data-start-training="5" data-start-training-mode="numbersStudy">Тренировать числа</button>
+          </div>
+        </details>
+      `;
+    }
+
+    function renderCourtLessons() {
+      return `
+        <details class="control-menu" open>
+          <summary>Придворные карты</summary>
+          <div class="control-menu-content">
+            <div class="formula-steps">
+              ${courtLessons.map((item) => `
+                <div class="formula-step">
+                  <strong>${item.rank}</strong>
+                  <p class="muted">${item.role}</p>
+                </div>
+              `).join("")}
+            </div>
+            <div class="court-grid">
+              ${courtCards.map(([name, text]) => `
+                <div class="lesson-card">
+                  <h3>${name}</h3>
+                  <p class="muted">${text}</p>
+                </div>
+              `).join("")}
+            </div>
+            <button class="btn primary" type="button" data-start-training="5" data-start-training-mode="courtStudy">Тренировать придворные карты</button>
+          </div>
+        </details>
+      `;
+    }
+
+    function renderSuits() {
+      return `
+        <section class="view">
+          <div class="section-head">
+            <div>
+              <h2>Масти</h2>
+              <p class="muted">Четыре масти - это четыре языка жизненного опыта. Они помогают понять, о какой сфере говорит младший аркан.</p>
+            </div>
+          </div>
+          ${renderMinorFormula()}
+          <div class="list" style="margin-top: 14px;">
+            ${suits.map((suit) => renderSuitLesson(suit.label)).join("")}
+          </div>
+          <section class="panel panel-pad" style="margin-top: 14px;">
+            ${renderNumberLessons()}
+            ${renderCourtLessons()}
+          </section>
+        </section>
+      `;
+    }
+
     function renderFoolPath() {
       return `
         <section class="view">
@@ -2268,6 +2678,7 @@
             <summary>Настройки чтения</summary>
             <div class="control-menu-content">
               <button class="btn" type="button" data-reading-mode="${state.readingMode ? "off" : "on"}">${state.readingMode ? "Показать меню" : "Скрыть навигацию для чтения"}</button>
+              <button class="btn primary" type="button" data-route="suits">Открыть раздел «Масти»</button>
             </div>
           </details>
           <div class="journey-list">
@@ -2313,7 +2724,11 @@
         advice: makeAdviceQuestion,
         scenario: makeScenarioQuestion,
         shadow: makeShadowQuestion,
-        memory: makeMemoryQuestion
+        memory: makeMemoryQuestion,
+        suitSphere: makeSuitSphereQuestion,
+        numberMeaning: makeNumberMeaningQuestion,
+        courtRole: makeCourtRoleQuestion,
+        suitFocus: makeSuitFocusQuestion
       };
       return getTrainingMode(modeId).makers.map((id) => makers[id]).filter(Boolean);
     }
@@ -2321,17 +2736,23 @@
     function openTrainingMenu() {
       state.route = "training";
       state.training = null;
+      if (state.selectedTrainingMode === "suitFocus") {
+        state.selectedTrainingMode = "suitsStudy";
+        state.selectedTrainingSuit = "";
+      }
       render();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    function startTraining(total, modeId = state.selectedTrainingMode) {
+    function startTraining(total, modeId = state.selectedTrainingMode, suit = state.selectedTrainingSuit) {
       progress.stats.sessions += 1;
       saveProgress();
       state.route = "training";
       state.selectedTrainingMode = modeId;
+      state.selectedTrainingSuit = suit || "";
       state.training = {
         modeId,
+        suit: suit || "",
         total,
         infinite: total === "infinite",
         count: 0,
@@ -2499,6 +2920,78 @@
       };
     }
 
+    function makeSuitSphereQuestion() {
+      const suit = sample(Object.keys(suitLessons));
+      const lesson = getSuitLesson(suit);
+      const options = shuffled(Object.entries(suitLessons).map(([label, item]) => ({
+        value: label,
+        label: `${label}: ${item.sphere}`
+      })));
+      const card = sample(deck.filter((item) => item.suit === suit));
+      return {
+        type: "Масть и сфера",
+        cardId: card.id,
+        prompt: `Какая масть отвечает за сферу: ${lesson.sphere}?`,
+        options,
+        correct: suit,
+        explanation: `${suit}: ${lesson.formula} ${lesson.reading}`
+      };
+    }
+
+    function makeNumberMeaningQuestion() {
+      const lesson = sample(numberLessons);
+      const options = shuffled(numberLessons).slice(0, 4);
+      if (!options.some((item) => item.rank === lesson.rank)) options[0] = lesson;
+      const card = sample(minorCards().filter((item) => item.rank === lesson.rank));
+      return {
+        type: "Числа младших арканов",
+        cardId: card.id,
+        prompt: `Какой этап показывает число «${lesson.rank}»?`,
+        options: shuffled(options).map((item) => ({
+          value: item.rank,
+          label: `${item.rank}: ${item.meaning}`
+        })),
+        correct: lesson.rank,
+        explanation: `${lesson.rank}: ${lesson.meaning}. Вопрос для памяти: ${lesson.question}`
+      };
+    }
+
+    function makeCourtRoleQuestion() {
+      const lesson = sample(courtLessons);
+      const options = shuffled(courtLessons).map((item) => ({
+        value: item.rank,
+        label: `${item.rank}: ${item.role}`
+      }));
+      const card = sample(courtDeck().filter((item) => item.rank === lesson.rank));
+      return {
+        type: "Придворные карты",
+        cardId: card.id,
+        prompt: `Какая придворная роль звучит так: «${lesson.behavior}»?`,
+        options,
+        correct: lesson.rank,
+        explanation: `${lesson.rank}: ${lesson.role}. Это помогает читать придворные карты как поведение или роль.`
+      };
+    }
+
+    function makeSuitFocusQuestion() {
+      const suit = state.training && state.training.suit ? state.training.suit : state.selectedTrainingSuit;
+      const cards = deck.filter((card) => card.suit === suit);
+      const card = cards.length ? sample(cards) : sample(minorCards());
+      const lesson = getSuitLesson(card.suit);
+      const options = shuffled([card, ...getWrongOptions(card, cards.length >= 4 ? cards : minorCards())]).map((item) => ({
+        value: item.id,
+        label: item.name
+      }));
+      return {
+        type: `Фокус на масти: ${card.suit}`,
+        cardId: card.id,
+        prompt: `Какая карта масти «${card.suit}» лучше подходит к смыслу: ${card.meaning}`,
+        options,
+        correct: card.id,
+        explanation: `${card.name}: ${lesson ? lesson.formula : card.groupLabel} ${card.memory}`
+      };
+    }
+
     function answerQuestion(value) {
       const training = state.training;
       if (!training || training.answered) return;
@@ -2544,7 +3037,7 @@
               <summary>Тип тренировки: ${selectedMode.title}</summary>
               <div class="control-menu-content">
                 <div class="mode-grid">
-                ${trainingModes.map(renderTrainingModeCard).join("")}
+                ${trainingModes.filter((mode) => mode.id !== "suitFocus").map(renderTrainingModeCard).join("")}
                 </div>
               </div>
             </details>
@@ -2898,6 +3391,7 @@
             <summary>Настройки чтения</summary>
             <div class="control-menu-content">
               <button class="btn" type="button" data-reading-mode="${state.readingMode ? "off" : "on"}">${state.readingMode ? "Показать меню" : "Скрыть навигацию для чтения"}</button>
+              <button class="btn primary" type="button" data-route="suits">Открыть раздел «Масти»</button>
             </div>
           </details>
 
@@ -3014,6 +3508,12 @@
         const value = trainingButton.dataset.startTraining;
         const mode = trainingButton.dataset.startTrainingMode || state.selectedTrainingMode;
         startTraining(value === "infinite" ? "infinite" : Number(value), mode);
+        return;
+      }
+
+      const trainSuitButton = event.target.closest("[data-train-suit]");
+      if (trainSuitButton) {
+        startTraining(5, "suitFocus", trainSuitButton.dataset.trainSuit);
         return;
       }
 
