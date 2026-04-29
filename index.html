@@ -2,245 +2,2250 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#17121f">
-  <title>Тренажер-самоучитель по картам Таро</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#12100f">
+  <title>Тренажер Таро</title>
   <style>
     :root {
       color-scheme: dark;
-      --bg: #17121f;
-      --panel: #241c30;
-      --panel-soft: #30263e;
-      --text: #f7f0ff;
-      --muted: #c7b8d8;
-      --accent: #f5c66b;
-      --accent-2: #7fd3c6;
-      --line: rgba(255, 255, 255, 0.14);
-      --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+      --bg: #12100f;
+      --bg-2: #19131d;
+      --panel: rgba(35, 29, 38, 0.84);
+      --panel-strong: #261f2b;
+      --panel-soft: rgba(255, 255, 255, 0.07);
+      --text: #fff8ec;
+      --muted: #d9cbbb;
+      --soft: #a99ba8;
+      --line: rgba(255, 248, 236, 0.14);
+      --gold: #f0c66a;
+      --mint: #83d6c8;
+      --rose: #e68ba4;
+      --violet: #9a8be6;
+      --green: #a8d672;
+      --danger: #ef9a9a;
+      --shadow: 0 22px 70px rgba(0, 0, 0, 0.38);
+      --radius: 18px;
+      --nav-height: 76px;
     }
 
     * {
       box-sizing: border-box;
     }
 
+    html {
+      min-width: 320px;
+      background: var(--bg);
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow-x: hidden;
       background:
-        radial-gradient(circle at 20% 10%, rgba(127, 211, 198, 0.18), transparent 32rem),
-        radial-gradient(circle at 80% 0%, rgba(245, 198, 107, 0.18), transparent 30rem),
-        linear-gradient(160deg, #17121f 0%, #20192b 52%, #11151d 100%);
+        radial-gradient(circle at 15% -4%, rgba(240, 198, 106, 0.18), transparent 18rem),
+        radial-gradient(circle at 92% 12%, rgba(131, 214, 200, 0.16), transparent 18rem),
+        linear-gradient(155deg, #12100f 0%, #1d1722 48%, #101819 100%);
       color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
     }
 
-    main {
-      width: min(100%, 48rem);
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      color: inherit;
+    }
+
+    .app-shell {
+      width: min(100%, 760px);
+      min-height: 100vh;
       margin: 0 auto;
-      padding: 2rem 1rem 1.5rem;
+      padding: 18px 14px calc(var(--nav-height) + 28px + env(safe-area-inset-bottom));
+    }
+
+    .view {
+      animation: appear 220ms ease-out both;
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .hero {
       display: grid;
-      gap: 1.5rem;
-      min-height: 100vh;
-      align-content: center;
+      gap: 18px;
+      padding: 18px 0 8px;
     }
 
-    .badge {
+    .eyebrow {
       width: fit-content;
-      padding: 0.45rem 0.75rem;
+      margin: 0;
+      padding: 8px 12px;
       border: 1px solid var(--line);
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.06);
       color: var(--muted);
-      font-size: 0.85rem;
+      font-size: 0.84rem;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
     }
 
     h1 {
-      margin: 0;
-      max-width: 12ch;
-      font-size: clamp(2.75rem, 12vw, 5rem);
-      line-height: 0.92;
+      margin-bottom: 8px;
+      font-size: clamp(2.6rem, 12vw, 4.8rem);
+      line-height: 0.94;
       letter-spacing: 0;
     }
 
-    .lead {
-      margin: 0;
-      max-width: 34rem;
+    h2 {
+      margin-bottom: 12px;
+      font-size: clamp(1.55rem, 7vw, 2.35rem);
+      line-height: 1.04;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 1rem;
+      letter-spacing: 0;
+    }
+
+    .subtitle,
+    .muted {
       color: var(--muted);
-      font-size: 1.08rem;
-      line-height: 1.65;
     }
 
-    .actions {
-      display: grid;
-      gap: 0.75rem;
-      grid-template-columns: 1fr;
+    .subtitle {
+      max-width: 34rem;
+      margin-bottom: 0;
+      font-size: 1.04rem;
     }
 
-    .button {
-      display: inline-flex;
-      min-height: 3.25rem;
-      align-items: center;
-      justify-content: center;
-      border: 0;
-      border-radius: 0.9rem;
-      background: var(--accent);
-      color: #241603;
-      font: inherit;
-      font-weight: 800;
-      text-decoration: none;
-      box-shadow: 0 14px 32px rgba(245, 198, 107, 0.28);
-    }
-
-    .button.secondary {
+    .panel {
       border: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text);
-      box-shadow: none;
-    }
-
-    .preview {
-      display: grid;
-      gap: 1rem;
-      padding: 1rem;
-      border: 1px solid var(--line);
-      border-radius: 1.35rem;
-      background: rgba(36, 28, 48, 0.78);
+      border-radius: var(--radius);
+      background: var(--panel);
       box-shadow: var(--shadow);
       backdrop-filter: blur(18px);
     }
 
-    .card {
-      position: relative;
-      min-height: 22rem;
-      overflow: hidden;
-      border: 1px solid rgba(245, 198, 107, 0.35);
-      border-radius: 1rem;
-      background:
-        linear-gradient(135deg, rgba(245, 198, 107, 0.18), transparent 35%),
-        linear-gradient(215deg, rgba(127, 211, 198, 0.16), transparent 38%),
-        var(--panel-soft);
+    .panel-pad {
+      padding: 16px;
     }
 
-    .card::before,
-    .card::after {
+    .magic-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .magic-card::before {
       position: absolute;
-      inset: 2.2rem;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 999px;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(135deg, rgba(240, 198, 106, 0.18), transparent 42%),
+        linear-gradient(215deg, rgba(131, 214, 200, 0.12), transparent 44%);
       content: "";
     }
 
-    .card::after {
-      inset: 4.5rem 3rem;
-      transform: rotate(90deg);
+    .magic-card > * {
+      position: relative;
+      z-index: 1;
     }
 
-    .card-title {
-      position: absolute;
-      right: 1.25rem;
-      bottom: 1.25rem;
-      left: 1.25rem;
-      margin: 0;
-      color: var(--accent);
-      font-size: 1.2rem;
+    .hero-card {
+      display: grid;
+      gap: 16px;
+      padding: 18px;
+    }
+
+    .progress-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .stat {
+      min-width: 0;
+      padding: 12px 10px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .stat strong {
+      display: block;
+      color: var(--text);
+      font-size: 1.35rem;
+      line-height: 1;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 7px;
+      color: var(--soft);
+      font-size: 0.76rem;
+      line-height: 1.2;
+    }
+
+    .progress-bar {
+      height: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.22);
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--gold), var(--mint));
+      box-shadow: 0 0 18px rgba(240, 198, 106, 0.28);
+      transition: width 220ms ease;
+    }
+
+    .button-row,
+    .quick-grid,
+    .filters,
+    .answer-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .button-row.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .quick-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .btn {
+      min-height: 48px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+    }
+
+    .btn:active {
+      transform: translateY(1px) scale(0.99);
+    }
+
+    .btn.primary {
+      border-color: rgba(240, 198, 106, 0.58);
+      background: linear-gradient(135deg, #f0c66a, #f3a96d);
+      color: #271908;
       font-weight: 800;
-      text-align: center;
+      box-shadow: 0 16px 34px rgba(240, 198, 106, 0.24);
+    }
+
+    .btn.good {
+      border-color: rgba(131, 214, 200, 0.5);
+      background: rgba(131, 214, 200, 0.13);
+    }
+
+    .btn.warn {
+      border-color: rgba(230, 139, 164, 0.5);
+      background: rgba(230, 139, 164, 0.12);
+    }
+
+    .btn.ghost {
+      min-height: 40px;
+      padding: 8px 11px;
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .btn.selected,
+    .btn[aria-current="true"] {
+      border-color: rgba(240, 198, 106, 0.7);
+      background: rgba(240, 198, 106, 0.14);
+      color: #ffe5a6;
+    }
+
+    .btn.answer {
+      min-height: 58px;
+      text-align: left;
+    }
+
+    .btn.correct {
+      border-color: rgba(131, 214, 200, 0.78);
+      background: rgba(131, 214, 200, 0.18);
+    }
+
+    .btn.wrong {
+      border-color: rgba(239, 154, 154, 0.72);
+      background: rgba(239, 154, 154, 0.15);
+    }
+
+    .section-head {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin: 8px 0 14px;
+    }
+
+    .section-head p {
+      margin-bottom: 0;
+    }
+
+    .filters {
+      grid-auto-flow: column;
+      grid-auto-columns: max-content;
+      margin: 0 -14px 14px;
+      padding: 0 14px 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .filters::-webkit-scrollbar {
+      display: none;
+    }
+
+    .list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .card-row {
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.065);
+      color: var(--text);
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .sigil {
+      display: grid;
+      width: 48px;
+      height: 58px;
+      place-items: center;
+      border: 1px solid rgba(240, 198, 106, 0.3);
+      border-radius: 14px;
+      background:
+        linear-gradient(145deg, rgba(240, 198, 106, 0.12), rgba(131, 214, 200, 0.08)),
+        rgba(0, 0, 0, 0.16);
+      color: var(--gold);
+      font-size: 1.3rem;
+    }
+
+    .card-row strong,
+    .card-title strong {
+      display: block;
+      overflow-wrap: anywhere;
+      line-height: 1.2;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 7px;
+      color: var(--soft);
+      font-size: 0.78rem;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 4px 8px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.055);
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .level {
+      min-width: 64px;
+      color: var(--gold);
+      font-size: 0.82rem;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .detail-card {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 14px;
+      padding: 16px;
+    }
+
+    .detail-top {
+      display: grid;
+      grid-template-columns: 68px minmax(0, 1fr);
+      gap: 14px;
+      align-items: center;
+    }
+
+    .big-sigil {
+      display: grid;
+      width: 68px;
+      height: 92px;
+      place-items: center;
+      border: 1px solid rgba(240, 198, 106, 0.35);
+      border-radius: 16px;
+      background:
+        radial-gradient(circle at 50% 26%, rgba(240, 198, 106, 0.22), transparent 38%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+      color: var(--gold);
+      font-size: 1.8rem;
+    }
+
+    .info-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .note {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.055);
+    }
+
+    .note p:last-child {
+      margin-bottom: 0;
+    }
+
+    .journey-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .journey-card {
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .journey-card.done {
+      border-color: rgba(131, 214, 200, 0.46);
+      background: rgba(131, 214, 200, 0.09);
+    }
+
+    .question-card {
+      display: grid;
+      gap: 14px;
+      padding: 16px;
+    }
+
+    .question-type {
+      color: var(--gold);
+      font-size: 0.84rem;
+      font-weight: 800;
       text-transform: uppercase;
     }
 
-    .features {
+    .question-text {
+      margin-bottom: 0;
+      font-size: 1.2rem;
+      line-height: 1.34;
+    }
+
+    .result {
+      border-color: rgba(240, 198, 106, 0.38);
+      background: rgba(240, 198, 106, 0.09);
+    }
+
+    .spread-grid {
       display: grid;
-      gap: 0.75rem;
-      margin: 0;
-      padding: 0;
-      list-style: none;
+      gap: 12px;
     }
 
-    .features li {
-      padding: 0.95rem 1rem;
+    .spread-position {
+      display: grid;
+      grid-template-columns: 54px minmax(0, 1fr);
+      gap: 12px;
+      padding: 12px;
       border: 1px solid var(--line);
-      border-radius: 0.9rem;
+      border-radius: 16px;
       background: rgba(255, 255, 255, 0.06);
-      color: var(--muted);
-      line-height: 1.45;
     }
 
-    .features strong {
-      display: block;
-      margin-bottom: 0.2rem;
+    .textarea {
+      width: 100%;
+      min-height: 136px;
+      resize: vertical;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      outline: none;
+      background: rgba(0, 0, 0, 0.2);
       color: var(--text);
     }
 
-    footer {
-      padding: 1.5rem 0 0.5rem;
-      color: rgba(247, 240, 255, 0.55);
-      font-size: 0.9rem;
+    .textarea:focus {
+      border-color: rgba(240, 198, 106, 0.62);
+      box-shadow: 0 0 0 3px rgba(240, 198, 106, 0.12);
+    }
+
+    .progress-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 20;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(18, 16, 15, 0.88);
+      backdrop-filter: blur(22px);
+      padding: 8px max(8px, env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-right));
+    }
+
+    .bottom-nav-inner {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 5px;
+      width: min(100%, 760px);
+      margin: 0 auto;
+    }
+
+    .nav-btn {
+      display: grid;
+      gap: 3px;
+      min-width: 0;
+      min-height: 58px;
+      place-items: center;
+      border: 0;
+      border-radius: 14px;
+      background: transparent;
+      color: var(--soft);
+      cursor: pointer;
+    }
+
+    .nav-btn span:first-child {
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+
+    .nav-btn span:last-child {
+      max-width: 100%;
+      overflow: hidden;
+      font-size: 0.68rem;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .nav-btn.active {
+      background: rgba(240, 198, 106, 0.14);
+      color: var(--gold);
+    }
+
+    .empty {
+      padding: 18px;
+      border: 1px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      color: var(--muted);
       text-align: center;
     }
 
-    @media (min-width: 42rem) {
-      main {
-        padding: 3rem 1.5rem 2rem;
+    .fine-print {
+      margin: 18px 0 0;
+      color: rgba(217, 203, 187, 0.74);
+      font-size: 0.78rem;
+    }
+
+    @media (min-width: 680px) {
+      .app-shell {
+        padding-right: 18px;
+        padding-left: 18px;
       }
 
-      .actions {
+      .quick-grid,
+      .answer-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      .preview {
-        grid-template-columns: 0.9fr 1.1fr;
-        align-items: center;
-        padding: 1.25rem;
+      .info-grid,
+      .spread-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .hero-card {
+        padding: 22px;
       }
     }
   </style>
 </head>
 <body>
-  <main>
-    <section class="hero" aria-labelledby="title">
-      <div>
-        <p class="badge">Статическое мобильное HTML-приложение</p>
-        <h1 id="title">Тренажер Таро</h1>
-      </div>
+  <main id="app" class="app-shell" aria-live="polite"></main>
 
-      <p class="lead">
-        Основа будущего самоучителя: короткие значения карт, практика запоминания
-        и спокойный ежедневный режим обучения. Пока это стартовая страница проекта.
-      </p>
+  <nav class="bottom-nav" aria-label="Нижняя навигация">
+    <div class="bottom-nav-inner" id="bottomNav"></div>
+  </nav>
 
-      <div class="actions" aria-label="Основные действия">
-        <a class="button" href="#start">Начать знакомство</a>
-        <a class="button secondary" href="#plan">План приложения</a>
-      </div>
+  <script>
+    const STORAGE_KEY = "tarotTrainerProgress.v1";
 
-      <section class="preview" id="start" aria-label="Превью проекта">
-        <div class="card" aria-hidden="true">
-          <p class="card-title">The Fool</p>
+    const majorArcana = [
+      {
+        id: "major-00",
+        name: "Шут",
+        type: "major",
+        suit: "",
+        rank: "0",
+        keywords: ["начало", "доверие", "свобода", "шаг"],
+        meaning: "Начинается новый опыт. Важно сделать первый шаг и не требовать от себя полной уверенности.",
+        shadow: "Наивность, бегство от ответственности или желание прыгнуть вперед без опоры.",
+        advice: "Позволь себе попробовать. Маленький шаг сейчас важнее идеального плана.",
+        reflection: "Где я могу начать легче, без лишнего давления?",
+        memory: "Шут стоит на краю дороги: он еще не знает маршрут, но уже готов учиться.",
+        element: "Дух",
+        groupLabel: "Старшие арканы",
+        symbol: "✦",
+        journey: {
+          title: "начало пути",
+          story: "Герой выходит из привычного мира и берет с собой только доверие.",
+          lesson: "Начало не обязано быть идеальным.",
+          question: "Какой первый шаг я могу сделать сегодня?"
+        }
+      },
+      {
+        id: "major-01",
+        name: "Маг",
+        type: "major",
+        suit: "",
+        rank: "I",
+        keywords: ["действие", "воля", "инструменты", "старт"],
+        meaning: "У тебя уже есть ресурсы, чтобы начать действовать и собирать идею в форму.",
+        shadow: "Слова без дела, желание контролировать впечатление или распыляться.",
+        advice: "Выбери один инструмент и примени его. Сила появляется в действии.",
+        reflection: "Каким навыком я уже могу воспользоваться?",
+        memory: "Маг видит на столе все инструменты и решает: пора не мечтать, а делать.",
+        element: "Воздух",
+        groupLabel: "Старшие арканы",
+        symbol: "∞",
+        journey: {
+          title: "я могу действовать",
+          story: "Герой понимает, что сила не где-то далеко. Она в руках, словах и внимании.",
+          lesson: "Ресурсы оживают, когда ими пользуются.",
+          question: "Что я могу сделать уже имеющимися средствами?"
+        }
+      },
+      {
+        id: "major-02",
+        name: "Жрица",
+        type: "major",
+        suit: "",
+        rank: "II",
+        keywords: ["интуиция", "тишина", "тайна", "наблюдение"],
+        meaning: "Не все ответы видны сразу. Иногда нужно замедлиться и услышать внутренний голос.",
+        shadow: "Молчание из страха, закрытость или попытка видеть знаки там, где нужна ясность.",
+        advice: "Собери факты и дай себе паузу. Ответ может стать тише, но точнее.",
+        reflection: "Что я уже чувствую, но пока не называю вслух?",
+        memory: "Жрица держит книгу на коленях: часть знания открыта, часть дозревает в тишине.",
+        element: "Вода",
+        groupLabel: "Старшие арканы",
+        symbol: "☾",
+        journey: {
+          title: "я слышу внутренний голос",
+          story: "Герой впервые останавливается и замечает, что тишина тоже говорит.",
+          lesson: "Интуиция требует внимания, а не спешки.",
+          question: "Какой тихий сигнал я обычно игнорирую?"
+        }
+      },
+      {
+        id: "major-03",
+        name: "Императрица",
+        type: "major",
+        suit: "",
+        rank: "III",
+        keywords: ["рост", "забота", "творчество", "изобилие"],
+        meaning: "Что-то может расти, если ему дать тепло, время и заботливую среду.",
+        shadow: "Избыточная опека, лень или ожидание результата без участия.",
+        advice: "Подпитай то, что для тебя ценно: идею, тело, отношения или дом.",
+        reflection: "Что сейчас просит моей заботы?",
+        memory: "Императрица как сад: если поливать и не дергать ростки, появляется жизнь.",
+        element: "Земля",
+        groupLabel: "Старшие арканы",
+        symbol: "✿",
+        journey: {
+          title: "я питаю и создаю",
+          story: "Герой учится не только делать, но и выращивать.",
+          lesson: "Рост любит мягкую регулярность.",
+          question: "Что я хочу вырастить, а не выжать из себя?"
+        }
+      },
+      {
+        id: "major-04",
+        name: "Император",
+        type: "major",
+        suit: "",
+        rank: "IV",
+        keywords: ["порядок", "границы", "структура", "ответственность"],
+        meaning: "Нужны опора, правила и ясные границы. Так энергия становится надежной.",
+        shadow: "Жесткость, контроль ради контроля или страх потерять власть.",
+        advice: "Сделай план простым и устойчивым. Назови границы до того, как устанешь.",
+        reflection: "Где мне нужна более ясная структура?",
+        memory: "Император строит мост: без опор даже хороший путь не выдержит веса.",
+        element: "Огонь",
+        groupLabel: "Старшие арканы",
+        symbol: "▲",
+        journey: {
+          title: "я строю структуру",
+          story: "Герой понимает: свобода крепче, когда у нее есть берега.",
+          lesson: "Порядок помогает движению, если не превращается в клетку.",
+          question: "Какая граница сделает меня спокойнее?"
+        }
+      },
+      {
+        id: "major-05",
+        name: "Иерофант",
+        type: "major",
+        suit: "",
+        rank: "V",
+        keywords: ["учение", "традиция", "наставник", "смысл"],
+        meaning: "Полезно обратиться к опыту, системе или человеку, который уже проходил этот путь.",
+        shadow: "Слепое следование правилам или страх думать самостоятельно.",
+        advice: "Возьми из традиции то, что помогает, и проверь это на своем опыте.",
+        reflection: "У кого или у чего мне стоит поучиться?",
+        memory: "Иерофант передает ключ: дверь открываешь ты, но не обязан изобретать замок.",
+        element: "Земля",
+        groupLabel: "Старшие арканы",
+        symbol: "✚",
+        journey: {
+          title: "я учусь у традиции",
+          story: "Герой встречает школу, язык и правила, которые помогают не идти вслепую.",
+          lesson: "Традиция полезна, когда делает тебя взрослее.",
+          question: "Какое правило мне помогает, а какое уже тесно?"
+        }
+      },
+      {
+        id: "major-06",
+        name: "Влюбленные",
+        type: "major",
+        suit: "",
+        rank: "VI",
+        keywords: ["выбор", "ценности", "связь", "искренность"],
+        meaning: "Перед тобой выбор, который лучше делать из честности и понимания своих ценностей.",
+        shadow: "Зависимость от одобрения, колебания или попытка выбрать все сразу.",
+        advice: "Спроси не только что удобно, но и что созвучно твоему сердцу.",
+        reflection: "Какой выбор будет честным по отношению ко мне?",
+        memory: "Влюбленные стоят перед развилкой: карта не только про любовь, но и про верность выбору.",
+        element: "Воздух",
+        groupLabel: "Старшие арканы",
+        symbol: "♡",
+        journey: {
+          title: "я выбираю сердцем",
+          story: "Герой учится выбирать не из страха, а из внутреннего согласия.",
+          lesson: "Выбор показывает, что для тебя действительно важно.",
+          question: "Что я выбираю, когда никто не подсказывает?"
+        }
+      },
+      {
+        id: "major-07",
+        name: "Колесница",
+        type: "major",
+        suit: "",
+        rank: "VII",
+        keywords: ["курс", "победа", "воля", "движение"],
+        meaning: "Пора собрать силы и взять направление. Движение требует фокуса.",
+        shadow: "Упрямство, гонка ради гонки или борьба с собой.",
+        advice: "Определи цель и держи поводья спокойно. Не нужно доказывать все сразу.",
+        reflection: "Куда я на самом деле хочу направить силы?",
+        memory: "Колесница едет только тогда, когда возница смотрит на дорогу.",
+        element: "Вода",
+        groupLabel: "Старшие арканы",
+        symbol: "◆",
+        journey: {
+          title: "я беру направление",
+          story: "Герой садится в колесницу и понимает: путь выбирают не ноги, а намерение.",
+          lesson: "Фокус превращает энергию в движение.",
+          question: "Что сейчас должно стать моим главным направлением?"
+        }
+      },
+      {
+        id: "major-08",
+        name: "Сила",
+        type: "major",
+        suit: "",
+        rank: "VIII",
+        keywords: ["мягкость", "смелость", "самообладание", "доверие"],
+        meaning: "Настоящая сила часто мягкая. Она не ломает, а приручает импульс.",
+        shadow: "Подавление чувств, давление или страх показать уязвимость.",
+        advice: "Действуй спокойно. Сначала пойми импульс, потом направь его.",
+        reflection: "Как я могу быть сильнее без жесткости?",
+        memory: "Сила не сражается со львом, а кладет ладонь ему на гриву.",
+        element: "Огонь",
+        groupLabel: "Старшие арканы",
+        symbol: "♌",
+        journey: {
+          title: "я приручаю импульс",
+          story: "Герой встречает внутреннего зверя и учится говорить с ним без войны.",
+          lesson: "Самообладание мягче и надежнее подавления.",
+          question: "Какой импульс мне нужно не задавить, а понять?"
+        }
+      },
+      {
+        id: "major-09",
+        name: "Отшельник",
+        type: "major",
+        suit: "",
+        rank: "IX",
+        keywords: ["поиск", "мудрость", "уединение", "свет"],
+        meaning: "Время отойти от шума и найти собственный свет. Ответ созревает внутри.",
+        shadow: "Изоляция, холодность или уход от людей из усталости.",
+        advice: "Дай себе пространство. Не каждый ответ рождается в разговоре.",
+        reflection: "Что я увижу, если на время выключу шум?",
+        memory: "Отшельник несет фонарь: он освещает не весь мир, а следующий шаг.",
+        element: "Земля",
+        groupLabel: "Старшие арканы",
+        symbol: "◇",
+        journey: {
+          title: "я ищу свой свет",
+          story: "Герой остается один, чтобы услышать не толпу, а себя.",
+          lesson: "Уединение может быть мастерской смысла.",
+          question: "Какой ответ я могу найти только в тишине?"
+        }
+      },
+      {
+        id: "major-10",
+        name: "Колесо Фортуны",
+        type: "major",
+        suit: "",
+        rank: "X",
+        keywords: ["цикл", "перемены", "шанс", "поворот"],
+        meaning: "Ситуация меняется. Важно увидеть цикл и занять свое место в движении.",
+        shadow: "Пассивность, вера в случай вместо участия или страх перемен.",
+        advice: "Заметь, что повторяется. Используй поворот, а не спорь с ним.",
+        reflection: "Какой цикл сейчас завершает круг?",
+        memory: "Колесо напоминает: наверху и внизу никто не остается навсегда.",
+        element: "Огонь",
+        groupLabel: "Старшие арканы",
+        symbol: "◎",
+        journey: {
+          title: "я вижу циклы",
+          story: "Герой замечает, что путь не прямая линия, а движение по кругам опыта.",
+          lesson: "Перемены легче принять, когда видишь их ритм.",
+          question: "Что в моей жизни снова вышло на круг?"
+        }
+      },
+      {
+        id: "major-11",
+        name: "Справедливость",
+        type: "major",
+        suit: "",
+        rank: "XI",
+        keywords: ["честность", "баланс", "решение", "ответственность"],
+        meaning: "Пришло время честно увидеть причины и последствия, без драматизации.",
+        shadow: "Суровый суд, оправдания или желание быть правым любой ценой.",
+        advice: "Смотри на факты. Выбирай так, чтобы потом выдержать свой выбор.",
+        reflection: "За какое решение мне пора взять ответственность?",
+        memory: "Весы Справедливости не ругают, а показывают, что где перевешивает.",
+        element: "Воздух",
+        groupLabel: "Старшие арканы",
+        symbol: "⚖",
+        journey: {
+          title: "я отвечаю за выбор",
+          story: "Герой видит связь между поступком и результатом.",
+          lesson: "Честность освобождает от лишних объяснений.",
+          question: "Где мне пора быть честнее с собой?"
+        }
+      },
+      {
+        id: "major-12",
+        name: "Повешенный",
+        type: "major",
+        suit: "",
+        rank: "XII",
+        keywords: ["пауза", "новый взгляд", "принятие", "переворот"],
+        meaning: "Ситуация просит паузы и смены точки зрения. Не всякая остановка является поражением.",
+        shadow: "Зависание, жертвенность или ожидание, что все решится само.",
+        advice: "Посмотри на вопрос под другим углом. Возможно, ответ не там, где ты искал.",
+        reflection: "Что изменится, если я посмотрю наоборот?",
+        memory: "Повешенный видит мир вверх ногами и замечает то, что пропускал стоя.",
+        element: "Вода",
+        groupLabel: "Старшие арканы",
+        symbol: "▽",
+        journey: {
+          title: "я меняю взгляд",
+          story: "Герой останавливается и впервые понимает, что пауза тоже движение.",
+          lesson: "Новый взгляд может быть сильнее нового усилия.",
+          question: "Где мне нужна не скорость, а иной угол?"
+        }
+      },
+      {
+        id: "major-13",
+        name: "Смерть",
+        type: "major",
+        suit: "",
+        rank: "XIII",
+        keywords: ["завершение", "переход", "освобождение", "обновление"],
+        meaning: "Что-то отжило и просит завершения. Это карта перехода и освобождения места.",
+        shadow: "Страх перемен, цепляние за старое или резкое обрывание без уважения.",
+        advice: "Отпусти то, что уже не живит. Новое войдет в освободившееся пространство.",
+        reflection: "Что я удерживаю только по привычке?",
+        memory: "Смерть как осень: листья падают не из злости, а чтобы дерево пережило зиму.",
+        element: "Вода",
+        groupLabel: "Старшие арканы",
+        symbol: "✧",
+        journey: {
+          title: "я отпускаю старое",
+          story: "Герой проходит через завершение и видит, что конец может быть дверью.",
+          lesson: "Отпускание освобождает силы для следующего цикла.",
+          question: "С чем мне пора попрощаться спокойно?"
+        }
+      },
+      {
+        id: "major-14",
+        name: "Умеренность",
+        type: "major",
+        suit: "",
+        rank: "XIV",
+        keywords: ["смешение", "ритм", "исцеление", "мера"],
+        meaning: "Нужно соединить разные части и найти рабочий ритм. Не резко, а постепенно.",
+        shadow: "Затягивание, сглаживание конфликтов любой ценой или потеря живости.",
+        advice: "Ищи пропорцию. Малые регулярные действия сейчас лучше рывка.",
+        reflection: "Какие две части моей жизни хотят договориться?",
+        memory: "Умеренность переливает воду из чаши в чашу, подбирая верную меру.",
+        element: "Огонь",
+        groupLabel: "Старшие арканы",
+        symbol: "≈",
+        journey: {
+          title: "я соединяю части",
+          story: "Герой учится смешивать опыт, боль, надежду и действие в новый ритм.",
+          lesson: "Гармония создается настройкой, а не идеальностью.",
+          question: "Что мне нужно смешать мягче?"
+        }
+      },
+      {
+        id: "major-15",
+        name: "Дьявол",
+        type: "major",
+        suit: "",
+        rank: "XV",
+        keywords: ["привязка", "желание", "искушение", "честность"],
+        meaning: "Карта показывает привязки, привычки и желания, которые стоит увидеть честно.",
+        shadow: "Зависимость, самообман, ощущение ловушки или обмен свободы на удобство.",
+        advice: "Назови привязку по имени. То, что видно, уже легче выбирать иначе.",
+        reflection: "Что управляет мной сильнее, чем я хочу признать?",
+        memory: "Дьявол держит цепи, но карта спрашивает: точно ли они заперты?",
+        element: "Земля",
+        groupLabel: "Старшие арканы",
+        symbol: "⬟",
+        journey: {
+          title: "я вижу привязки",
+          story: "Герой встречает свои желания и перестает делать вид, что их нет.",
+          lesson: "Честность возвращает право выбора.",
+          question: "Какая привычка просит света и ясности?"
+        }
+      },
+      {
+        id: "major-16",
+        name: "Башня",
+        type: "major",
+        suit: "",
+        rank: "XVI",
+        keywords: ["срыв иллюзий", "освобождение", "перестройка", "правда"],
+        meaning: "Старая конструкция не выдерживает. Это может быть резким, но освобождает правду.",
+        shadow: "Сопротивление очевидному, хаос ради хаоса или страх признать трещину.",
+        advice: "Убери то, что держится только на видимости. Оставь прочное.",
+        reflection: "Какая иллюзия уже мешает мне дышать?",
+        memory: "Башня трещит не потому, что жизнь против тебя, а потому что фундамент был слабым.",
+        element: "Огонь",
+        groupLabel: "Старшие арканы",
+        symbol: "▵",
+        journey: {
+          title: "я освобождаюсь от иллюзии",
+          story: "Герой видит, что разрушение иногда открывает выход.",
+          lesson: "Правда может быть громкой, но после нее легче строить.",
+          question: "Что мне пора перестать поддерживать?"
+        }
+      },
+      {
+        id: "major-17",
+        name: "Звезда",
+        type: "major",
+        suit: "",
+        rank: "XVII",
+        keywords: ["надежда", "вдохновение", "восстановление", "доверие"],
+        meaning: "После напряжения появляется тихая надежда. Можно снова верить и восстанавливаться.",
+        shadow: "Ожидание чуда без участия или уход в красивые мечты.",
+        advice: "Поддержи свою надежду маленьким делом. Свету нужен путь.",
+        reflection: "Что возвращает мне веру в себя?",
+        memory: "Звезда не ослепляет. Она светит достаточно, чтобы идти дальше.",
+        element: "Воздух",
+        groupLabel: "Старшие арканы",
+        symbol: "✶",
+        journey: {
+          title: "я снова верю",
+          story: "Герой выходит после бури и видит не ответ, а свет направления.",
+          lesson: "Надежда лечит, когда ее поддерживают действием.",
+          question: "Какой маленький свет я могу сохранить?"
+        }
+      },
+      {
+        id: "major-18",
+        name: "Луна",
+        type: "major",
+        suit: "",
+        rank: "XVIII",
+        keywords: ["туман", "сны", "страхи", "подсознание"],
+        meaning: "Не все ясно. Карта говорит о тумане, чувствах и образах, которые нужно распутать.",
+        shadow: "Тревожные фантазии, самообман или потеря ориентира.",
+        advice: "Не спеши с выводом. Проверь факты и отнесись к чувствам бережно.",
+        reflection: "Что во мне сейчас говорит страх, а что интуиция?",
+        memory: "Луна освещает дорогу не полностью: идти можно, но медленнее.",
+        element: "Вода",
+        groupLabel: "Старшие арканы",
+        symbol: "◐",
+        journey: {
+          title: "я прохожу туман",
+          story: "Герой идет ночью и учится не путать тень с реальностью.",
+          lesson: "Неясность требует бережной проверки.",
+          question: "Какие факты помогут мне выйти из тумана?"
+        }
+      },
+      {
+        id: "major-19",
+        name: "Солнце",
+        type: "major",
+        suit: "",
+        rank: "XIX",
+        keywords: ["ясность", "радость", "простота", "тепло"],
+        meaning: "Становится светлее и проще. Карта про ясность, открытость и живую радость.",
+        shadow: "Наивный оптимизм, демонстративность или нежелание видеть нюансы.",
+        advice: "Выбирай простое и ясное. Поделись теплом, но не выжигай детали.",
+        reflection: "Что станет легче, если я скажу просто?",
+        memory: "Солнце показывает предметы без тумана: вот путь, вот тело, вот радость.",
+        element: "Огонь",
+        groupLabel: "Старшие арканы",
+        symbol: "☉",
+        journey: {
+          title: "я выбираю ясность",
+          story: "Герой выходит на свет и видит, что простота тоже мудрость.",
+          lesson: "Ясность возвращает энергию.",
+          question: "Где я могу выбрать светлее и проще?"
+        }
+      },
+      {
+        id: "major-20",
+        name: "Суд",
+        type: "major",
+        suit: "",
+        rank: "XX",
+        keywords: ["пробуждение", "призвание", "итог", "отклик"],
+        meaning: "Что-то зовет к пробуждению. Пора услышать итог прошлого и выйти на новый уровень.",
+        shadow: "Самоосуждение, страх оценки или желание отложить важный отклик.",
+        advice: "Услышь зов без наказания себя. Сделай вывод и поднимайся.",
+        reflection: "К чему меня зовет накопленный опыт?",
+        memory: "Суд звучит как труба: это не приговор, а приглашение проснуться.",
+        element: "Огонь",
+        groupLabel: "Старшие арканы",
+        symbol: "✺",
+        journey: {
+          title: "я просыпаюсь",
+          story: "Герой слышит зов и понимает: прошлый опыт хочет стать силой, а не грузом.",
+          lesson: "Итоги нужны, чтобы подняться, а не застыть.",
+          question: "Какой вывод я готов превратить в действие?"
+        }
+      },
+      {
+        id: "major-21",
+        name: "Мир",
+        type: "major",
+        suit: "",
+        rank: "XXI",
+        keywords: ["целостность", "завершение", "мастерство", "цикл"],
+        meaning: "Цикл завершается. Части складываются в целую картину, и можно идти дальше.",
+        shadow: "Страх завершить, перфекционизм или желание удержать уже пройденное.",
+        advice: "Признай результат. Завершение тоже действие и часть пути.",
+        reflection: "Что я могу достойно завершить?",
+        memory: "Мир похож на венок: путь сделал круг и стал опытом.",
+        element: "Земля",
+        groupLabel: "Старшие арканы",
+        symbol: "◉",
+        journey: {
+          title: "я завершаю цикл",
+          story: "Герой видит весь путь целиком и берет с собой не багаж, а мастерство.",
+          lesson: "Завершение открывает следующий круг.",
+          question: "Какой цикл уже можно признать завершенным?"
+        }
+      }
+    ];
+
+    const suits = [
+      {
+        key: "wands",
+        label: "Жезлы",
+        of: "Жезлов",
+        element: "Огонь",
+        groupLabel: "Жезлы",
+        symbol: "♨",
+        keywords: ["энергия", "воля", "дело", "рост"],
+        focus: "энергию, инициативу, желание действовать и творческий импульс",
+        shadow: "спешка, выгорание или борьба за правоту",
+        resource: "живой интерес и честный темп",
+        lifeArea: "действиями, проектами и личной смелостью",
+        image: "факел, который освещает дорогу, если держать его ровно"
+      },
+      {
+        key: "cups",
+        label: "Кубки",
+        of: "Кубков",
+        element: "Вода",
+        groupLabel: "Кубки",
+        symbol: "◍",
+        keywords: ["чувства", "связь", "сердце", "вдохновение"],
+        focus: "чувства, отношения, эмпатию и внутреннее наполнение",
+        shadow: "идеализация, обида или уход в переживания",
+        resource: "мягкость, честность чувств и способность слушать",
+        lifeArea: "эмоциями, близостью и творческим вдохновением",
+        image: "чашу с водой: она отражает небо, когда ее не трясти"
+      },
+      {
+        key: "swords",
+        label: "Мечи",
+        of: "Мечей",
+        element: "Воздух",
+        groupLabel: "Мечи",
+        symbol: "◇",
+        keywords: ["мысль", "решение", "правда", "слово"],
+        focus: "мысли, решения, разговоры и способность видеть правду",
+        shadow: "жесткость, тревожные мысли или спор ради победы",
+        resource: "ясность, честный разговор и проверенные факты",
+        lifeArea: "выбором, словами и внутренними установками",
+        image: "меч, который лучше режет путаницу, чем людей"
+      },
+      {
+        key: "pentacles",
+        label: "Пентакли",
+        of: "Пентаклей",
+        element: "Земля",
+        groupLabel: "Пентакли",
+        symbol: "⬟",
+        keywords: ["практика", "тело", "ресурсы", "устойчивость"],
+        focus: "практические дела, ресурсы, тело, работу и устойчивость",
+        shadow: "застревание, чрезмерный контроль или страх нехватки",
+        resource: "терпение, регулярность и реальные шаги",
+        lifeArea: "бытом, работой, деньгами как ресурсом и телесной опорой",
+        image: "монету в ладони: ценность видна там, где есть внимание"
+      }
+    ];
+
+    const ranks = [
+      {
+        key: "ace",
+        label: "Туз",
+        name: "Туз",
+        keywords: ["искра", "начало"],
+        meaning: "Новая возможность только появляется и просит заметить ее.",
+        shadow: "Искра может погаснуть, если ждать идеального момента.",
+        advice: "Береги начало и сделай первый простой шаг.",
+        reflection: "Где я чувствую первый импульс?",
+        memory: "Туз - это семя: маленькое, но с целым деревом внутри."
+      },
+      {
+        key: "2",
+        label: "2",
+        name: "2",
+        keywords: ["выбор", "пара"],
+        meaning: "Есть две силы или два варианта, между которыми нужно найти отношение.",
+        shadow: "Колебания могут стать способом ничего не выбирать.",
+        advice: "Сравни варианты и назови, что для тебя важнее.",
+        reflection: "Между чем я сейчас выбираю?",
+        memory: "Двойка похожа на две двери: обе видны, но войти нужно в одну."
+      },
+      {
+        key: "3",
+        label: "3",
+        name: "3",
+        keywords: ["рост", "обмен"],
+        meaning: "Появляется развитие: первые результаты, поддержка или расширение.",
+        shadow: "Легко рассеяться и потерять главное среди возможностей.",
+        advice: "Поддержи то, что уже начало расти.",
+        reflection: "Что просит продолжения?",
+        memory: "Тройка - это росток с третьим листом: процесс уже заметен."
+      },
+      {
+        key: "4",
+        label: "4",
+        name: "4",
+        keywords: ["опора", "стабильность"],
+        meaning: "Нужна структура, спокойный ритм и надежная основа.",
+        shadow: "Стабильность может стать тесной коробкой.",
+        advice: "Укрепи основу, но оставь место движению.",
+        reflection: "Какая опора сейчас самая важная?",
+        memory: "Четверка - это стол на четырех ножках: удобно, если он не прибит к полу."
+      },
+      {
+        key: "5",
+        label: "5",
+        name: "5",
+        keywords: ["напряжение", "урок"],
+        meaning: "Появляется вызов, который показывает слабое место и учит гибкости.",
+        shadow: "Можно застрять в борьбе и видеть только проблему.",
+        advice: "Ищи урок, а не виноватого.",
+        reflection: "Чему меня учит это напряжение?",
+        memory: "Пятерка - это камешек в обуви: неприятно, но он заставляет остановиться."
+      },
+      {
+        key: "6",
+        label: "6",
+        name: "6",
+        keywords: ["гармония", "помощь"],
+        meaning: "Баланс начинает возвращаться. Возможны поддержка, обмен и теплый результат.",
+        shadow: "Комфорт может усыпить внимание к реальности.",
+        advice: "Прими поддержку и раздели ее с другим.",
+        reflection: "Где я могу восстановить равновесие?",
+        memory: "Шестерка - это мост: он соединяет берега после напряжения."
+      },
+      {
+        key: "7",
+        label: "7",
+        name: "7",
+        keywords: ["испытание", "поиск"],
+        meaning: "Нужно проверить намерение, выбрать стратегию и не идти на автопилоте.",
+        shadow: "Можно уйти в защиту, сомнения или хитрые обходные пути.",
+        advice: "Действуй осознанно и не теряй цель из виду.",
+        reflection: "Какую стратегию я выбираю?",
+        memory: "Семерка - это задача с несколькими ходами: важно думать, а не метаться."
+      },
+      {
+        key: "8",
+        label: "8",
+        name: "8",
+        keywords: ["движение", "мастерство"],
+        meaning: "Процесс набирает скорость или требует тренировки и повторения.",
+        shadow: "Ритм может стать суетой, если не понимать зачем.",
+        advice: "Продолжай, но проверяй направление.",
+        reflection: "Какая регулярность даст результат?",
+        memory: "Восьмерка - это колесо навыка: чем ровнее вращение, тем дальше путь."
+      },
+      {
+        key: "9",
+        label: "9",
+        name: "9",
+        keywords: ["итог", "зрелость"],
+        meaning: "Опыт почти созрел. Можно увидеть результат и понять, что он дал.",
+        shadow: "Есть риск закрыться, устать или удерживать контроль.",
+        advice: "Признай опыт и береги силы перед завершением.",
+        reflection: "Что я уже понял благодаря этому пути?",
+        memory: "Девятка - это вечер перед финишем: многое уже сделано."
+      },
+      {
+        key: "10",
+        label: "10",
+        name: "10",
+        keywords: ["завершение", "переход"],
+        meaning: "Цикл подходит к завершению и готовит переход в новую форму.",
+        shadow: "Можно перегрузиться или цепляться за старый формат.",
+        advice: "Заверши главное и оставь лишнее позади.",
+        reflection: "Что пора закрыть, чтобы двигаться дальше?",
+        memory: "Десятка - это полная корзина: ее нужно донести и разобрать."
+      },
+      {
+        key: "page",
+        label: "Паж",
+        name: "Паж",
+        keywords: ["ученик", "новость"],
+        meaning: "Появляется любопытство, первый навык или сообщение, которое открывает тему.",
+        shadow: "Неопытность может маскироваться уверенностью.",
+        advice: "Учись через пробу и задавай простые вопросы.",
+        reflection: "Где мне полезно снова стать учеником?",
+        memory: "Паж держит инструмент впервые: пока неловко, но интересно."
+      },
+      {
+        key: "knight",
+        label: "Рыцарь",
+        name: "Рыцарь",
+        keywords: ["движение", "поиск"],
+        meaning: "Энергия идет вперед. Карта показывает стиль движения и мотивацию.",
+        shadow: "Порыв может стать крайностью, если забыть о последствиях.",
+        advice: "Двигайся смело, но сверяйся с дорогой.",
+        reflection: "Какой темп будет честным и устойчивым?",
+        memory: "Рыцарь уже в пути: вопрос не в желании, а в направлении."
+      },
+      {
+        key: "queen",
+        label: "Королева",
+        name: "Королева",
+        keywords: ["зрелость", "внутренняя сила"],
+        meaning: "Качество масти проживается глубоко, спокойно и изнутри.",
+        shadow: "Сила может уйти в закрытость, контроль или тонкое давление.",
+        advice: "Действуй из зрелости и уважай свои границы.",
+        reflection: "Как я могу проявить это качество мягко и уверенно?",
+        memory: "Королева не доказывает власть: она создает пространство."
+      },
+      {
+        key: "king",
+        label: "Король",
+        name: "Король",
+        keywords: ["мастерство", "управление"],
+        meaning: "Качество масти становится зрелым решением, ответственностью и влиянием.",
+        shadow: "Контроль может заменить мудрость, если забыть о живом человеке.",
+        advice: "Бери ответственность и управляй спокойно.",
+        reflection: "Где мне пора действовать взрослее?",
+        memory: "Король держит карту местности: он отвечает не только за себя, но и за курс."
+      }
+    ];
+
+    function buildMinorDeck() {
+      return suits.flatMap((suit) => ranks.map((rank) => ({
+        id: `${suit.key}-${rank.key}`,
+        name: `${rank.name} ${suit.of}`,
+        type: "minor",
+        suit: suit.label,
+        rank: rank.label,
+        keywords: [...rank.keywords, ...suit.keywords].slice(0, 4),
+        meaning: `${rank.meaning} В масти ${suit.label.toLowerCase()} это про ${suit.focus}.`,
+        shadow: `${rank.shadow} В этой масти тень часто звучит как ${suit.shadow}.`,
+        advice: `${rank.advice} Опирайся на ${suit.resource}.`,
+        reflection: `${rank.reflection} Как это связано с ${suit.lifeArea}?`,
+        memory: `${rank.memory} Для запоминания представь ${suit.image}.`,
+        element: suit.element,
+        groupLabel: suit.groupLabel,
+        symbol: suit.symbol
+      })));
+    }
+
+    const deck = [...majorArcana, ...buildMinorDeck()];
+    const byId = new Map(deck.map((card) => [card.id, card]));
+
+    const filters = [
+      ["all", "Все"],
+      ["major", "Старшие арканы"],
+      ["Жезлы", "Жезлы"],
+      ["Кубки", "Кубки"],
+      ["Мечи", "Мечи"],
+      ["Пентакли", "Пентакли"],
+      ["favorites", "Избранные"],
+      ["weak", "Слабые карты"]
+    ];
+
+    const navItems = [
+      ["home", "✦", "Главная"],
+      ["cards", "▣", "Карты"],
+      ["training", "?", "Тренировка"],
+      ["spread", "✥", "Расклад"],
+      ["progress", "◎", "Прогресс"]
+    ];
+
+    const spreadPositions = [
+      {
+        key: "now",
+        title: "Что происходит сейчас",
+        prompt: "Покажи главную тему момента"
+      },
+      {
+        key: "influence",
+        title: "Что влияет на ситуацию",
+        prompt: "Найди скрытый фактор или настроение"
+      },
+      {
+        key: "direction",
+        title: "Куда все движется",
+        prompt: "Покажи вероятное направление развития"
+      },
+      {
+        key: "advice",
+        title: "Совет",
+        prompt: "Сформулируй мягкий практический шаг"
+      }
+    ];
+
+    const app = document.querySelector("#app");
+    const bottomNav = document.querySelector("#bottomNav");
+
+    const state = {
+      route: "home",
+      filter: "all",
+      selectedCardId: null,
+      training: null,
+      spread: null,
+      showReading: false
+    };
+
+    let progress = loadProgress();
+
+    function cardDefaultProgress() {
+      return {
+        level: 0,
+        correct: 0,
+        wrong: 0,
+        favorite: false,
+        studied: false
+      };
+    }
+
+    function createProgressMap() {
+      return Object.fromEntries(deck.map((card) => [card.id, cardDefaultProgress()]));
+    }
+
+    function loadProgress() {
+      const fallback = {
+        cards: createProgressMap(),
+        stats: {
+          questions: 0,
+          correct: 0,
+          sessions: 0,
+          spreads: 0
+        }
+      };
+
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+        const cards = createProgressMap();
+        Object.keys(cards).forEach((id) => {
+          cards[id] = {
+            ...cards[id],
+            ...(saved.cards && saved.cards[id] ? saved.cards[id] : {})
+          };
+        });
+        return {
+          cards,
+          stats: {
+            ...fallback.stats,
+            ...(saved.stats || {})
+          }
+        };
+      } catch (error) {
+        return fallback;
+      }
+    }
+
+    function saveProgress() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    }
+
+    function resetProgress() {
+      progress = {
+        cards: createProgressMap(),
+        stats: {
+          questions: 0,
+          correct: 0,
+          sessions: 0,
+          spreads: 0
+        }
+      };
+      saveProgress();
+    }
+
+    function getStats() {
+      const items = Object.values(progress.cards);
+      const studied = items.filter((item) => item.studied || item.level >= 3).length;
+      const confident = items.filter((item) => item.level >= 4).length;
+      const favorites = items.filter((item) => item.favorite).length;
+      const weak = items.filter((item) => item.wrong > 0 && (item.wrong >= item.correct || item.level < 3)).length;
+      const accuracy = progress.stats.questions
+        ? Math.round((progress.stats.correct / progress.stats.questions) * 100)
+        : 0;
+      const overall = Math.round((items.reduce((sum, item) => sum + item.level, 0) / (deck.length * 5)) * 100);
+
+      return {
+        total: deck.length,
+        studied,
+        confident,
+        favorites,
+        weak,
+        questions: progress.stats.questions,
+        correct: progress.stats.correct,
+        sessions: progress.stats.sessions,
+        spreads: progress.stats.spreads,
+        accuracy,
+        overall
+      };
+    }
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function sample(array) {
+      return array[Math.floor(Math.random() * array.length)];
+    }
+
+    function shuffled(array) {
+      return [...array].sort(() => Math.random() - 0.5);
+    }
+
+    function getWrongOptions(correctCard, sourceDeck = deck, amount = 3) {
+      return shuffled(sourceDeck.filter((card) => card.id !== correctCard.id)).slice(0, amount);
+    }
+
+    function levelText(level) {
+      if (level <= 0) return "0/5";
+      return `${level}/5`;
+    }
+
+    function levelPips(level) {
+      return `${"●".repeat(level)}${"○".repeat(5 - level)}`;
+    }
+
+    function cardProgress(cardId) {
+      return progress.cards[cardId] || cardDefaultProgress();
+    }
+
+    function markCard(cardId, result) {
+      const item = cardProgress(cardId);
+      if (result === "correct") {
+        item.correct += 1;
+        item.level = clamp(item.level + 1, 0, 5);
+        if (item.level >= 3) item.studied = true;
+      } else {
+        item.wrong += 1;
+        item.level = clamp(item.level - 1, 0, 5);
+      }
+      progress.cards[cardId] = item;
+      saveProgress();
+    }
+
+    function setSelfRating(cardId, level) {
+      const item = cardProgress(cardId);
+      item.level = level;
+      item.studied = level >= 2;
+      progress.cards[cardId] = item;
+      saveProgress();
+      render();
+    }
+
+    function toggleFavorite(cardId) {
+      const item = cardProgress(cardId);
+      item.favorite = !item.favorite;
+      progress.cards[cardId] = item;
+      saveProgress();
+      render();
+    }
+
+    function markJourney(cardId) {
+      const item = cardProgress(cardId);
+      item.studied = true;
+      item.level = Math.max(item.level, 2);
+      progress.cards[cardId] = item;
+      saveProgress();
+      render();
+    }
+
+    function navigate(route) {
+      state.route = route;
+      if (route !== "cards") state.selectedCardId = null;
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderNav() {
+      bottomNav.innerHTML = navItems.map(([route, icon, label]) => {
+        const active = state.route === route || (state.route === "fool" && route === "training");
+        return `
+          <button class="nav-btn ${active ? "active" : ""}" type="button" data-route="${route}" aria-label="${label}" aria-current="${active ? "page" : "false"}">
+            <span aria-hidden="true">${icon}</span>
+            <span>${label}</span>
+          </button>
+        `;
+      }).join("");
+    }
+
+    function render() {
+      renderNav();
+      const views = {
+        home: renderHome,
+        cards: renderCards,
+        fool: renderFoolPath,
+        training: renderTraining,
+        spread: renderSpread,
+        progress: renderProgress
+      };
+      app.innerHTML = (views[state.route] || renderHome)();
+    }
+
+    function renderHome() {
+      const stats = getStats();
+      return `
+        <section class="view hero">
+          <p class="eyebrow">Маленькая школа Таро в кармане</p>
+          <div>
+            <h1>Тренажер Таро</h1>
+            <p class="subtitle">Учись читать карты через образы, истории и практику. Открывай приложение на 5-10 минут в день и собирай свой навык спокойно, шаг за шагом.</p>
+          </div>
+
+          <section class="panel hero-card magic-card">
+            <div class="progress-grid">
+              <div class="stat">
+                <strong>${stats.studied}</strong>
+                <span>изучено карт</span>
+              </div>
+              <div class="stat">
+                <strong>${stats.sessions}</strong>
+                <span>тренировок</span>
+              </div>
+              <div class="stat">
+                <strong>${stats.overall}%</strong>
+                <span>общий прогресс</span>
+              </div>
+            </div>
+            <div class="progress-bar" aria-label="Общий прогресс">
+              <div class="progress-fill" style="width: ${stats.overall}%"></div>
+            </div>
+            <button class="btn primary" type="button" data-start-training="5">Начать тренировку</button>
+          </section>
+
+          <section>
+            <h2>Быстрые режимы</h2>
+            <div class="quick-grid">
+              <button class="btn" type="button" data-route="cards">Карты</button>
+              <button class="btn" type="button" data-route="training">Викторина</button>
+              <button class="btn" type="button" data-route="fool">Путь Шута</button>
+              <button class="btn" type="button" data-route="spread">Расклад-тренажер</button>
+              <button class="btn" type="button" data-route="progress">Прогресс</button>
+            </div>
+          </section>
+
+          <section class="panel panel-pad">
+            <h3>Как учиться сегодня</h3>
+            <p class="muted">Выбери одну карту, прочитай ее как сцену, а потом ответь на несколько вопросов. Не нужно зубрить 78 значений сразу: карта запоминается лучше, когда становится частью истории.</p>
+          </section>
+
+          <p class="fine-print">Материалы приложения предназначены для обучения, самоанализа и развлечения. Они не являются медицинской, юридической или финансовой рекомендацией.</p>
+        </section>
+      `;
+    }
+
+    function getFilteredCards() {
+      return deck.filter((card) => {
+        const item = cardProgress(card.id);
+        if (state.filter === "all") return true;
+        if (state.filter === "major") return card.type === "major";
+        if (state.filter === "favorites") return item.favorite;
+        if (state.filter === "weak") return item.wrong > 0 && (item.wrong >= item.correct || item.level < 3);
+        return card.suit === state.filter;
+      });
+    }
+
+    function renderCards() {
+      const cards = getFilteredCards();
+      const selected = state.selectedCardId ? byId.get(state.selectedCardId) : null;
+      return `
+        <section class="view">
+          <div class="section-head">
+            <div>
+              <h2>Карты</h2>
+              <p class="muted">Компактный справочник всей колоды. Нажми на карту, чтобы учить ее через смысл, образ и вопрос к себе.</p>
+            </div>
+          </div>
+
+          <div class="filters" aria-label="Фильтры карт">
+            ${filters.map(([id, label]) => `
+              <button class="btn ghost ${state.filter === id ? "selected" : ""}" type="button" data-filter="${id}">${label}</button>
+            `).join("")}
+          </div>
+
+          ${selected ? renderCardDetail(selected) : ""}
+
+          <div class="list">
+            ${cards.length ? cards.map(renderCardRow).join("") : `<div class="empty">Здесь пока пусто. Добавь карты в избранное или потренируй слабые места.</div>`}
+          </div>
+        </section>
+      `;
+    }
+
+    function renderCardRow(card) {
+      const item = cardProgress(card.id);
+      return `
+        <button class="card-row" type="button" data-card-id="${card.id}">
+          <span class="sigil" aria-hidden="true">${card.symbol}</span>
+          <span class="card-title">
+            <strong>${card.name}</strong>
+            <span class="meta">
+              <span>${card.groupLabel}</span>
+              ${card.keywords.slice(0, 3).map((word) => `<span class="chip">${word}</span>`).join("")}
+            </span>
+          </span>
+          <span class="level" aria-label="Уровень знания ${item.level} из 5">${levelPips(item.level)}<br>${levelText(item.level)}</span>
+        </button>
+      `;
+    }
+
+    function renderCardDetail(card) {
+      const item = cardProgress(card.id);
+      return `
+        <article class="panel detail-card magic-card">
+          <div class="detail-top">
+            <div class="big-sigil" aria-hidden="true">${card.symbol}</div>
+            <div>
+              <p class="eyebrow">${card.groupLabel}${card.element ? ` - ${card.element}` : ""}</p>
+              <h2>${card.name}</h2>
+              <p class="muted">${card.keywords.map((word) => `<span class="chip">${word}</span>`).join(" ")}</p>
+            </div>
+          </div>
+
+          <div class="info-grid">
+            ${renderNote("Простое значение", card.meaning)}
+            ${renderNote("Теневая сторона", card.shadow)}
+            ${renderNote("Совет карты", card.advice)}
+            ${renderNote("Вопрос для размышления", card.reflection)}
+            ${renderNote("Ассоциация", card.memory)}
+          </div>
+
+          <div class="button-row two">
+            <button class="btn ${item.favorite ? "selected" : ""}" type="button" data-favorite="${card.id}">
+              ${item.favorite ? "В избранном" : "Добавить в избранное"}
+            </button>
+            <button class="btn" type="button" data-close-detail>Закрыть карточку</button>
+          </div>
+
+          <div>
+            <h3>Самооценка</h3>
+            <div class="button-row">
+              <button class="btn warn" type="button" data-rate="${card.id}" data-level="0">Не знаю</button>
+              <button class="btn" type="button" data-rate="${card.id}" data-level="2">Путаюсь</button>
+              <button class="btn good" type="button" data-rate="${card.id}" data-level="4">Почти знаю</button>
+              <button class="btn primary" type="button" data-rate="${card.id}" data-level="5">Знаю</button>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderNote(title, text) {
+      return `
+        <div class="note">
+          <h3>${title}</h3>
+          <p class="muted">${text}</p>
         </div>
+      `;
+    }
 
-        <ul class="features" id="plan">
-          <li>
-            <strong>Карты и значения</strong>
-            База для изучения Старших и Младших арканов.
-          </li>
-          <li>
-            <strong>Тренировки</strong>
-            Проверка памяти и повторение сложных карт.
-          </li>
-          <li>
-            <strong>Автономность</strong>
-            Один файл, без backend, npm и внешних библиотек.
-          </li>
-        </ul>
-      </section>
-    </section>
+    function renderFoolPath() {
+      return `
+        <section class="view">
+          <div class="section-head">
+            <div>
+              <h2>Путь Шута</h2>
+              <p class="muted">Старшие арканы как путь героя: от первого шага до целостного завершения цикла.</p>
+            </div>
+          </div>
+          <div class="journey-list">
+            ${majorArcana.map((card, index) => renderJourneyStep(card, index)).join("")}
+          </div>
+        </section>
+      `;
+    }
 
-    <footer>
-      GitHub Pages: ветка main, папка root.
-    </footer>
-  </main>
+    function renderJourneyStep(card, index) {
+      const item = cardProgress(card.id);
+      return `
+        <article class="journey-card ${item.studied ? "done" : ""}">
+          <div class="detail-top">
+            <div class="sigil" aria-hidden="true">${card.symbol}</div>
+            <div>
+              <p class="eyebrow">${String(index + 1).padStart(2, "0")} шаг</p>
+              <h3>${card.name}: ${card.journey.title}</h3>
+            </div>
+          </div>
+          <p class="muted">${card.journey.story}</p>
+          <div class="info-grid">
+            ${renderNote("Главный урок", card.journey.lesson)}
+            ${renderNote("Вопрос к себе", card.journey.question)}
+          </div>
+          <button class="btn ${item.studied ? "selected" : "primary"}" type="button" data-journey-study="${card.id}">
+            ${item.studied ? "Изучено" : "Отметить как изучено"}
+          </button>
+        </article>
+      `;
+    }
+
+    function startTraining(total) {
+      progress.stats.sessions += 1;
+      saveProgress();
+      state.route = "training";
+      state.training = {
+        total,
+        infinite: total === "infinite",
+        count: 0,
+        current: null,
+        answered: false,
+        selected: null,
+        wasCorrect: null
+      };
+      nextQuestion();
+    }
+
+    function nextQuestion() {
+      if (!state.training) startTraining(5);
+      if (!state.training.infinite && state.training.count >= state.training.total) {
+        state.training.current = null;
+        render();
+        return;
+      }
+      state.training.current = createQuestion();
+      state.training.answered = false;
+      state.training.selected = null;
+      state.training.wasCorrect = null;
+      state.training.count += 1;
+      render();
+    }
+
+    function createQuestion() {
+      const makers = [
+        makeMeaningToCardQuestion,
+        makeCardToMeaningQuestion,
+        makeSuitElementQuestion,
+        makeMajorMinorQuestion,
+        makeAdviceQuestion
+      ];
+      return sample(makers)();
+    }
+
+    function makeMeaningToCardQuestion() {
+      const card = sample(deck);
+      const options = shuffled([card, ...getWrongOptions(card)]).map((item) => ({
+        value: item.id,
+        label: item.name
+      }));
+      return {
+        type: "Угадай карту по значению",
+        cardId: card.id,
+        prompt: card.meaning,
+        options,
+        correct: card.id,
+        explanation: `${card.name}: ${card.memory}`
+      };
+    }
+
+    function makeCardToMeaningQuestion() {
+      const card = sample(deck);
+      const options = shuffled([card, ...getWrongOptions(card)]).map((item) => ({
+        value: item.id,
+        label: item.meaning
+      }));
+      return {
+        type: "Угадай значение карты",
+        cardId: card.id,
+        prompt: `Как лучше всего прочитать карту «${card.name}»?`,
+        options,
+        correct: card.id,
+        explanation: `${card.name} говорит так: ${card.advice}`
+      };
+    }
+
+    function makeSuitElementQuestion() {
+      const card = sample(deck);
+      const correctLabel = card.type === "major"
+        ? `Старший аркан, ${card.element}`
+        : `${card.suit}, ${card.element}`;
+      const optionLabels = shuffled([
+        correctLabel,
+        "Жезлы, Огонь",
+        "Кубки, Вода",
+        "Мечи, Воздух",
+        "Пентакли, Земля",
+        "Старший аркан, Дух"
+      ].filter((label, index, array) => array.indexOf(label) === index)).slice(0, 4);
+
+      if (!optionLabels.includes(correctLabel)) optionLabels[0] = correctLabel;
+
+      return {
+        type: "Масть и стихия",
+        cardId: card.id,
+        prompt: `К какой группе относится «${card.name}»?`,
+        options: shuffled(optionLabels).map((label) => ({ value: label, label })),
+        correct: correctLabel,
+        explanation: `${card.name} относится к группе «${card.groupLabel}», стихия: ${card.element}.`
+      };
+    }
+
+    function makeMajorMinorQuestion() {
+      const card = sample(deck);
+      const correct = card.type === "major" ? "Старший аркан" : "Младший аркан";
+      return {
+        type: "Старший или младший аркан",
+        cardId: card.id,
+        prompt: `«${card.name}» - это какая карта?`,
+        options: ["Старший аркан", "Младший аркан", "Карта двора", "Масть без ранга"].map((label) => ({ value: label, label })),
+        correct,
+        explanation: `${card.name}: ${card.groupLabel}. ${card.meaning}`
+      };
+    }
+
+    function makeAdviceQuestion() {
+      const card = sample(deck);
+      const options = shuffled([card, ...getWrongOptions(card)]).map((item) => ({
+        value: item.id,
+        label: item.name
+      }));
+      return {
+        type: "Совет карты",
+        cardId: card.id,
+        prompt: `Какая карта лучше всего подходит к совету: «${card.advice}»?`,
+        options,
+        correct: card.id,
+        explanation: `${card.name} подходит, потому что ее образ помогает увидеть: ${card.meaning}`
+      };
+    }
+
+    function answerQuestion(value) {
+      const training = state.training;
+      if (!training || training.answered) return;
+
+      const question = training.current;
+      const isCorrect = value === question.correct;
+      training.answered = true;
+      training.selected = value;
+      training.wasCorrect = isCorrect;
+
+      progress.stats.questions += 1;
+      if (isCorrect) progress.stats.correct += 1;
+      markCard(question.cardId, isCorrect ? "correct" : "wrong");
+      saveProgress();
+      render();
+    }
+
+    function renderTraining() {
+      const training = state.training;
+      if (!training) {
+        return `
+          <section class="view">
+            <div class="section-head">
+              <div>
+                <h2>Тренировка</h2>
+                <p class="muted">Быстрые вопросы помогают связать карту с образом, значением и действием. Выбери длину занятия.</p>
+              </div>
+            </div>
+            <div class="button-row">
+              <button class="btn primary" type="button" data-start-training="5">5 вопросов</button>
+              <button class="btn" type="button" data-start-training="10">10 вопросов</button>
+              <button class="btn" type="button" data-start-training="infinite">Бесконечный режим</button>
+            </div>
+          </section>
+        `;
+      }
+
+      if (!training.current) {
+        const stats = getStats();
+        return `
+          <section class="view">
+            <article class="panel question-card magic-card">
+              <p class="eyebrow">Тренировка завершена</p>
+              <h2>Хороший короткий подход</h2>
+              <p class="muted">Ты ответил на ${training.count} вопросов. Общая точность сейчас ${stats.accuracy}%.</p>
+              <div class="button-row">
+                <button class="btn primary" type="button" data-start-training="5">Еще 5 вопросов</button>
+                <button class="btn" type="button" data-route="progress">Посмотреть прогресс</button>
+              </div>
+            </article>
+          </section>
+        `;
+      }
+
+      const question = training.current;
+      const totalLabel = training.infinite ? "∞" : training.total;
+      return `
+        <section class="view">
+          <article class="panel question-card magic-card">
+            <div>
+              <p class="question-type">${question.type}</p>
+              <h2>Вопрос ${training.count} из ${totalLabel}</h2>
+              <p class="question-text">${question.prompt}</p>
+            </div>
+
+            <div class="answer-grid">
+              ${question.options.map((option) => {
+                let stateClass = "";
+                if (training.answered) {
+                  if (option.value === question.correct) stateClass = "correct";
+                  if (option.value === training.selected && option.value !== question.correct) stateClass = "wrong";
+                }
+                return `<button class="btn answer ${stateClass}" type="button" data-answer="${option.value}" ${training.answered ? "disabled" : ""}>${option.label}</button>`;
+              }).join("")}
+            </div>
+
+            ${training.answered ? `
+              <div class="note result">
+                <h3>${training.wasCorrect ? "Верно" : "Почти, но нет"}</h3>
+                <p class="muted">${question.explanation}</p>
+              </div>
+              <button class="btn primary" type="button" data-next-question>Следующий вопрос</button>
+            ` : ""}
+          </article>
+        </section>
+      `;
+    }
+
+    function drawSpread() {
+      const cards = shuffled(deck).slice(0, 4);
+      state.spread = spreadPositions.map((position, index) => ({
+        ...position,
+        cardId: cards[index].id
+      }));
+      state.showReading = false;
+      progress.stats.spreads += 1;
+      saveProgress();
+      render();
+    }
+
+    function positionHint(position, card) {
+      const lead = {
+        now: "Сейчас карта подсвечивает главную тему:",
+        influence: "Как влияние она показывает фон:",
+        direction: "В направлении развития звучит так:",
+        advice: "В позиции совета предлагает:"
+      };
+      return `${lead[position.key]} ${card.meaning}`;
+    }
+
+    function renderSpread() {
+      return `
+        <section class="view">
+          <div class="section-head">
+            <div>
+              <h2>Расклад-тренажер</h2>
+              <p class="muted">Тренируй не предсказание, а связный рассказ. Четыре карты помогают увидеть ситуацию как маленькую историю.</p>
+            </div>
+          </div>
+
+          <button class="btn primary" type="button" data-draw-spread>Собрать тренировочный расклад</button>
+
+          ${state.spread ? `
+            <div class="spread-grid" style="margin-top: 14px;">
+              ${state.spread.map((position) => {
+                const card = byId.get(position.cardId);
+                return `
+                  <article class="spread-position">
+                    <div class="sigil" aria-hidden="true">${card.symbol}</div>
+                    <div>
+                      <p class="eyebrow">${position.title}</p>
+                      <h3>${card.name}</h3>
+                      <p class="meta">${card.keywords.map((word) => `<span class="chip">${word}</span>`).join("")}</p>
+                      <p class="muted">${positionHint(position, card)}</p>
+                    </div>
+                  </article>
+                `;
+              }).join("")}
+            </div>
+
+            <section class="panel panel-pad" style="margin-top: 14px;">
+              <h3>Попробуй сказать это человеческим языком</h3>
+              <p class="muted">Сначала напиши свою версию. Не ищи идеальные слова: просто свяжи карты в понятную историю.</p>
+              <textarea class="textarea" id="readingText" placeholder="Моя трактовка"></textarea>
+              <button class="btn primary" type="button" data-show-reading style="margin-top: 10px;">Показать пример трактовки</button>
+            </section>
+
+            ${state.showReading ? renderReadingExample() : ""}
+          ` : `
+            <div class="empty" style="margin-top: 14px;">Нажми кнопку выше, чтобы вытянуть 4 карты для учебного расклада.</div>
+          `}
+        </section>
+      `;
+    }
+
+    function renderReadingExample() {
+      const [now, influence, direction, advice] = state.spread.map((position) => ({
+        position,
+        card: byId.get(position.cardId)
+      }));
+      return `
+        <article class="panel panel-pad magic-card" style="margin-top: 14px;">
+          <h3>Пример связного рассказа</h3>
+          <p class="muted">
+            Если сказать просто, сейчас тема похожа на «${now.card.name}»: ${now.card.meaning}
+            На ситуацию влияет «${influence.card.name}» - это добавляет оттенок: ${influence.card.keywords.slice(0, 2).join(", ")}.
+            Дальше история может двигаться к «${direction.card.name}», то есть к опыту, где важно ${direction.card.advice.toLowerCase()}
+            А совет «${advice.card.name}» звучит мягко: ${advice.card.advice}
+          </p>
+          <p class="muted">
+            Хорошая трактовка не обязана звучать мистически. Главное - увидеть, что происходит, что влияет, куда идет процесс и какой следующий шаг будет самым бережным.
+          </p>
+        </article>
+      `;
+    }
+
+    function renderProgress() {
+      const stats = getStats();
+      const weakCards = deck.filter((card) => {
+        const item = cardProgress(card.id);
+        return item.wrong > 0 && (item.wrong >= item.correct || item.level < 3);
+      }).slice(0, 5);
+
+      return `
+        <section class="view">
+          <div class="section-head">
+            <div>
+              <h2>Прогресс</h2>
+              <p class="muted">Здесь видно, как растет знакомство с колодой. Уровень карты повышается за верные ответы и самооценку.</p>
+            </div>
+          </div>
+
+          <section class="panel hero-card magic-card">
+            <div class="progress-grid">
+              ${renderStat("78", "всего карт")}
+              ${renderStat(stats.studied, "изучено")}
+              ${renderStat(stats.confident, "уверенно знаю")}
+              ${renderStat(stats.favorites, "избранные")}
+              ${renderStat(stats.weak, "слабые карты")}
+              ${renderStat(`${stats.accuracy}%`, "точность")}
+            </div>
+            <div>
+              <p class="muted">Общий уровень: ${stats.overall}%</p>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: ${stats.overall}%"></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel panel-pad" style="margin-top: 14px;">
+            <h3>Статистика тренировок</h3>
+            <div class="progress-list">
+              <div class="note"><strong>${stats.questions}</strong><p class="muted">пройденных вопросов</p></div>
+              <div class="note"><strong>${stats.correct}</strong><p class="muted">правильных ответов</p></div>
+              <div class="note"><strong>${stats.sessions}</strong><p class="muted">начатых тренировок</p></div>
+              <div class="note"><strong>${stats.spreads}</strong><p class="muted">собранных раскладов</p></div>
+            </div>
+          </section>
+
+          <section class="panel panel-pad" style="margin-top: 14px;">
+            <h3>Слабые карты</h3>
+            ${weakCards.length ? `
+              <div class="list">
+                ${weakCards.map(renderCardRow).join("")}
+              </div>
+            ` : `<p class="muted">Пока нет слабых карт. Ошибки появятся здесь как подсказки для повторения, а не как повод ругать себя.</p>`}
+          </section>
+
+          <button class="btn warn" type="button" data-reset-progress style="width: 100%; margin-top: 14px;">Сбросить прогресс</button>
+
+          <p class="fine-print">Материалы приложения предназначены для обучения, самоанализа и развлечения. Они не являются медицинской, юридической или финансовой рекомендацией.</p>
+        </section>
+      `;
+    }
+
+    function renderStat(value, label) {
+      return `
+        <div class="stat">
+          <strong>${value}</strong>
+          <span>${label}</span>
+        </div>
+      `;
+    }
+
+    document.addEventListener("click", (event) => {
+      const routeButton = event.target.closest("[data-route]");
+      if (routeButton) {
+        navigate(routeButton.dataset.route);
+        return;
+      }
+
+      const trainingButton = event.target.closest("[data-start-training]");
+      if (trainingButton) {
+        const value = trainingButton.dataset.startTraining;
+        startTraining(value === "infinite" ? "infinite" : Number(value));
+        return;
+      }
+
+      const filterButton = event.target.closest("[data-filter]");
+      if (filterButton) {
+        state.filter = filterButton.dataset.filter;
+        state.selectedCardId = null;
+        render();
+        return;
+      }
+
+      const cardButton = event.target.closest("[data-card-id]");
+      if (cardButton) {
+        state.route = "cards";
+        state.selectedCardId = cardButton.dataset.cardId;
+        render();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+
+      if (event.target.closest("[data-close-detail]")) {
+        state.selectedCardId = null;
+        render();
+        return;
+      }
+
+      const favoriteButton = event.target.closest("[data-favorite]");
+      if (favoriteButton) {
+        toggleFavorite(favoriteButton.dataset.favorite);
+        return;
+      }
+
+      const rateButton = event.target.closest("[data-rate]");
+      if (rateButton) {
+        setSelfRating(rateButton.dataset.rate, Number(rateButton.dataset.level));
+        return;
+      }
+
+      const journeyButton = event.target.closest("[data-journey-study]");
+      if (journeyButton) {
+        markJourney(journeyButton.dataset.journeyStudy);
+        return;
+      }
+
+      const answerButton = event.target.closest("[data-answer]");
+      if (answerButton) {
+        answerQuestion(answerButton.dataset.answer);
+        return;
+      }
+
+      if (event.target.closest("[data-next-question]")) {
+        nextQuestion();
+        return;
+      }
+
+      if (event.target.closest("[data-draw-spread]")) {
+        drawSpread();
+        return;
+      }
+
+      if (event.target.closest("[data-show-reading]")) {
+        state.showReading = true;
+        render();
+        return;
+      }
+
+      if (event.target.closest("[data-reset-progress]")) {
+        const confirmed = window.confirm("Сбросить весь прогресс обучения?");
+        if (confirmed) {
+          resetProgress();
+          state.training = null;
+          state.selectedCardId = null;
+          render();
+        }
+      }
+    });
+
+    render();
+  </script>
 </body>
 </html>
