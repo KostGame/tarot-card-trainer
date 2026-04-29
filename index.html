@@ -564,6 +564,82 @@
       height: 58px;
     }
 
+    .path-overview {
+      display: grid;
+      gap: 12px;
+      padding: 16px;
+    }
+
+    .day-card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.06);
+      overflow: hidden;
+    }
+
+    .day-card.done {
+      border-color: rgba(131, 214, 200, 0.52);
+      background: rgba(131, 214, 200, 0.09);
+      box-shadow: 0 0 28px rgba(131, 214, 200, 0.08);
+    }
+
+    .day-card summary {
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      min-height: 64px;
+      padding: 12px;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .day-card summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .day-number {
+      display: grid;
+      width: 44px;
+      height: 44px;
+      place-items: center;
+      border: 1px solid rgba(240, 198, 106, 0.34);
+      border-radius: 14px;
+      color: var(--gold);
+      font-weight: 800;
+    }
+
+    .day-status {
+      color: var(--mint);
+      font-size: 0.88rem;
+      white-space: nowrap;
+    }
+
+    .day-content {
+      display: grid;
+      gap: 10px;
+      padding: 0 12px 12px;
+    }
+
+    .mini-card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .mini-card {
+      display: grid;
+      min-height: 92px;
+      place-items: center;
+      padding: 8px;
+      border: 1px solid rgba(240, 198, 106, 0.25);
+      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.16);
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.78rem;
+    }
+
     .control-menu {
       margin: 0 0 14px;
       border: 1px solid var(--line);
@@ -1639,6 +1715,90 @@
       }
     ];
 
+    const learningPathDays = [
+      {
+        day: 1,
+        title: "Колода как язык символов",
+        goal: "Понять, что Таро не нужно зубрить как словарь.",
+        theory: [
+          "Колода состоит из старших арканов, младших арканов, мастей и придворных карт.",
+          "Карта лучше запоминается как сцена: образ, настроение, действие и вопрос."
+        ],
+        practice: "Открой 3 случайные карты и опиши каждую одним словом.",
+        action: { type: "drawPathCards", label: "Открыть 3 карты" }
+      },
+      {
+        day: 2,
+        title: "Путь Шута",
+        goal: "Увидеть старшие арканы как историю героя.",
+        theory: [
+          "22 старших аркана описывают большие этапы опыта.",
+          "Их удобно читать как путь от первого шага Шута до завершения Мира."
+        ],
+        practice: "Пройди первые 7 шагов Пути Шута.",
+        action: { type: "route", route: "fool", label: "Открыть Путь Шута" }
+      },
+      {
+        day: 3,
+        title: "Масти и стихии",
+        goal: "Понять базовую логику младших арканов.",
+        theory: [
+          "Жезлы: огонь, действие, энергия.",
+          "Кубки: вода, чувства, отношения.",
+          "Мечи: воздух, мысли, конфликты, ясность.",
+          "Пентакли: земля, тело, деньги, быт, результат."
+        ],
+        practice: "Пройди тренировку «Масти и структура» на 10 вопросов.",
+        action: { type: "training", mode: "structure", total: 10, label: "Начать 10 вопросов" }
+      },
+      {
+        day: 4,
+        title: "Числа младших арканов",
+        goal: "Понять, что числа задают этап развития.",
+        theory: [
+          "Туз - начало, 2 - выбор, 3 - рост, 4 - стабильность, 5 - напряжение.",
+          "6 - восстановление, 7 - проверка, 8 - процесс, 9 - зрелость, 10 - завершение."
+        ],
+        practice: "Открой любую масть и пройди от Туза до 10 как историю.",
+        action: { type: "cardsFilter", filter: "Жезлы", label: "Открыть Жезлы" }
+      },
+      {
+        day: 5,
+        title: "Придворные карты",
+        goal: "Перестать путаться в Пажах, Рыцарях, Королевах и Королях.",
+        theory: [
+          "Паж - ученик, сигнал, начало опыта.",
+          "Рыцарь - движение и импульс.",
+          "Королева - зрелое внутреннее владение стихией.",
+          "Король - внешнее управление стихией."
+        ],
+        practice: "Выбери одну масть и сравни четыре придворные карты.",
+        action: { type: "cardsFilter", filter: "Кубки", label: "Открыть Кубки" }
+      },
+      {
+        day: 6,
+        title: "Три карты как история",
+        goal: "Научиться связывать карты, а не читать их по отдельности.",
+        theory: [
+          "Расклад читается как связный рассказ.",
+          "Сначала назови роли карт, потом соедини их человеческим языком."
+        ],
+        practice: "Собери тренировочный расклад на 3 карты плюс совет и напиши короткую трактовку.",
+        action: { type: "route", route: "spread", label: "Открыть расклад" }
+      },
+      {
+        day: 7,
+        title: "Первый самостоятельный расклад",
+        goal: "Собрать все навыки вместе.",
+        theory: [
+          "Хороший расклад отвечает спокойно, конкретно и без запугивания.",
+          "Сравни свою трактовку с примером приложения и отметь, что стало понятнее."
+        ],
+        practice: "Задай простой вопрос, вытяни 3 карты плюс совет, напиши трактовку и сравни с примером.",
+        action: { type: "route", route: "spread", label: "Открыть расклад" }
+      }
+    ];
+
     const app = document.querySelector("#app");
     const bottomNav = document.querySelector("#bottomNav");
 
@@ -1648,6 +1808,7 @@
       selectedCardId: null,
       selectedTrainingMode: "mixed",
       training: null,
+      pathCards: [],
       spread: null,
       showReading: false,
       spreadNote: "",
@@ -1678,6 +1839,9 @@
           correct: 0,
           sessions: 0,
           spreads: 0
+        },
+        learningPath: {
+          completedDays: []
         }
       };
 
@@ -1695,6 +1859,10 @@
           stats: {
             ...fallback.stats,
             ...(saved.stats || {})
+          },
+          learningPath: {
+            ...fallback.learningPath,
+            ...(saved.learningPath || {})
           }
         };
       } catch (error) {
@@ -1714,9 +1882,42 @@
           correct: 0,
           sessions: 0,
           spreads: 0
+        },
+        learningPath: {
+          completedDays: []
         }
       };
       saveProgress();
+    }
+
+    function getLearningPathStats() {
+      const completedDays = progress.learningPath && Array.isArray(progress.learningPath.completedDays)
+        ? progress.learningPath.completedDays
+        : [];
+      return {
+        completedDays,
+        completed: completedDays.length,
+        total: learningPathDays.length,
+        percent: Math.round((completedDays.length / learningPathDays.length) * 100)
+      };
+    }
+
+    function completeLearningDay(day) {
+      const stats = getLearningPathStats();
+      if (!stats.completedDays.includes(day)) {
+        progress.learningPath.completedDays = [...stats.completedDays, day].sort((a, b) => a - b);
+        saveProgress();
+      }
+      render();
+    }
+
+    function resetLearningPath() {
+      progress.learningPath = {
+        completedDays: []
+      };
+      state.pathCards = [];
+      saveProgress();
+      render();
     }
 
     function getStats() {
@@ -1833,6 +2034,12 @@
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
+    function navigateCardsFilter(filter) {
+      state.filter = filter;
+      state.selectedCardId = null;
+      navigate("cards");
+    }
+
     function renderNav() {
       bottomNav.innerHTML = navItems.map(([route, icon, label]) => {
         const active = state.route === route || (state.route === "fool" && route === "training");
@@ -1853,6 +2060,7 @@
         cards: renderCards,
         fool: renderFoolPath,
         training: renderTraining,
+        path: renderLearningPath,
         spread: renderSpread,
         progress: renderProgress,
         guide: renderGuide
@@ -1868,6 +2076,7 @@
 
     function renderHome() {
       const stats = getStats();
+      const pathStats = getLearningPathStats();
       return `
         <section class="view hero">
           <p class="eyebrow">Маленькая школа Таро в кармане</p>
@@ -1897,9 +2106,25 @@
             <button class="btn primary" type="button" data-start-training="5">Начать тренировку</button>
           </section>
 
+          <section class="panel path-overview magic-card">
+            <div>
+              <p class="eyebrow">Учебный маршрут</p>
+              <h2>7 дней для старта</h2>
+              <p class="muted">Короткий план для новичка: теория, маленькая практика и ясный следующий шаг на каждый день.</p>
+            </div>
+            <div>
+              <p class="muted">Пройдено: ${pathStats.completed}/${pathStats.total}</p>
+              <div class="progress-bar" aria-label="Прогресс маршрута">
+                <div class="progress-fill" style="width: ${pathStats.percent}%"></div>
+              </div>
+            </div>
+            <button class="btn primary" type="button" data-route="path">Открыть маршрут</button>
+          </section>
+
           <section>
             <h2>Быстрые режимы</h2>
             <div class="quick-grid">
+              <button class="btn" type="button" data-route="path">Маршрут</button>
               <button class="btn" type="button" data-route="cards">Карты</button>
               <button class="btn" type="button" data-route="training">Викторина</button>
               <button class="btn" type="button" data-route="fool">Путь Шута</button>
@@ -2407,6 +2632,113 @@
       `;
     }
 
+    function drawPathCards() {
+      state.pathCards = shuffled(deck).slice(0, 3).map((card) => card.id);
+      render();
+    }
+
+    function renderPathAction(day) {
+      if (!day.action) return "";
+      const action = day.action;
+      if (action.type === "drawPathCards") {
+        return `<button class="btn primary" type="button" data-path-draw>${action.label}</button>`;
+      }
+      if (action.type === "route") {
+        return `<button class="btn primary" type="button" data-route="${action.route}">${action.label}</button>`;
+      }
+      if (action.type === "training") {
+        return `<button class="btn primary" type="button" data-start-training="${action.total}" data-start-training-mode="${action.mode}">${action.label}</button>`;
+      }
+      if (action.type === "cardsFilter") {
+        return `<button class="btn primary" type="button" data-cards-filter="${action.filter}">${action.label}</button>`;
+      }
+      return "";
+    }
+
+    function renderPathCards() {
+      if (!state.pathCards.length) return "";
+      return `
+        <div class="mini-card-grid">
+          ${state.pathCards.map((id) => {
+            const card = byId.get(id);
+            return `
+              <div class="mini-card">
+                <span>${card.symbol}</span>
+                <strong>${card.name}</strong>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    function renderLearningDay(day) {
+      const pathStats = getLearningPathStats();
+      const done = pathStats.completedDays.includes(day.day);
+      return `
+        <details class="day-card ${done ? "done" : ""}" ${day.day === Math.min(pathStats.completed + 1, learningPathDays.length) ? "open" : ""}>
+          <summary>
+            <span class="day-number">${day.day}</span>
+            <span>
+              <strong>День ${day.day}. ${day.title}</strong>
+              <span class="meta"><span>${day.goal}</span></span>
+            </span>
+            <span class="day-status">${done ? "✓" : ""}</span>
+          </summary>
+          <div class="day-content">
+            ${renderNote("Цель", day.goal)}
+            <div class="note">
+              <h3>Короткая теория</h3>
+              ${day.theory.map((text) => `<p class="muted">${text}</p>`).join("")}
+            </div>
+            ${renderNote("Практика", day.practice)}
+            ${day.day === 1 ? renderPathCards() : ""}
+            <div class="button-row">
+              ${renderPathAction(day)}
+              <button class="btn ${done ? "selected" : "good"}" type="button" data-complete-path-day="${day.day}">
+                ${done ? "День пройден" : "Отметить день как пройденный"}
+              </button>
+            </div>
+          </div>
+        </details>
+      `;
+    }
+
+    function renderLearningPath() {
+      const pathStats = getLearningPathStats();
+      return `
+        <section class="view">
+          <div class="section-head">
+            <div>
+              <h2>Маршрут</h2>
+              <p class="muted">7 дней, чтобы новичок не терялся: короткая теория, маленькая практика и понятный следующий шаг.</p>
+            </div>
+          </div>
+
+          <section class="panel path-overview magic-card">
+            <div>
+              <p class="eyebrow">Учебный маршрут: 7 дней</p>
+              <h3>${pathStats.completed}/${pathStats.total} дней пройдено</h3>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: ${pathStats.percent}%"></div>
+              </div>
+            </div>
+            <details class="control-menu">
+              <summary>Управление маршрутом</summary>
+              <div class="control-menu-content">
+                <button class="btn" type="button" data-reading-mode="${state.readingMode ? "off" : "on"}">${state.readingMode ? "Показать меню" : "Скрыть навигацию для чтения"}</button>
+                <button class="btn warn" type="button" data-reset-path>Сбросить маршрут</button>
+              </div>
+            </details>
+          </section>
+
+          <div class="list" style="margin-top: 14px;">
+            ${learningPathDays.map(renderLearningDay).join("")}
+          </div>
+        </section>
+      `;
+    }
+
     function drawSpread() {
       const cards = shuffled(deck).slice(0, 4);
       state.spread = spreadPositions.map((position, index) => ({
@@ -2680,7 +3012,33 @@
       const trainingButton = event.target.closest("[data-start-training]");
       if (trainingButton) {
         const value = trainingButton.dataset.startTraining;
-        startTraining(value === "infinite" ? "infinite" : Number(value));
+        const mode = trainingButton.dataset.startTrainingMode || state.selectedTrainingMode;
+        startTraining(value === "infinite" ? "infinite" : Number(value), mode);
+        return;
+      }
+
+      const cardsFilterButton = event.target.closest("[data-cards-filter]");
+      if (cardsFilterButton) {
+        navigateCardsFilter(cardsFilterButton.dataset.cardsFilter);
+        return;
+      }
+
+      if (event.target.closest("[data-path-draw]")) {
+        drawPathCards();
+        return;
+      }
+
+      const completePathButton = event.target.closest("[data-complete-path-day]");
+      if (completePathButton) {
+        completeLearningDay(Number(completePathButton.dataset.completePathDay));
+        return;
+      }
+
+      if (event.target.closest("[data-reset-path]")) {
+        const confirmed = window.confirm("Сбросить прогресс учебного маршрута?");
+        if (confirmed) {
+          resetLearningPath();
+        }
         return;
       }
 
