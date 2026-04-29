@@ -130,6 +130,7 @@
     .subtitle,
     .muted {
       color: var(--muted);
+      overflow-wrap: anywhere;
     }
 
     .subtitle {
@@ -245,6 +246,7 @@
       background: rgba(255, 255, 255, 0.08);
       color: var(--text);
       cursor: pointer;
+      overflow-wrap: anywhere;
       touch-action: manipulation;
       transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
     }
@@ -603,6 +605,21 @@
 
       .hero-card {
         padding: 22px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .app-shell {
+        padding-right: 12px;
+        padding-left: 12px;
+      }
+
+      .progress-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .stat strong {
+        font-size: 1.2rem;
       }
     }
   </style>
@@ -1393,7 +1410,8 @@
       selectedCardId: null,
       training: null,
       spread: null,
-      showReading: false
+      showReading: false,
+      spreadNote: ""
     };
 
     let progress = loadProgress();
@@ -1497,6 +1515,16 @@
 
     function shuffled(array) {
       return [...array].sort(() => Math.random() - 0.5);
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[char]));
     }
 
     function getWrongOptions(correctCard, sourceDeck = deck, amount = 3) {
@@ -2008,6 +2036,7 @@
         cardId: cards[index].id
       }));
       state.showReading = false;
+      state.spreadNote = "";
       progress.stats.spreads += 1;
       saveProgress();
       render();
@@ -2056,7 +2085,7 @@
             <section class="panel panel-pad" style="margin-top: 14px;">
               <h3>Попробуй сказать это человеческим языком</h3>
               <p class="muted">Сначала напиши свою версию. Не ищи идеальные слова: просто свяжи карты в понятную историю.</p>
-              <textarea class="textarea" id="readingText" placeholder="Моя трактовка"></textarea>
+              <textarea class="textarea" id="readingText" placeholder="Моя трактовка" aria-label="Моя трактовка">${escapeHtml(state.spreadNote)}</textarea>
               <button class="btn primary" type="button" data-show-reading style="margin-top: 10px;">Показать пример трактовки</button>
             </section>
 
@@ -2229,6 +2258,8 @@
       }
 
       if (event.target.closest("[data-show-reading]")) {
+        const readingText = document.querySelector("#readingText");
+        state.spreadNote = readingText ? readingText.value : state.spreadNote;
         state.showReading = true;
         render();
         return;
@@ -2242,6 +2273,12 @@
           state.selectedCardId = null;
           render();
         }
+      }
+    });
+
+    document.addEventListener("input", (event) => {
+      if (event.target && event.target.id === "readingText") {
+        state.spreadNote = event.target.value;
       }
     });
 
