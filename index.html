@@ -522,6 +522,112 @@
       gap: 10px;
     }
 
+    .mode-grid,
+    .achievement-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .mode-card,
+    .achievement-card {
+      display: grid;
+      gap: 8px;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      cursor: pointer;
+      text-align: left;
+      touch-action: manipulation;
+    }
+
+    .mode-card.selected {
+      border-color: rgba(240, 198, 106, 0.65);
+      background: rgba(240, 198, 106, 0.13);
+    }
+
+    .achievement-card {
+      grid-template-columns: 48px minmax(0, 1fr);
+      align-items: center;
+      opacity: 0.58;
+    }
+
+    .achievement-card.unlocked {
+      border-color: rgba(240, 198, 106, 0.5);
+      background: rgba(240, 198, 106, 0.11);
+      opacity: 1;
+    }
+
+    .achievement-card .sigil {
+      width: 48px;
+      height: 58px;
+    }
+
+    .control-menu {
+      margin: 0 0 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.055);
+    }
+
+    .control-menu summary {
+      display: flex;
+      min-height: 48px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      color: var(--gold);
+      cursor: pointer;
+      font-weight: 800;
+      list-style: none;
+    }
+
+    .control-menu summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .control-menu summary::after {
+      color: var(--muted);
+      content: "раскрыть";
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .control-menu[open] summary::after {
+      content: "скрыть";
+    }
+
+    .control-menu-content {
+      display: grid;
+      gap: 10px;
+      padding: 0 12px 12px;
+    }
+
+    .reader-float {
+      position: fixed;
+      right: 12px;
+      bottom: calc(12px + env(safe-area-inset-bottom));
+      z-index: 30;
+      min-height: 46px;
+      padding: 10px 14px;
+      border: 1px solid rgba(240, 198, 106, 0.6);
+      border-radius: 999px;
+      background: rgba(18, 16, 15, 0.92);
+      color: var(--gold);
+      box-shadow: var(--shadow);
+    }
+
+    body.reading-mode .bottom-nav {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(110%);
+    }
+
+    body.reading-mode .app-shell {
+      padding-bottom: calc(24px + env(safe-area-inset-bottom));
+    }
+
     .bottom-nav {
       position: fixed;
       right: 0;
@@ -1401,6 +1507,138 @@
       }
     ];
 
+    const advancedQuestionBank = [
+      {
+        cardId: "major-12",
+        situation: "Человек уперся в привычный способ решения, но чем сильнее давит, тем меньше движения. Какая карта лучше учит сменить угол зрения?",
+        explanation: "Повешенный не про слабость, а про паузу и новый взгляд: иногда выход появляется после остановки."
+      },
+      {
+        cardId: "major-14",
+        situation: "Две части жизни тянут в разные стороны: хочется и скорости, и спокойствия. Какая карта предлагает смешать ритмы без рывка?",
+        explanation: "Умеренность учит соединять части и искать рабочую пропорцию, а не выбирать крайность."
+      },
+      {
+        cardId: "major-15",
+        situation: "Вопрос вроде понятен, но внутри есть сильная привязка: привычка, страх или соблазн удобного выбора. Какая карта помогает увидеть цепочку честно?",
+        explanation: "Дьявол показывает привязки не для запугивания, а чтобы вернуть человеку право выбора."
+      },
+      {
+        cardId: "major-17",
+        situation: "После сложного периода еще нет готового решения, но появляется тихая вера и желание восстановиться. Какая карта лучше всего описывает это состояние?",
+        explanation: "Звезда дает мягкую надежду после напряжения: не обещание чуда, а свет направления."
+      },
+      {
+        cardId: "wands-7",
+        situation: "У человека есть цель, но вокруг много давления и конкурирующих мнений. Какая карта учит удерживать позицию без лишней войны?",
+        explanation: "7 Жезлов про испытание намерения: важно защищать свое направление, но не превращать все в борьбу."
+      },
+      {
+        cardId: "cups-4",
+        situation: "Возможность рядом, но человек устал и смотрит только внутрь своего недовольства. Какая карта это напоминает?",
+        explanation: "4 Кубков часто говорит о закрытости к предложению из-за эмоциональной усталости или пресыщения."
+      },
+      {
+        cardId: "swords-8",
+        situation: "Проблема выглядит как ловушка, но главные стены построены из мыслей, страхов и запретов в голове. Какая карта подходит лучше всего?",
+        explanation: "8 Мечей показывает ментальное ограничение: сначала нужно увидеть, где мысль стала клеткой."
+      },
+      {
+        cardId: "pentacles-6",
+        situation: "Важна тема обмена: кто-то дает, кто-то принимает, и нужно проверить баланс помощи. Какая карта отвечает за этот сюжет?",
+        explanation: "6 Пентаклей про практическую поддержку, щедрость и честный обмен ресурсами."
+      },
+      {
+        cardId: "wands-knight",
+        situation: "Много огня, скорости и желания немедленно ворваться в действие. Какая карта показывает такой стиль движения?",
+        explanation: "Рыцарь Жезлов несет импульс и смелость, но просит не путать движение с суетой."
+      },
+      {
+        cardId: "cups-queen",
+        situation: "Нужно не спасать всех вокруг, а спокойно слышать чувства и держать мягкие границы. Какая карта ближе всего?",
+        explanation: "Королева Кубков про зрелую эмоциональность: сочувствие без растворения в чужом состоянии."
+      },
+      {
+        cardId: "swords-king",
+        situation: "Разговор требует ясности, структуры и взрослого решения без лишней драматизации. Какая карта здесь сильнее всего?",
+        explanation: "Король Мечей показывает зрелое мышление, ответственность за слова и ясный курс."
+      },
+      {
+        cardId: "pentacles-8",
+        situation: "Результат приходит не от вдохновения на один вечер, а от ремесла, повторения и спокойной практики. Какая карта это описывает?",
+        explanation: "8 Пентаклей про обучение через регулярность: мастерство собирается маленькими повторениями."
+      }
+    ];
+
+    const trainingModes = [
+      {
+        id: "mixed",
+        title: "Смешанная тренировка",
+        description: "Все типы вопросов вперемешку: значения, масти, советы и ситуации.",
+        label: "баланс",
+        makers: ["meaning", "cardMeaning", "suitElement", "majorMinor", "advice", "scenario", "shadow"]
+      },
+      {
+        id: "basics",
+        title: "База значений",
+        description: "Для спокойного повторения: карта по значению и значение по карте.",
+        label: "основа",
+        makers: ["meaning", "cardMeaning"]
+      },
+      {
+        id: "structure",
+        title: "Масти и структура",
+        description: "Тренировка мастей, стихий и отличия старших арканов от младших.",
+        label: "система",
+        makers: ["suitElement", "majorMinor"]
+      },
+      {
+        id: "story",
+        title: "Истории и советы",
+        description: "Ситуации из жизни, совет карты и выбор смысла по контексту.",
+        label: "история",
+        makers: ["advice", "scenario", "memory"]
+      },
+      {
+        id: "advanced",
+        title: "Сложные вопросы",
+        description: "Тень, тонкие различия и учебные ситуации, где нужно думать глубже.",
+        label: "сложно",
+        makers: ["scenario", "shadow", "memory"]
+      }
+    ];
+
+    const guideSections = [
+      {
+        title: "Как пользоваться самоучителем",
+        text: "Начни с короткой тренировки или одной карты. Смотри не только на готовое значение, а на образ: кто действует, что меняется, где напряжение и какой следующий шаг выглядит бережным."
+      },
+      {
+        title: "Коротко об истории Таро",
+        text: "Карты Таро появились в Европе как карточная игра, а позже стали использоваться как образный язык для размышления. В этом приложении Таро подается как учебная система символов, историй и вопросов к себе."
+      },
+      {
+        title: "Как устроена колода",
+        text: "В колоде 78 карт: 22 старших аркана и 56 младших. Старшие арканы показывают крупные этапы пути, а младшие помогают читать повседневные ситуации через масти, ранги и стихии."
+      },
+      {
+        title: "Старшие и младшие арканы",
+        text: "Старшие арканы удобно читать как главы большого пути: Шут начинает, Мир завершает цикл. Младшие арканы ближе к деталям дня: эмоциям, решениям, действиям, ресурсам и практическим шагам."
+      },
+      {
+        title: "Масти и стихии",
+        text: "Жезлы связаны с огнем, действием и импульсом. Кубки - с водой, чувствами и связью. Мечи - с воздухом, мыслью и словами. Пентакли - с землей, телом, практикой и устойчивостью."
+      },
+      {
+        title: "Как читать расклад",
+        text: "Сначала назови каждую карту простым языком, затем свяжи позиции в одну историю: что происходит, что влияет, куда движется и какой совет можно взять. Хорошая трактовка звучит понятно, а не обязательно мистически."
+      },
+      {
+        title: "Этика и безопасность",
+        text: "Не используй карты как обещание точного будущего. Лучше относиться к ним как к инструменту обучения, самоанализа и разговора с собой. Для медицинских, юридических и финансовых решений нужны профильные специалисты."
+      }
+    ];
+
     const app = document.querySelector("#app");
     const bottomNav = document.querySelector("#bottomNav");
 
@@ -1408,10 +1646,12 @@
       route: "home",
       filter: "all",
       selectedCardId: null,
+      selectedTrainingMode: "mixed",
       training: null,
       spread: null,
       showReading: false,
-      spreadNote: ""
+      spreadNote: "",
+      readingMode: false
     };
 
     let progress = loadProgress();
@@ -1485,6 +1725,7 @@
       const confident = items.filter((item) => item.level >= 4).length;
       const favorites = items.filter((item) => item.favorite).length;
       const weak = items.filter((item) => item.wrong > 0 && (item.wrong >= item.correct || item.level < 3)).length;
+      const wrong = items.reduce((sum, item) => sum + item.wrong, 0);
       const accuracy = progress.stats.questions
         ? Math.round((progress.stats.correct / progress.stats.questions) * 100)
         : 0;
@@ -1496,6 +1737,7 @@
         confident,
         favorites,
         weak,
+        wrong,
         questions: progress.stats.questions,
         correct: progress.stats.correct,
         sessions: progress.stats.sessions,
@@ -1604,6 +1846,7 @@
     }
 
     function render() {
+      document.body.classList.toggle("reading-mode", state.readingMode);
       renderNav();
       const views = {
         home: renderHome,
@@ -1611,9 +1854,16 @@
         fool: renderFoolPath,
         training: renderTraining,
         spread: renderSpread,
-        progress: renderProgress
+        progress: renderProgress,
+        guide: renderGuide
       };
-      app.innerHTML = (views[state.route] || renderHome)();
+      app.innerHTML = `${renderReaderFloat()}${(views[state.route] || renderHome)()}`;
+    }
+
+    function renderReaderFloat() {
+      return state.readingMode
+        ? `<button class="reader-float" type="button" data-reading-mode="off">Показать меню</button>`
+        : "";
     }
 
     function renderHome() {
@@ -1655,6 +1905,7 @@
               <button class="btn" type="button" data-route="fool">Путь Шута</button>
               <button class="btn" type="button" data-route="spread">Расклад-тренажер</button>
               <button class="btn" type="button" data-route="progress">Прогресс</button>
+              <button class="btn" type="button" data-route="guide">Справка</button>
             </div>
           </section>
 
@@ -1744,22 +1995,28 @@
             ${renderNote("Ассоциация", card.memory)}
           </div>
 
-          <div class="button-row two">
-            <button class="btn ${item.favorite ? "selected" : ""}" type="button" data-favorite="${card.id}">
-              ${item.favorite ? "В избранном" : "Добавить в избранное"}
-            </button>
-            <button class="btn" type="button" data-close-detail>Закрыть карточку</button>
-          </div>
+          <details class="control-menu">
+            <summary>Действия с картой</summary>
+            <div class="control-menu-content">
+              <div class="button-row two">
+                <button class="btn ${item.favorite ? "selected" : ""}" type="button" data-favorite="${card.id}">
+                  ${item.favorite ? "В избранном" : "Добавить в избранное"}
+                </button>
+                <button class="btn" type="button" data-reading-mode="${state.readingMode ? "off" : "on"}">${state.readingMode ? "Показать меню" : "Режим чтения"}</button>
+                <button class="btn" type="button" data-close-detail>Закрыть карточку</button>
+              </div>
 
-          <div>
-            <h3>Самооценка</h3>
-            <div class="button-row">
-              <button class="btn warn" type="button" data-rate="${card.id}" data-level="0">Не знаю</button>
-              <button class="btn" type="button" data-rate="${card.id}" data-level="2">Путаюсь</button>
-              <button class="btn good" type="button" data-rate="${card.id}" data-level="4">Почти знаю</button>
-              <button class="btn primary" type="button" data-rate="${card.id}" data-level="5">Знаю</button>
+              <div>
+                <h3>Самооценка</h3>
+                <div class="button-row">
+                  <button class="btn warn" type="button" data-rate="${card.id}" data-level="0">Не знаю</button>
+                  <button class="btn" type="button" data-rate="${card.id}" data-level="2">Путаюсь</button>
+                  <button class="btn good" type="button" data-rate="${card.id}" data-level="4">Почти знаю</button>
+                  <button class="btn primary" type="button" data-rate="${card.id}" data-level="5">Знаю</button>
+                </div>
+              </div>
             </div>
-          </div>
+          </details>
         </article>
       `;
     }
@@ -1782,6 +2039,12 @@
               <p class="muted">Старшие арканы как путь героя: от первого шага до целостного завершения цикла.</p>
             </div>
           </div>
+          <details class="control-menu">
+            <summary>Настройки чтения</summary>
+            <div class="control-menu-content">
+              <button class="btn" type="button" data-reading-mode="${state.readingMode ? "off" : "on"}">${state.readingMode ? "Показать меню" : "Скрыть навигацию для чтения"}</button>
+            </div>
+          </details>
           <div class="journey-list">
             ${majorArcana.map((card, index) => renderJourneyStep(card, index)).join("")}
           </div>
@@ -1812,11 +2075,38 @@
       `;
     }
 
-    function startTraining(total) {
+    function getTrainingMode(modeId = state.selectedTrainingMode) {
+      return trainingModes.find((mode) => mode.id === modeId) || trainingModes[0];
+    }
+
+    function questionMakersFor(modeId) {
+      const makers = {
+        meaning: makeMeaningToCardQuestion,
+        cardMeaning: makeCardToMeaningQuestion,
+        suitElement: makeSuitElementQuestion,
+        majorMinor: makeMajorMinorQuestion,
+        advice: makeAdviceQuestion,
+        scenario: makeScenarioQuestion,
+        shadow: makeShadowQuestion,
+        memory: makeMemoryQuestion
+      };
+      return getTrainingMode(modeId).makers.map((id) => makers[id]).filter(Boolean);
+    }
+
+    function openTrainingMenu() {
+      state.route = "training";
+      state.training = null;
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function startTraining(total, modeId = state.selectedTrainingMode) {
       progress.stats.sessions += 1;
       saveProgress();
       state.route = "training";
+      state.selectedTrainingMode = modeId;
       state.training = {
+        modeId,
         total,
         infinite: total === "infinite",
         count: 0,
@@ -1835,7 +2125,7 @@
         render();
         return;
       }
-      state.training.current = createQuestion();
+      state.training.current = createQuestion(state.training.modeId);
       state.training.answered = false;
       state.training.selected = null;
       state.training.wasCorrect = null;
@@ -1843,14 +2133,8 @@
       render();
     }
 
-    function createQuestion() {
-      const makers = [
-        makeMeaningToCardQuestion,
-        makeCardToMeaningQuestion,
-        makeSuitElementQuestion,
-        makeMajorMinorQuestion,
-        makeAdviceQuestion
-      ];
+    function createQuestion(modeId = "mixed") {
+      const makers = questionMakersFor(modeId);
       return sample(makers)();
     }
 
@@ -1941,6 +2225,55 @@
       };
     }
 
+    function makeScenarioQuestion() {
+      const item = sample(advancedQuestionBank);
+      const card = byId.get(item.cardId);
+      const options = shuffled([card, ...getWrongOptions(card)]).map((optionCard) => ({
+        value: optionCard.id,
+        label: optionCard.name
+      }));
+      return {
+        type: "Сложная ситуация",
+        cardId: card.id,
+        prompt: item.situation,
+        options,
+        correct: card.id,
+        explanation: item.explanation
+      };
+    }
+
+    function makeShadowQuestion() {
+      const card = sample(deck);
+      const options = shuffled([card, ...getWrongOptions(card)]).map((optionCard) => ({
+        value: optionCard.id,
+        label: optionCard.shadow
+      }));
+      return {
+        type: "Теневая сторона",
+        cardId: card.id,
+        prompt: `Какая теневая сторона точнее всего относится к карте «${card.name}»?`,
+        options,
+        correct: card.id,
+        explanation: `${card.name}: ${card.shadow}`
+      };
+    }
+
+    function makeMemoryQuestion() {
+      const card = sample(deck);
+      const options = shuffled([card, ...getWrongOptions(card)]).map((optionCard) => ({
+        value: optionCard.id,
+        label: optionCard.name
+      }));
+      return {
+        type: "Образ для запоминания",
+        cardId: card.id,
+        prompt: `Какая карта лучше всего запоминается через такой образ: «${card.memory}»?`,
+        options,
+        correct: card.id,
+        explanation: `${card.name} можно держать в памяти так: ${card.memory}`
+      };
+    }
+
     function answerQuestion(value) {
       const training = state.training;
       if (!training || training.answered) return;
@@ -1958,25 +2291,53 @@
       render();
     }
 
+    function renderTrainingModeCard(mode) {
+      const selected = state.selectedTrainingMode === mode.id;
+      return `
+        <button class="mode-card ${selected ? "selected" : ""}" type="button" data-training-mode="${mode.id}" aria-current="${selected ? "true" : "false"}">
+          <span class="chip">${mode.label}</span>
+          <strong>${mode.title}</strong>
+          <span class="muted">${mode.description}</span>
+        </button>
+      `;
+    }
+
     function renderTraining() {
       const training = state.training;
       if (!training) {
+        const selectedMode = getTrainingMode();
         return `
           <section class="view">
             <div class="section-head">
               <div>
                 <h2>Тренировка</h2>
-                <p class="muted">Быстрые вопросы помогают связать карту с образом, значением и действием. Выбери длину занятия.</p>
+                <p class="muted">Выбери тип вопросов и длину занятия. Можно начать с базы, а потом перейти к ситуациям и теневым сторонам карт.</p>
               </div>
             </div>
-            <div class="button-row">
-              <button class="btn primary" type="button" data-start-training="5">5 вопросов</button>
-              <button class="btn" type="button" data-start-training="10">10 вопросов</button>
-              <button class="btn" type="button" data-start-training="infinite">Бесконечный режим</button>
-            </div>
+
+            <details class="control-menu">
+              <summary>Тип тренировки: ${selectedMode.title}</summary>
+              <div class="control-menu-content">
+                <div class="mode-grid">
+                ${trainingModes.map(renderTrainingModeCard).join("")}
+                </div>
+              </div>
+            </details>
+
+            <section class="panel panel-pad">
+              <h3>Длина занятия</h3>
+              <p class="muted">Сейчас выбран режим: ${selectedMode.title}.</p>
+              <div class="button-row">
+                <button class="btn primary" type="button" data-start-training="5">5 вопросов</button>
+                <button class="btn" type="button" data-start-training="10">10 вопросов</button>
+                <button class="btn" type="button" data-start-training="infinite">Бесконечный режим</button>
+              </div>
+            </section>
           </section>
         `;
       }
+
+      const trainingMode = getTrainingMode(training.modeId);
 
       if (!training.current) {
         const stats = getStats();
@@ -1985,9 +2346,10 @@
             <article class="panel question-card magic-card">
               <p class="eyebrow">Тренировка завершена</p>
               <h2>Хороший короткий подход</h2>
-              <p class="muted">Ты ответил на ${training.count} вопросов. Общая точность сейчас ${stats.accuracy}%.</p>
+              <p class="muted">Режим: ${trainingMode.title}. Ты ответил на ${training.count} вопросов. Общая точность сейчас ${stats.accuracy}%.</p>
               <div class="button-row">
                 <button class="btn primary" type="button" data-start-training="5">Еще 5 вопросов</button>
+                <button class="btn" type="button" data-training-menu>Сменить режим</button>
                 <button class="btn" type="button" data-route="progress">Посмотреть прогресс</button>
               </div>
             </article>
@@ -2003,6 +2365,7 @@
             <div>
               <p class="question-type">${question.type}</p>
               <h2>Вопрос ${training.count} из ${totalLabel}</h2>
+              <p class="eyebrow">${trainingMode.title}</p>
               <p class="question-text">${question.prompt}</p>
             </div>
 
@@ -2022,8 +2385,23 @@
                 <h3>${training.wasCorrect ? "Верно" : "Почти, но нет"}</h3>
                 <p class="muted">${question.explanation}</p>
               </div>
-              <button class="btn primary" type="button" data-next-question>Следующий вопрос</button>
-            ` : ""}
+              <div class="button-row">
+                <button class="btn primary" type="button" data-next-question>Следующий вопрос</button>
+              </div>
+              <details class="control-menu">
+                <summary>Настройки тренировки</summary>
+                <div class="control-menu-content">
+                  <button class="btn" type="button" data-training-menu>Сменить режим</button>
+                </div>
+              </details>
+            ` : `
+              <details class="control-menu">
+                <summary>Настройки тренировки</summary>
+                <div class="control-menu-content">
+                  <button class="btn" type="button" data-training-menu>Сменить режим</button>
+                </div>
+              </details>
+            `}
           </article>
         </section>
       `;
@@ -2062,7 +2440,15 @@
             </div>
           </div>
 
-          <button class="btn primary" type="button" data-draw-spread>Собрать тренировочный расклад</button>
+          ${state.spread ? `
+            <details class="control-menu">
+              <summary>Управление раскладом</summary>
+              <div class="control-menu-content">
+                <button class="btn" type="button" data-draw-spread>Собрать новый расклад</button>
+                <button class="btn" type="button" data-reading-mode="${state.readingMode ? "off" : "on"}">${state.readingMode ? "Показать меню" : "Скрыть навигацию для чтения"}</button>
+              </div>
+            </details>
+          ` : `<button class="btn primary" type="button" data-draw-spread>Собрать тренировочный расклад</button>`}
 
           ${state.spread ? `
             <div class="spread-grid" style="margin-top: 14px;">
@@ -2118,8 +2504,91 @@
       `;
     }
 
+    function getAchievements(stats) {
+      const rules = [
+        [1, "Первый вопрос", "Начать путь с первого ответа", stats.questions >= 1],
+        [1, "Первое попадание", "Ответить правильно хотя бы раз", stats.correct >= 1],
+        [1, "Личная полка", "Добавить первую карту в избранное", stats.favorites >= 1],
+        [1, "Первая изученная", "Отметить или выучить одну карту", stats.studied >= 1],
+        [3, "Малый круг", "Изучить 3 карты", stats.studied >= 3],
+        [5, "Пять шагов", "Пройти 5 вопросов", stats.questions >= 5],
+        [50, "Половина света", "Держать точность от 50% после 5 вопросов", stats.questions >= 5 && stats.accuracy >= 50],
+        [2, "Вернулся к практике", "Начать 2 тренировки", stats.sessions >= 2],
+        [1, "Уверенная карта", "Поднять карту до уровня 4+", stats.confident >= 1],
+        [1, "Первый расклад", "Собрать тренировочный расклад", stats.spreads >= 1],
+        [10, "Десять вопросов", "Пройти 10 вопросов", stats.questions >= 10],
+        [1, "Честная ошибка", "Увидеть первую слабую карту", stats.weak >= 1],
+        [3, "Три истории", "Собрать 3 расклада", stats.spreads >= 3],
+        [7, "Семь знакомых", "Изучить 7 карт", stats.studied >= 7],
+        [60, "Ровный ритм", "Держать точность от 60% после 10 вопросов", stats.questions >= 10 && stats.accuracy >= 60],
+        [3, "Работа с тенью", "Накопить 3 слабые карты для повторения", stats.weak >= 3],
+        [10, "Десять верных", "Ответить правильно 10 раз", stats.correct >= 10],
+        [3, "Три опоры", "Уверенно знать 3 карты", stats.confident >= 3],
+        [25, "Длинная тропа", "Пройти 25 вопросов", stats.questions >= 25],
+        [70, "Ясный день", "Держать точность от 70% после 20 вопросов", stats.questions >= 20 && stats.accuracy >= 70],
+        [15, "Большая полка", "Изучить 15 карт", stats.studied >= 15],
+        [25, "Первый цикл", "Довести общий прогресс до 25%", stats.overall >= 25]
+      ];
+
+      return majorArcana.map((card, index) => ({
+        card,
+        title: rules[index][1],
+        description: rules[index][2],
+        progress: rules[index][0],
+        unlocked: rules[index][3]
+      }));
+    }
+
+    function renderAchievement(achievement) {
+      return `
+        <article class="achievement-card ${achievement.unlocked ? "unlocked" : ""}">
+          <div class="sigil" aria-hidden="true">${achievement.card.symbol}</div>
+          <div>
+            <p class="eyebrow">${achievement.unlocked ? "Открыто" : "Закрыто"} - ${achievement.card.name}</p>
+            <h3>${achievement.title}</h3>
+            <p class="muted">${achievement.description}</p>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderGuide() {
+      return `
+        <section class="view">
+          <div class="section-head">
+            <div>
+              <h2>Справка</h2>
+              <p class="muted">Короткие материалы для чтения: история Таро, структура колоды, масти, расклады и спокойный подход к практике.</p>
+            </div>
+          </div>
+
+          <details class="control-menu">
+            <summary>Настройки чтения</summary>
+            <div class="control-menu-content">
+              <button class="btn" type="button" data-reading-mode="${state.readingMode ? "off" : "on"}">${state.readingMode ? "Показать меню" : "Скрыть навигацию для чтения"}</button>
+            </div>
+          </details>
+
+          <div class="list">
+            ${guideSections.map((section, index) => `
+              <details class="control-menu" ${index === 0 ? "open" : ""}>
+                <summary>${section.title}</summary>
+                <div class="control-menu-content">
+                  <p class="muted">${section.text}</p>
+                </div>
+              </details>
+            `).join("")}
+          </div>
+
+          <p class="fine-print">Материалы приложения предназначены для обучения, самоанализа и развлечения. Они не являются медицинской, юридической или финансовой рекомендацией.</p>
+        </section>
+      `;
+    }
+
     function renderProgress() {
       const stats = getStats();
+      const achievements = getAchievements(stats);
+      const unlockedAchievements = achievements.filter((achievement) => achievement.unlocked).length;
       const weakCards = deck.filter((card) => {
         const item = cardProgress(card.id);
         return item.wrong > 0 && (item.wrong >= item.correct || item.level < 3);
@@ -2148,6 +2617,14 @@
               <div class="progress-bar">
                 <div class="progress-fill" style="width: ${stats.overall}%"></div>
               </div>
+            </div>
+          </section>
+
+          <section class="panel panel-pad" style="margin-top: 14px;">
+            <h3>Ачивки старших арканов</h3>
+            <p class="muted">Каждая ачивка открывает образ старшего аркана. Сейчас открыто ${unlockedAchievements} из ${achievements.length}.</p>
+            <div class="achievement-grid">
+              ${achievements.map(renderAchievement).join("")}
             </div>
           </section>
 
@@ -2193,10 +2670,29 @@
         return;
       }
 
+      const readingModeButton = event.target.closest("[data-reading-mode]");
+      if (readingModeButton) {
+        state.readingMode = readingModeButton.dataset.readingMode === "on";
+        render();
+        return;
+      }
+
       const trainingButton = event.target.closest("[data-start-training]");
       if (trainingButton) {
         const value = trainingButton.dataset.startTraining;
         startTraining(value === "infinite" ? "infinite" : Number(value));
+        return;
+      }
+
+      const trainingModeButton = event.target.closest("[data-training-mode]");
+      if (trainingModeButton) {
+        state.selectedTrainingMode = trainingModeButton.dataset.trainingMode;
+        render();
+        return;
+      }
+
+      if (event.target.closest("[data-training-menu]")) {
+        openTrainingMenu();
         return;
       }
 
