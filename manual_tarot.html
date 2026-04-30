@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#11100e">
+  <title>Руководство по Таро</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #11100e;
+      --paper: #1d1815;
+      --panel: rgba(38, 31, 28, 0.88);
+      --panel-soft: rgba(255, 255, 255, 0.07);
+      --text: #fff8ec;
+      --muted: #d9cabb;
+      --soft: #aa9d91;
+      --line: rgba(255, 248, 236, 0.16);
+      --gold: #f0c66a;
+      --copper: #d88d56;
+      --sage: #8bc7a3;
+      --sky: #91b8db;
+      --rose: #e3a0a0;
+      --shadow: 0 24px 76px rgba(0, 0, 0, 0.38);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-width: 320px;
+      background: var(--bg);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 8% 0%, rgba(240, 198, 106, 0.18), transparent 19rem),
+        radial-gradient(circle at 96% 10%, rgba(139, 199, 163, 0.16), transparent 18rem),
+        linear-gradient(150deg, #11100e 0%, #201916 45%, #10191a 100%);
+      color: var(--text);
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1.55;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: #ffe6aa;
+    }
+
+    .page {
+      width: min(100%, 920px);
+      margin: 0 auto;
+      padding: 16px 14px 44px;
+    }
+
+    .hero {
+      display: grid;
+      gap: 18px;
+      padding: 20px 0 12px;
+    }
+
+    .hero-card,
+    .panel,
+    details {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .hero-card {
+      display: grid;
+      gap: 16px;
+      padding: 18px;
+      overflow: hidden;
+    }
+
+    .hero-card img {
+      max-height: 360px;
+      object-fit: contain;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(0, 0, 0, 0.18);
+    }
+
+    .eyebrow {
+      width: fit-content;
+      margin: 0;
+      padding: 7px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 8px;
+      font-size: clamp(2.55rem, 12vw, 5rem);
+      line-height: 0.95;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+      font-size: clamp(1.45rem, 6vw, 2.2rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+      letter-spacing: 0;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .fine {
+      color: var(--soft);
+      font-size: 0.88rem;
+    }
+
+    .nav-strip,
+    .button-row {
+      display: grid;
+      gap: 10px;
+    }
+
+    .nav-strip {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin: 14px 0;
+    }
+
+    .btn {
+      display: grid;
+      min-height: 48px;
+      place-items: center;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .btn.primary {
+      border-color: rgba(240, 198, 106, 0.62);
+      background: linear-gradient(135deg, var(--gold), var(--copper));
+      color: #291809;
+      font-weight: 800;
+    }
+
+    .panel {
+      display: grid;
+      gap: 12px;
+      margin: 14px 0;
+      padding: 16px;
+    }
+
+    details {
+      margin: 12px 0;
+      overflow: hidden;
+    }
+
+    summary {
+      min-height: 56px;
+      padding: 16px;
+      cursor: pointer;
+      color: #ffe6aa;
+      font-weight: 800;
+      list-style-position: inside;
+    }
+
+    .details-body {
+      display: grid;
+      gap: 12px;
+      padding: 0 16px 16px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .cards {
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    }
+
+    .mini-card,
+    .arcana-card {
+      display: grid;
+      gap: 8px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .arcana-card {
+      grid-template-columns: 42px minmax(0, 1fr);
+    }
+
+    .num {
+      display: grid;
+      width: 42px;
+      height: 50px;
+      place-items: center;
+      border: 1px solid rgba(240, 198, 106, 0.32);
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.18);
+      color: var(--gold);
+      font-weight: 800;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      padding: 5px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .image-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    figure {
+      margin: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    figure img {
+      aspect-ratio: 3 / 5;
+      object-fit: cover;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    figcaption {
+      padding: 10px;
+      color: var(--soft);
+      font-size: 0.82rem;
+    }
+
+    .formula {
+      border-left: 4px solid var(--gold);
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(240, 198, 106, 0.09);
+    }
+
+    .toc {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      margin: 0 -14px 14px;
+      padding: 10px 14px;
+      overflow-x: auto;
+      background: rgba(17, 16, 14, 0.86);
+      backdrop-filter: blur(16px);
+      scrollbar-width: none;
+    }
+
+    .toc::-webkit-scrollbar {
+      display: none;
+    }
+
+    .toc-inner {
+      display: flex;
+      gap: 8px;
+      width: max-content;
+    }
+
+    .toc a {
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--muted);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    @media (min-width: 720px) {
+      .hero-card {
+        grid-template-columns: 1.05fr 0.95fr;
+        align-items: center;
+      }
+
+      .nav-strip,
+      .button-row {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <a class="btn" href="index.html">Вернуться в тренажер</a>
+      <article class="hero-card">
+        <div>
+          <p class="eyebrow">Отдельное руководство</p>
+          <h1>Руководство по Таро</h1>
+          <p class="muted">Короткая авторская карта местности: как устроена колода, почему ее делят на арканы, как читать масти, числа и придворные карты, и как пользоваться раскладом без мистического давления.</p>
+          <div class="nav-strip">
+            <a class="btn primary" href="#start">Начать чтение</a>
+            <a class="btn" href="#cards">Карты</a>
+            <a class="btn" href="#practice">Практика</a>
+            <a class="btn" href="#sources">Источники</a>
+          </div>
+        </div>
+        <figure>
+          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/RWS%20Tarot%2000%20Fool.jpg" alt="Карта Шут из колоды Райдера-Уэйта">
+          <figcaption>Шут хорошо подходит для начала: карта первого шага, открытости и опыта, который еще только собирается.</figcaption>
+        </figure>
+      </article>
+    </section>
+
+    <nav class="toc" aria-label="Оглавление">
+      <div class="toc-inner">
+        <a href="#start">Что такое Таро</a>
+        <a href="#history">История</a>
+        <a href="#structure">Структура</a>
+        <a href="#majors">Старшие</a>
+        <a href="#minors">Младшие</a>
+        <a href="#practice">Практика</a>
+        <a href="#ethics">Этика</a>
+      </div>
+    </nav>
+
+    <section id="start" class="panel">
+      <p class="eyebrow">Главная идея</p>
+      <h2>Что такое колода Таро</h2>
+      <p class="muted">Таро обычно понимают как колоду из 78 карт. В ней есть 22 старших аркана и 56 младших арканов. Старшие арканы удобны для больших тем: этапов, кризисов, выборов, архетипов. Младшие арканы ближе к повседневности: чувствам, делам, разговору, деньгам, телу, быту и конкретным шагам.</p>
+      <p class="muted">В XX веке одной из самых узнаваемых систем стала колода Райдера-Уэйта-Смит: в ней сюжетные иллюстрации есть не только у старших арканов, но и у числовых младших карт. Поэтому новичку проще учиться через сцены, жесты, настроение и детали.</p>
+      <p class="formula"><strong>В этом проекте Таро используется как язык символов для обучения, самоанализа и игры с образами.</strong> Это не гарантия будущего и не замена медицинской, юридической или финансовой помощи.</p>
+    </section>
+
+    <section id="history" class="panel">
+      <p class="eyebrow">Контекст</p>
+      <h2>Короткая история без тумана</h2>
+      <div class="grid cards">
+        <article class="mini-card">
+          <h3>Игровое происхождение</h3>
+          <p class="muted">Ранние европейские колоды Таро связаны с карточными играми. Позже их стали читать как символическую систему, где карта говорит не только о правилах игры, но и о человеческом опыте.</p>
+        </article>
+        <article class="mini-card">
+          <h3>Эзотерический слой</h3>
+          <p class="muted">Со временем вокруг Таро появились школы толкования, связи с астрологией, каббалой, стихиями и психологическими архетипами. Новичку не нужно знать все сразу: достаточно понимать структуру.</p>
+        </article>
+        <article class="mini-card">
+          <h3>Райдер-Уэйт-Смит</h3>
+          <p class="muted">Эта система стала популярной потому, что карты выглядят как маленькие сцены. Их можно читать глазами: кто изображен, куда смотрит, что делает, какое настроение в карте.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="structure" class="panel">
+      <p class="eyebrow">Скелет колоды</p>
+      <h2>Как устроены 78 карт</h2>
+      <div class="grid cards">
+        <article class="mini-card">
+          <h3>22 старших аркана</h3>
+          <p class="muted">Большие темы и поворотные этапы: начало, выбор, сила, кризис, надежда, ясность, завершение. Их удобно читать как путь героя от Шута до Мира.</p>
+        </article>
+        <article class="mini-card">
+          <h3>56 младших арканов</h3>
+          <p class="muted">Повседневная конкретика. Каждая масть содержит 10 числовых карт и 4 придворные карты: Паж, Рыцарь, Королева, Король.</p>
+        </article>
+        <article class="mini-card">
+          <h3>4 масти</h3>
+          <p class="muted">Жезлы говорят об энергии и действии. Кубки о чувствах. Мечи о мыслях и словах. Пентакли о практике, теле и ресурсах.</p>
+        </article>
+      </div>
+      <p class="formula"><strong>Младший аркан = масть + число/ранг + позиция в раскладе.</strong> Масть показывает сферу, число показывает этап, придворный ранг показывает роль, а позиция объясняет, куда применить значение.</p>
+    </section>
+
+    <section class="panel">
+      <p class="eyebrow">Визуальная опора</p>
+      <h2>Учись смотреть на карту</h2>
+      <div class="image-grid">
+        <figure>
+          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/RWS%20Tarot%2001%20Magician.jpg" alt="Маг из колоды Райдера-Уэйта">
+          <figcaption>Маг: ресурсы уже на столе, вопрос в действии.</figcaption>
+        </figure>
+        <figure>
+          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/RWS%20Tarot%2013%20Death.jpg" alt="Смерть из колоды Райдера-Уэйта">
+          <figcaption>Смерть: завершение этапа и освобождение места.</figcaption>
+        </figure>
+        <figure>
+          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/RWS%20Tarot%2017%20Star.jpg" alt="Звезда из колоды Райдера-Уэйта">
+          <figcaption>Звезда: восстановление, доверие, тихий свет направления.</figcaption>
+        </figure>
+        <figure>
+          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/RWS%20Tarot%2021%20World.jpg" alt="Мир из колоды Райдера-Уэйта">
+          <figcaption>Мир: цикл собран, опыт стал цельной картиной.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <details id="majors" open>
+      <summary>Старшие арканы: 22 главы большого пути</summary>
+      <div class="details-body">
+        <p class="muted">Старшие арканы не обязательно означают «важнее всех остальных». Скорее они показывают крупный слой истории: архетип, урок, этап взросления или точку, где жизнь просит большего внимания.</p>
+        <div class="grid cards">
+          <article class="arcana-card"><span class="num">0</span><div><h3>Шут</h3><p class="muted">Начало, доверие, первый шаг. Риск: идти совсем без внимания.</p></div></article>
+          <article class="arcana-card"><span class="num">I</span><div><h3>Маг</h3><p class="muted">Воля, инструменты, действие. Риск: манипулировать или переоценить контроль.</p></div></article>
+          <article class="arcana-card"><span class="num">II</span><div><h3>Жрица</h3><p class="muted">Интуиция, тайна, пауза. Риск: молчать там, где нужна ясность.</p></div></article>
+          <article class="arcana-card"><span class="num">III</span><div><h3>Императрица</h3><p class="muted">Рост, забота, плодородие. Риск: раствориться в комфорте.</p></div></article>
+          <article class="arcana-card"><span class="num">IV</span><div><h3>Император</h3><p class="muted">Структура, границы, ответственность. Риск: жесткий контроль.</p></div></article>
+          <article class="arcana-card"><span class="num">V</span><div><h3>Иерофант</h3><p class="muted">Учитель, традиция, школа. Риск: догма вместо живого смысла.</p></div></article>
+          <article class="arcana-card"><span class="num">VI</span><div><h3>Влюбленные</h3><p class="muted">Выбор по ценностям, союз, согласие. Риск: выбирать из страха.</p></div></article>
+          <article class="arcana-card"><span class="num">VII</span><div><h3>Колесница</h3><p class="muted">Направление, управление, движение. Риск: напор ради победы.</p></div></article>
+          <article class="arcana-card"><span class="num">VIII</span><div><h3>Сила</h3><p class="muted">Мягкая власть, терпение, приручение импульса. Риск: подавление.</p></div></article>
+          <article class="arcana-card"><span class="num">IX</span><div><h3>Отшельник</h3><p class="muted">Поиск внутреннего света. Риск: изоляция и холодность.</p></div></article>
+          <article class="arcana-card"><span class="num">X</span><div><h3>Колесо Фортуны</h3><p class="muted">Циклы, поворот, перемены. Риск: пассивный фатализм.</p></div></article>
+          <article class="arcana-card"><span class="num">XI</span><div><h3>Справедливость</h3><p class="muted">Факты, баланс, последствия. Риск: сухой приговор.</p></div></article>
+          <article class="arcana-card"><span class="num">XII</span><div><h3>Повешенный</h3><p class="muted">Пауза, новый взгляд, принятие. Риск: зависнуть навсегда.</p></div></article>
+          <article class="arcana-card"><span class="num">XIII</span><div><h3>Смерть</h3><p class="muted">Завершение и обновление. Риск: цепляться за то, что ушло.</p></div></article>
+          <article class="arcana-card"><span class="num">XIV</span><div><h3>Умеренность</h3><p class="muted">Мера, смешивание, восстановление. Риск: размытость.</p></div></article>
+          <article class="arcana-card"><span class="num">XV</span><div><h3>Дьявол</h3><p class="muted">Привязки, соблазн, честность с тенью. Риск: добровольная несвобода.</p></div></article>
+          <article class="arcana-card"><span class="num">XVI</span><div><h3>Башня</h3><p class="muted">Крушение иллюзии, освобождение. Риск: разрушать без смысла.</p></div></article>
+          <article class="arcana-card"><span class="num">XVII</span><div><h3>Звезда</h3><p class="muted">Надежда, исцеление, доверие. Риск: ждать спасения извне.</p></div></article>
+          <article class="arcana-card"><span class="num">XVIII</span><div><h3>Луна</h3><p class="muted">Туман, страхи, глубина. Риск: спутать интуицию с тревогой.</p></div></article>
+          <article class="arcana-card"><span class="num">XIX</span><div><h3>Солнце</h3><p class="muted">Ясность, радость, открытость. Риск: не видеть сложность.</p></div></article>
+          <article class="arcana-card"><span class="num">XX</span><div><h3>Суд</h3><p class="muted">Пробуждение, зов, итог. Риск: самоосуждение.</p></div></article>
+          <article class="arcana-card"><span class="num">XXI</span><div><h3>Мир</h3><p class="muted">Целостность, завершение, интеграция. Риск: застрять в финале.</p></div></article>
+        </div>
+      </div>
+    </details>
+
+    <details id="minors" open>
+      <summary>Младшие арканы: масть + число + роль</summary>
+      <div class="details-body">
+        <div class="grid cards">
+          <article class="mini-card">
+            <h3>Числа</h3>
+            <p class="muted">Туз - начало. 2 - выбор. 3 - рост. 4 - структура. 5 - напряжение. 6 - восстановление. 7 - испытание. 8 - процесс. 9 - зрелость. 10 - завершение.</p>
+          </article>
+          <article class="mini-card">
+            <h3>Придворные</h3>
+            <p class="muted">Паж учится стихии. Рыцарь несет ее в движение. Королева владеет ею изнутри. Король управляет ею вовне и отвечает за решение.</p>
+          </article>
+        </div>
+        <div class="grid cards">
+          <article class="mini-card"><h3>Жезлы</h3><p class="muted">Огонь: действие, энергия, желание, инициатива. Вопрос: куда идет моя сила?</p><div class="chips"><span class="chip">трефы</span><span class="chip">смелость</span><span class="chip">выгорание</span></div></article>
+          <article class="mini-card"><h3>Кубки</h3><p class="muted">Вода: чувства, отношения, близость, эмпатия. Вопрос: что я чувствую на самом деле?</p><div class="chips"><span class="chip">червы</span><span class="chip">любовь</span><span class="chip">иллюзии</span></div></article>
+          <article class="mini-card"><h3>Мечи</h3><p class="muted">Воздух: мысли, слова, решения, конфликты. Вопрос: какая правда должна быть названа?</p><div class="chips"><span class="chip">пики</span><span class="chip">ясность</span><span class="chip">тревога</span></div></article>
+          <article class="mini-card"><h3>Пентакли</h3><p class="muted">Земля: тело, работа, деньги, быт, результат. Вопрос: что можно укрепить на практике?</p><div class="chips"><span class="chip">бубны</span><span class="chip">ресурс</span><span class="chip">застой</span></div></article>
+        </div>
+      </div>
+    </details>
+
+    <section id="practice" class="panel">
+      <p class="eyebrow">Алгоритм</p>
+      <h2>Как читать карту простым языком</h2>
+      <div class="grid cards">
+        <article class="mini-card"><h3>1. Назови карту</h3><p class="muted">Не спеши с трактовкой. Сначала просто произнеси название и посмотри на картинку.</p></article>
+        <article class="mini-card"><h3>2. Определи тип</h3><p class="muted">Старший аркан - крупный урок. Младший - конкретная ситуация, сфера, этап или роль.</p></article>
+        <article class="mini-card"><h3>3. Собери значение</h3><p class="muted">Для младших карт соединяй масть, число или ранг и позицию в раскладе.</p></article>
+        <article class="mini-card"><h3>4. Скажи по-человечески</h3><p class="muted">Хорошая трактовка звучит спокойно: «похоже, здесь важно...» вместо «точно случится...».</p></article>
+      </div>
+      <p class="formula"><strong>Пример:</strong> Пятерка Кубков в позиции совета. Кубки - чувства. Пятерка - напряжение и переживание. Совет: признай разочарование, но не смотри только на потерю; рядом могут оставаться связи и возможности.</p>
+    </section>
+
+    <section class="panel">
+      <p class="eyebrow">Расклады</p>
+      <h2>С чего начать практику</h2>
+      <div class="grid cards">
+        <article class="mini-card"><h3>Одна карта</h3><p class="muted">Вопрос дня: «На что обратить внимание?» Запиши карту, три ключевых слова и один мягкий совет.</p></article>
+        <article class="mini-card"><h3>Три карты</h3><p class="muted">Сейчас, влияние, направление. Читай не три отдельных ответа, а одну короткую историю.</p></article>
+        <article class="mini-card"><h3>3 карты + совет</h3><p class="muted">Добавь четвертую карту как практический шаг. Именно этот формат использует тренажер раскладов.</p></article>
+      </div>
+      <div class="button-row">
+        <a class="btn primary" href="index.html">Открыть тренажер</a>
+        <a class="btn" href="index.html">Практика расклада</a>
+        <a class="btn" href="index.html">Справочник карт</a>
+        <a class="btn" href="#sources">Источники</a>
+      </div>
+    </section>
+
+    <section id="ethics" class="panel">
+      <p class="eyebrow">Этика</p>
+      <h2>Безопасное чтение</h2>
+      <div class="grid cards">
+        <article class="mini-card"><h3>Не пугать</h3><p class="muted">Даже напряженные карты можно читать как предупреждение, вопрос или приглашение к вниманию.</p></article>
+        <article class="mini-card"><h3>Не обещать абсолют</h3><p class="muted">Карты не обязаны «точно предсказывать». Лучше говорить о тенденциях, смыслах и возможных шагах.</p></article>
+        <article class="mini-card"><h3>Не заменять специалистов</h3><p class="muted">Медицина, право и финансы требуют профессиональной помощи. Таро здесь - инструмент размышления.</p></article>
+        <article class="mini-card"><h3>Беречь вопрос</h3><p class="muted">Спокойный вопрос дает спокойный ответ: «что я могу понять?» обычно полезнее, чем «чем все кончится?».</p></article>
+      </div>
+    </section>
+
+    <section id="sources" class="panel">
+      <p class="eyebrow">Дальнейшее чтение</p>
+      <h2>Источники</h2>
+      <p class="muted">Текст руководства написан как авторская учебная адаптация. Он опирается на открытые справочные источники, но не копирует их дословно.</p>
+      <div class="grid">
+        <a href="https://ru.wikipedia.org/wiki/%D0%9A%D0%BE%D0%BB%D0%BE%D0%B4%D0%B0_%D0%A2%D0%B0%D1%80%D0%BE" target="_blank" rel="noopener noreferrer">Википедия: «Колода Таро»</a>
+        <a href="https://en.wikipedia.org/wiki/Rider%E2%80%93Waite_Tarot" target="_blank" rel="noopener noreferrer">Wikipedia: Rider-Waite Tarot</a>
+        <a href="https://commons.wikimedia.org/wiki/Category:Rider-Waite_Tarot_deck" target="_blank" rel="noopener noreferrer">Wikimedia Commons: изображения колоды Райдера-Уэйта</a>
+        <a href="https://www.britannica.com/topic/tarot" target="_blank" rel="noopener noreferrer">Britannica: Tarot</a>
+      </div>
+      <p class="fine">Материалы предназначены для обучения, самоанализа и развлечения. Они не являются медицинской, юридической или финансовой рекомендацией.</p>
+    </section>
+  </main>
+</body>
+</html>

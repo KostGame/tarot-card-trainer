@@ -239,6 +239,8 @@
     }
 
     .btn {
+      display: grid;
+      place-items: center;
       min-height: 48px;
       padding: 12px 14px;
       border: 1px solid var(--line);
@@ -246,6 +248,8 @@
       background: rgba(255, 255, 255, 0.08);
       color: var(--text);
       cursor: pointer;
+      text-align: center;
+      text-decoration: none;
       overflow-wrap: anywhere;
       touch-action: manipulation;
       transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
@@ -2476,6 +2480,7 @@
             <div class="button-row two">
               <button class="btn primary" type="button" data-route="suits">Изучить масти и числа</button>
               <button class="btn" type="button" data-route="guide">Справочник Таро</button>
+              <a class="btn" href="manual_tarot.html">Руководство по Таро</a>
             </div>
           </section>
 
@@ -2505,6 +2510,7 @@
               <button class="btn" type="button" data-route="spread">Расклад-тренажер</button>
               <button class="btn" type="button" data-route="progress">Прогресс</button>
               <button class="btn" type="button" data-route="guide">Справочник</button>
+              <a class="btn" href="manual_tarot.html">Руководство</a>
             </div>
           </section>
 
