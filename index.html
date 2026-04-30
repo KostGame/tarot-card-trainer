@@ -328,9 +328,61 @@
       display: none;
     }
 
+    .search-panel {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .search-input {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: rgba(240, 198, 106, 0.7);
+      box-shadow: 0 0 0 3px rgba(240, 198, 106, 0.12);
+    }
+
     .list {
       display: grid;
       gap: 10px;
+    }
+
+    .handbook-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .handbook-card {
+      display: grid;
+      gap: 8px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .handbook-card h3,
+    .handbook-card p {
+      margin-bottom: 0;
+    }
+
+    .handbook-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .source-link {
+      color: #ffe5a6;
+      overflow-wrap: anywhere;
     }
 
     .card-row {
@@ -1699,6 +1751,7 @@
       ["Кубки", "Кубки"],
       ["Мечи", "Мечи"],
       ["Пентакли", "Пентакли"],
+      ["court", "Придворные"],
       ["favorites", "Избранные"],
       ["weak", "Слабые карты"]
     ];
@@ -1901,6 +1954,77 @@
       }
     ];
 
+    const majorHandbook = [
+      ["0", "Шут", "Дурак", "ребенок, странник, начинающий", "начало пути, открытость, доверие опыту", "сделать первый шаг и не требовать от себя полной готовности", "легкомыслие, отсутствие плана, уход от ответственности", "где мне стоит попробовать новое без страха ошибиться?"],
+      ["I", "Маг", "Фокусник", "мастер, творец, инициатор", "действие, воля, способность влиять", "собрать ресурсы и начать действовать", "манипуляция, самоуверенность, иллюзия всемогущества", "какие инструменты уже есть в моих руках?"],
+      ["II", "Жрица", "Папесса", "хранительница тайны, внутренний голос", "интуиция, пауза, скрытое знание", "услышать тихий ответ внутри и не торопить вывод", "закрытость, пассивность, уход в намеки", "что я знаю глубже слов?"],
+      ["III", "Императрица", "Хозяйка", "мать, сад, творящая сила", "рост, забота, плодородие, телесность", "питать то, что хочет расти", "излишняя опека, лень, растворение в комфорте", "что во мне просит заботы и времени?"],
+      ["IV", "Император", "Хозяин", "правитель, строитель, отец структуры", "границы, порядок, ответственность", "создать устойчивую форму и ясные правила", "жесткость, контроль, страх хаоса", "где мне нужна опора, а не давление?"],
+      ["V", "Иерофант", "Жрец", "учитель, традиция, наставник", "знание, школа, общие правила", "найти систему, которая помогает учиться", "догматизм, зависимость от авторитета", "какая традиция поддерживает мой рост?"],
+      ["VI", "Влюбленные", "Выбор", "сердце, союз, развилка", "выбор по ценностям, отношения, согласие", "выбрать честно и признать свои ценности", "сомнение, зависимость, выбор из страха", "какой выбор согласуется с моим сердцем?"],
+      ["VII", "Колесница", "Повозка", "воин пути, водитель, победитель", "направление, воля, движение", "взять курс и удержать управление", "напор, борьба ради победы, потеря баланса", "куда я направляю силу?"],
+      ["VIII", "Сила", "Мужество", "укротитель, мягкая власть", "внутренняя сила, терпение, приручение импульса", "действовать мягко, но уверенно", "подавление, гордость, борьба с собой", "что во мне можно приручить без насилия?"],
+      ["IX", "Отшельник", "Мудрец", "искатель, наставник, светильник", "уединение, поиск смысла, внутренний свет", "замедлиться и найти собственный ответ", "изоляция, холодность, уход от людей", "какой свет я ищу внутри себя?"],
+      ["X", "Колесо Фортуны", "Колесо судьбы", "цикл, поворот, смена сезона", "перемены, ритмы, шанс", "увидеть цикл и двигаться вместе с переменой", "фатализм, суета, желание все контролировать", "какой цикл сейчас поворачивается?"],
+      ["XI", "Справедливость", "Правосудие", "судья, весы, честный выбор", "причины и последствия, баланс, ответственность", "признать факты и ответить за решение", "сухость, обвинение, жесткий приговор", "какое решение будет честным?"],
+      ["XII", "Повешенный", "Жертва", "перевернутый взгляд, добровольная пауза", "смена перспективы, остановка, принятие", "посмотреть иначе и отпустить старый способ", "зависание, роль жертвы, бесконечное ожидание", "что изменится, если я посмотрю с другой стороны?"],
+      ["XIII", "Смерть", "Переход", "порог, завершение, обновление", "конец этапа, освобождение места", "отпустить старое, чтобы появилось новое", "страх перемен, цепляние, резкий обрыв", "что уже завершилось и просит уважения?"],
+      ["XIV", "Умеренность", "Искусство меры", "алхимик, целитель, посредник", "смешивание, ритм, восстановление", "найти живую пропорцию между частями", "затягивание, размытость, потеря вкуса", "какую меру мне важно найти?"],
+      ["XV", "Дьявол", "Привязка", "искушение, тень желания, цепь", "зависимости, соблазн, честность с тенью", "увидеть привязку и вернуть себе выбор", "стыд, страх, добровольная несвобода", "что держит меня сильнее, чем я признаю?"],
+      ["XVI", "Башня", "Разрушенная башня", "молния, освобождение, правда", "крушение иллюзии, резкий поворот", "отпустить конструкцию, которая больше не держит", "шок, сопротивление, разрушение ради разрушения", "какая неправда больше не выдерживает реальности?"],
+      ["XVII", "Звезда", "Надежда", "путеводный свет, исцеление", "надежда, восстановление, доверие будущему", "вернуться к тихой вере и бережному ритму", "наивность, ожидание спасения извне", "какой свет помогает мне продолжать?"],
+      ["XVIII", "Луна", "Сумерки", "туман, сон, глубина", "неясность, страхи, интуиция, образы", "пройти туман без паники и проверить ощущения", "иллюзии, тревожные фантазии, самообман", "где мне важно отличить страх от интуиции?"],
+      ["XIX", "Солнце", "Ясность", "ребенок света, радость, открытость", "ясность, тепло, простая радость", "выбрать ясность и живое проявление", "самодовольство, слепота к теням", "что становится проще, когда я выхожу на свет?"],
+      ["XX", "Суд", "Пробуждение", "зов, обновление, голос души", "пробуждение, итог, возвращение к себе", "услышать зов и подняться на новый уровень", "самоосуждение, страх оценки, вина", "к чему меня зовет накопленный опыт?"],
+      ["XXI", "Мир", "Вселенная", "целостность, завершенный круг", "завершение цикла, интеграция, зрелость", "собрать опыт в цельную картину", "застой в завершенном, страх нового цикла", "что я могу признать завершенным?"]
+    ].map(([number, name, alt, archetype, theme, task, risk, question]) => ({ number, name, alt, archetype, theme, task, risk, question }));
+
+    const suitHandbook = {
+      "Жезлы": {
+        aliases: "Посохи, Скипетры, Булавы",
+        playing: "Трефы",
+        question: "куда идет моя энергия?",
+        example: "Если Жезлы выпали в позиции совета, часто речь о действии, смелости или управлении импульсом."
+      },
+      "Кубки": {
+        aliases: "Чаши",
+        playing: "Червы",
+        question: "что я чувствую на самом деле?",
+        example: "Если Кубки выпали в позиции препятствия, эмоции могут затуманивать ясность или удерживать человека в переживании."
+      },
+      "Мечи": {
+        aliases: "Сабли, Клинки",
+        playing: "Пики",
+        question: "какая правда должна быть названа?",
+        example: "Если Мечи выпали в позиции совета, стоит прояснить ситуацию словами и отделить факты от страхов."
+      },
+      "Пентакли": {
+        aliases: "Монеты, Диски, Динарии",
+        playing: "Бубны",
+        question: "что можно сделать и укрепить на практике?",
+        example: "Если Пентакли выпали в позиции совета, пора перейти от размышлений к конкретному действию, ресурсу, телу или быту."
+      }
+    };
+
+    const courtHandbook = [
+      ["Паж Жезлов", "учусь действовать, пробовать и зажигаться", "проявляет огонь через интерес, старт и смелую пробу", "быстро загорелся, быстро бросил"],
+      ["Рыцарь Жезлов", "несусь вперед, иногда слишком быстро", "проявляет огонь через скорость, азарт и напор", "путает смелость со спешкой"],
+      ["Королева Жезлов", "излучаю уверенность и вдохновляю", "проявляет огонь как харизму, тепло и веру в себя", "может давить яркостью или требовать внимания"],
+      ["Король Жезлов", "управляю энергией и веду за собой", "проявляет огонь как лидерство, стратегию и волю", "может стать авторитарным"],
+      ["Паж Кубков", "учусь чувствовать и открываться", "проявляет воду через нежность, творческий импульс и удивление", "может быть слишком ранимым или мечтательным"],
+      ["Рыцарь Кубков", "несу романтический или эмоциональный импульс", "проявляет воду через движение к чувствам, красоте и контакту", "может идеализировать и обещать больше, чем выдержит"],
+      ["Королева Кубков", "глубоко чувствую и создаю безопасное пространство", "проявляет воду как эмпатию, принятие и тонкое понимание", "может раствориться в чужих чувствах"],
+      ["Король Кубков", "держу эмоции зрело и спокойно", "проявляет воду как эмоциональную зрелость и мягкое управление", "может прятать чувства за спокойной маской"],
+      ["Паж Мечей", "учусь думать, спрашивать и наблюдать", "проявляет воздух через вопросы, учебу и внимательность", "может спорить ради спора"],
+      ["Рыцарь Мечей", "резко иду за мыслью или решением", "проявляет воздух через скорость, прямоту и интеллектуальный натиск", "может ранить словами или поспешить с выводами"],
+      ["Королева Мечей", "вижу правду и отделяю лишнее", "проявляет воздух как честность, ясные границы и точность", "может стать холодной или слишком критичной"],
+      ["Король Мечей", "принимаю ясные решения", "проявляет воздух как закон, логику и ответственность за слово", "может подавлять живое сухой логикой"],
+      ["Паж Пентаклей", "учусь практическому делу", "проявляет землю через навык, учебу и первые результаты", "может застрять в подготовке"],
+      ["Рыцарь Пентаклей", "двигаюсь медленно, но надежно", "проявляет землю через регулярность, терпение и долгий путь", "может стать упрямым и неповоротливым"],
+      ["Королева Пентаклей", "выращиваю ресурс и заботу", "проявляет землю как телесную опору, быт и щедрую практичность", "может чрезмерно опекать"],
+      ["Король Пентаклей", "управляю ресурсами, результатом и стабильностью", "проявляет землю как ответственность, достаток и устойчивую систему", "может стать слишком жестким в контроле и выгоде"]
+    ].map(([name, formula, expression, shadow]) => ({ name, formula, expression, shadow }));
+
     const learningPathDays = [
       {
         day: 1,
@@ -1991,6 +2115,7 @@
     const state = {
       route: "home",
       filter: "all",
+      cardSearch: "",
       selectedCardId: null,
       selectedTrainingMode: "mixed",
       selectedTrainingSuit: "",
@@ -2177,8 +2302,12 @@
       return deck.filter((card) => card.type === "minor");
     }
 
+    function isCourtCard(card) {
+      return ["Паж", "Рыцарь", "Королева", "Король"].includes(card.rank);
+    }
+
     function courtDeck() {
-      return deck.filter((card) => ["Паж", "Рыцарь", "Королева", "Король"].includes(card.rank));
+      return deck.filter(isCourtCard);
     }
 
     function getDailyFocus() {
@@ -2344,7 +2473,10 @@
             <p class="eyebrow">Версия 2: учим систему</p>
             <h3>Младшие арканы теперь проще собирать</h3>
             <p class="muted">Приложение помогает понимать карты через масти, числа и придворные роли: сфера жизни + этап развития + позиция в раскладе.</p>
-            <button class="btn primary" type="button" data-route="suits">Изучить масти и числа</button>
+            <div class="button-row two">
+              <button class="btn primary" type="button" data-route="suits">Изучить масти и числа</button>
+              <button class="btn" type="button" data-route="guide">Справочник Таро</button>
+            </div>
           </section>
 
           <section class="panel path-overview magic-card">
@@ -2372,7 +2504,7 @@
               <button class="btn" type="button" data-route="fool">Путь Шута</button>
               <button class="btn" type="button" data-route="spread">Расклад-тренажер</button>
               <button class="btn" type="button" data-route="progress">Прогресс</button>
-              <button class="btn" type="button" data-route="guide">Справка</button>
+              <button class="btn" type="button" data-route="guide">Справочник</button>
             </div>
           </section>
 
@@ -2389,11 +2521,27 @@
     function getFilteredCards() {
       return deck.filter((card) => {
         const item = cardProgress(card.id);
-        if (state.filter === "all") return true;
-        if (state.filter === "major") return card.type === "major";
-        if (state.filter === "favorites") return item.favorite;
-        if (state.filter === "weak") return item.wrong > 0 && (item.wrong >= item.correct || item.level < 3);
-        return card.suit === state.filter;
+        const query = state.cardSearch.trim().toLowerCase();
+        const text = [
+          card.name,
+          card.groupLabel,
+          card.suit,
+          card.rank,
+          card.meaning,
+          card.shadow,
+          card.advice,
+          card.keywords.join(" ")
+        ].filter(Boolean).join(" ").toLowerCase();
+        const matchesSearch = !query || text.includes(query);
+        let matchesFilter = true;
+
+        if (state.filter === "major") matchesFilter = card.type === "major";
+        else if (state.filter === "court") matchesFilter = isCourtCard(card);
+        else if (state.filter === "favorites") matchesFilter = item.favorite;
+        else if (state.filter === "weak") matchesFilter = item.wrong > 0 && (item.wrong >= item.correct || item.level < 3);
+        else if (state.filter !== "all") matchesFilter = card.suit === state.filter;
+
+        return matchesFilter && matchesSearch;
       });
     }
 
@@ -2416,6 +2564,16 @@
               <button class="btn primary" type="button" data-route="suits">Открыть Масти, числа и придворные</button>
             </div>
           </details>
+
+          <div class="panel panel-pad search-panel">
+            <label for="cardSearch"><strong>Поиск по колоде</strong></label>
+            <input class="search-input" id="cardSearch" type="search" value="${escapeHtml(state.cardSearch)}" placeholder="Название, ключевое слово или совет" autocomplete="off">
+            <div class="button-row two">
+              <button class="btn" type="button" data-clear-card-search>Очистить поиск</button>
+              <button class="btn" type="button" data-route="guide">Открыть справочник</button>
+            </div>
+            <p class="muted">Найдено карт: ${cards.length}</p>
+          </div>
 
           <div class="filters" aria-label="Фильтры карт">
             ${filters.map(([id, label]) => `
@@ -3377,33 +3535,215 @@
       `;
     }
 
+    function renderMajorHandbook() {
+      return `
+        <div class="handbook-grid">
+          ${majorHandbook.map((card) => `
+            <article class="handbook-card">
+              <div class="handbook-meta">
+                <span class="chip">${card.number}</span>
+                <span class="chip">${card.alt}</span>
+              </div>
+              <h3>${card.name}</h3>
+              <p class="muted"><strong>Архетип:</strong> ${card.archetype}.</p>
+              <p class="muted"><strong>Главная тема:</strong> ${card.theme}.</p>
+              <p class="muted"><strong>Задача:</strong> ${card.task}.</p>
+              <p class="muted"><strong>Риск:</strong> ${card.risk}.</p>
+              <p class="muted"><strong>Вопрос:</strong> ${card.question}</p>
+            </article>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function renderMinorHandbook() {
+      return `
+        <div class="handbook-grid">
+          <article class="handbook-card">
+            <h3>56 карт повседневной жизни</h3>
+            <p class="muted">Младшие арканы делятся на 4 масти по 14 карт. В каждой масти есть 10 числовых карт от Туза до 10 и 4 придворные карты: Паж, Рыцарь, Королева и Король.</p>
+            <p class="muted">Они помогают читать конкретику: чувства, действия, мысли, ресурсы, быт, работу, отношения, конфликты и решения.</p>
+          </article>
+          <article class="handbook-card">
+            <h3>Формула чтения</h3>
+            <p class="muted"><strong>Младший аркан = масть + число/ранг + позиция в раскладе.</strong></p>
+            <p class="muted">Масть показывает сферу жизни. Число показывает этап. Придворный ранг показывает роль или стиль поведения. Позиция в раскладе объясняет, куда применить значение.</p>
+          </article>
+          <article class="handbook-card">
+            <h3>Пример</h3>
+            <p class="muted"><strong>Пятерка Кубков:</strong> Кубки говорят о чувствах, Пятерка - о напряжении и переживании. В позиции совета карта может сказать: признай разочарование, но посмотри, какие связи и возможности еще рядом.</p>
+          </article>
+        </div>
+      `;
+    }
+
+    function renderSuitHandbook() {
+      return `
+        <div class="handbook-grid">
+          ${suits.map((suit) => {
+            const lesson = getSuitLesson(suit.label);
+            const reference = suitHandbook[suit.label];
+            return `
+              <article class="handbook-card">
+                <div class="handbook-meta">
+                  <span class="chip">${lesson.element}</span>
+                  <span class="chip">${reference.playing}</span>
+                </div>
+                <h3>${suit.label}</h3>
+                <p class="muted"><strong>Другие названия:</strong> ${reference.aliases}.</p>
+                <p class="muted"><strong>Сфера:</strong> ${lesson.sphere}.</p>
+                <p class="muted"><strong>Свет:</strong> ${lesson.light}</p>
+                <p class="muted"><strong>Тень:</strong> ${lesson.shadow}</p>
+                <p class="muted"><strong>Главный вопрос:</strong> ${reference.question}</p>
+                <p class="muted"><strong>Пример чтения:</strong> ${reference.example}</p>
+              </article>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    function renderCourtHandbook() {
+      return `
+        <div class="handbook-grid">
+          <article class="handbook-card">
+            <h3>Четыре роли</h3>
+            <p class="muted"><strong>Паж:</strong> ученик стихии, первое знакомство, сигнал, любопытство.</p>
+            <p class="muted"><strong>Рыцарь:</strong> движение стихии, импульс, активное проявление.</p>
+            <p class="muted"><strong>Королева:</strong> внутреннее владение стихией, атмосфера, зрелое принятие.</p>
+            <p class="muted"><strong>Король:</strong> внешнее управление стихией, ответственность, решение.</p>
+          </article>
+          ${courtHandbook.map((card) => `
+            <article class="handbook-card">
+              <h3>${card.name}</h3>
+              <p class="muted"><strong>Формула:</strong> ${card.formula}.</p>
+              <p class="muted"><strong>Проявление:</strong> ${card.expression}.</p>
+              <p class="muted"><strong>Тень:</strong> ${card.shadow}.</p>
+            </article>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function renderReadingAlgorithm() {
+      const steps = [
+        "Назови карту.",
+        "Определи: старший это аркан или младший.",
+        "Если старший: найди архетип, главный урок и посмотри на позицию в раскладе.",
+        "Если младший: определи масть, число или ранг, собери значение через формулу и примени к позиции.",
+        "Скажи трактовку человеческим языком.",
+        "Добавь мягкий совет без категоричности."
+      ];
+
+      return `
+        <div class="handbook-grid">
+          <article class="handbook-card">
+            <h3>Алгоритм на одну карту</h3>
+            ${steps.map((step, index) => `<p class="muted"><strong>${index + 1}.</strong> ${step}</p>`).join("")}
+          </article>
+          <article class="handbook-card">
+            <h3>Пример: Пятерка Кубков</h3>
+            <p class="muted">Кубки говорят о чувствах. Пятерка говорит о напряжении, потере или кризисе.</p>
+            <p class="muted">В позиции «совет» карта может звучать так: «Не застревай только в том, что не получилось. Признай разочарование, но посмотри, какие возможности и связи еще остаются рядом».</p>
+          </article>
+        </div>
+      `;
+    }
+
+    function renderReferenceTableIntro() {
+      return `
+        <div class="handbook-grid">
+          <article class="handbook-card">
+            <h3>Полная таблица уже живет в разделе «Карты»</h3>
+            <p class="muted">Чтобы не превращать справочник в длинную простыню, полный список 78 карт открыт в отдельном разделе. Там есть поиск по названию, ключевым словам и значениям, а также фильтры по старшим, мастям, избранным, слабым и придворным картам.</p>
+            <div class="button-row two">
+              <button class="btn primary" type="button" data-route="cards">Открыть полный список карт</button>
+              <button class="btn" type="button" data-cards-filter="court">Показать придворные</button>
+            </div>
+          </article>
+        </div>
+      `;
+    }
+
+    function renderSources() {
+      return `
+        <div class="handbook-grid">
+          <article class="handbook-card">
+            <h3>Источники и дальнейшее чтение</h3>
+            <p class="muted">Википедия: «Колода Таро». Колода Райдера-Уэйта упоминается как одна из самых известных систем для современной гадательной практики.</p>
+            <p class="muted">Материалы приложения являются учебной авторской адаптацией и не копируют источники дословно.</p>
+            <a class="source-link" href="https://ru.wikipedia.org/wiki/%D0%9A%D0%BE%D0%BB%D0%BE%D0%B4%D0%B0_%D0%A2%D0%B0%D1%80%D0%BE" target="_blank" rel="noopener noreferrer">Открыть статью «Колода Таро» в новой вкладке</a>
+          </article>
+        </div>
+      `;
+    }
+
+    function renderGuideSection(title, content, open = false) {
+      return `
+        <details class="control-menu" ${open ? "open" : ""}>
+          <summary>${title}</summary>
+          <div class="control-menu-content">
+            ${content}
+          </div>
+        </details>
+      `;
+    }
+
     function renderGuide() {
+      const sections = [
+        ["Что такое колода Таро", `
+          <div class="handbook-grid">
+            <article class="handbook-card">
+              <h3>Колода как язык символов</h3>
+              <p class="muted">Колода Таро обычно состоит из 78 карт: 22 старших аркана и 56 младших арканов. Старшие арканы говорят о крупных темах, архетипах и поворотных этапах, а младшие помогают увидеть повседневные детали, состояния и практические проявления.</p>
+              <p class="muted">В современных гадательных практиках часто используют систему Райдера-Уэйта. В этом приложении Таро подается как инструмент обучения, символического мышления и самоанализа, а не как способ гарантированного предсказания будущего.</p>
+            </article>
+          </div>
+        `, true],
+        ["Старшие арканы", renderMajorHandbook()],
+        ["Младшие арканы", renderMinorHandbook()],
+        ["Масти", renderSuitHandbook()],
+        ["Придворные карты", renderCourtHandbook()],
+        ["Как читать карту", renderReadingAlgorithm()],
+        ["Таблица значений", renderReferenceTableIntro()],
+        ["Этика чтения", `
+          <div class="handbook-grid">
+            <article class="handbook-card">
+              <h3>Спокойная практика</h3>
+              <p class="muted">Не пугай человека картами и не делай категоричных обещаний. Расклад лучше работает как способ размышления, а не как приговор.</p>
+              <p class="muted">Не заменяй картами помощь специалистов. Формулируй вопросы экологично: не «что точно случится?», а «на что мне обратить внимание?» или «какой следующий шаг будет бережным?»</p>
+            </article>
+          </div>
+        `],
+        ["Источники и дальнейшее чтение", renderSources()]
+      ];
+
       return `
         <section class="view">
           <div class="section-head">
             <div>
-              <h2>Справка</h2>
-              <p class="muted">Короткие материалы для чтения: история Таро, структура колоды, масти, расклады и спокойный подход к практике.</p>
+              <h2>Справочник Таро</h2>
+              <p class="muted">Карманный учебник по структуре колоды: старшие и младшие арканы, масти, придворные карты, алгоритм чтения и спокойная этика практики.</p>
             </div>
           </div>
 
-          <details class="control-menu">
-            <summary>Настройки чтения</summary>
+          <details class="control-menu" open>
+            <summary>Навигация справочника</summary>
             <div class="control-menu-content">
-              <button class="btn" type="button" data-reading-mode="${state.readingMode ? "off" : "on"}">${state.readingMode ? "Показать меню" : "Скрыть навигацию для чтения"}</button>
-              <button class="btn primary" type="button" data-route="suits">Открыть раздел «Масти»</button>
+              <p class="muted"><strong>Колода Таро: структура и значения.</strong> Читай короткими блоками, раскрывай только нужное и переходи к практике, когда появится желание закрепить материал.</p>
+              <div class="button-row two">
+                <button class="btn" type="button" data-reading-mode="${state.readingMode ? "off" : "on"}">${state.readingMode ? "Показать меню" : "Скрыть навигацию для чтения"}</button>
+                <button class="btn" type="button" data-route="home">Вернуться к обучению</button>
+                <button class="btn primary" type="button" data-route="suits">Изучить масти</button>
+                <button class="btn" type="button" data-start-training="5" data-start-training-mode="suitsStudy">Тренировать масти</button>
+                <button class="btn" type="button" data-route="fool">Открыть Путь Шута</button>
+                <button class="btn" type="button" data-route="spread">Открыть расклад-тренажер</button>
+              </div>
             </div>
           </details>
 
           <div class="list">
-            ${guideSections.map((section, index) => `
-              <details class="control-menu" ${index === 0 ? "open" : ""}>
-                <summary>${section.title}</summary>
-                <div class="control-menu-content">
-                  <p class="muted">${section.text}</p>
-                </div>
-              </details>
-            `).join("")}
+            ${sections.map(([title, content, open]) => renderGuideSection(title, content, Boolean(open))).join("")}
           </div>
 
           <p class="fine-print">Материалы приложения предназначены для обучения, самоанализа и развлечения. Они не являются медицинской, юридической или финансовой рекомендацией.</p>
@@ -3562,6 +3902,13 @@
         return;
       }
 
+      if (event.target.closest("[data-clear-card-search]")) {
+        state.cardSearch = "";
+        state.selectedCardId = null;
+        render();
+        return;
+      }
+
       const cardButton = event.target.closest("[data-card-id]");
       if (cardButton) {
         state.route = "cards";
@@ -3633,6 +3980,18 @@
     document.addEventListener("input", (event) => {
       if (event.target && event.target.id === "readingText") {
         state.spreadNote = event.target.value;
+      }
+
+      if (event.target && event.target.id === "cardSearch") {
+        const cursor = event.target.selectionStart;
+        state.cardSearch = event.target.value;
+        state.selectedCardId = null;
+        render();
+        const input = document.querySelector("#cardSearch");
+        if (input) {
+          input.focus();
+          input.setSelectionRange(cursor, cursor);
+        }
       }
     });
 
