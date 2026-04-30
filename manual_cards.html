@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#11100e">
+  <title>Все карты Таро с описаниями</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #11100e;
+      --panel: rgba(38, 31, 28, 0.9);
+      --soft-panel: rgba(255, 255, 255, 0.07);
+      --text: #fff8ec;
+      --muted: #d9cabb;
+      --soft: #aa9d91;
+      --line: rgba(255, 248, 236, 0.16);
+      --gold: #f0c66a;
+      --copper: #d88d56;
+      --mint: #8bc7a3;
+      --rose: #e3a0a0;
+      --shadow: 0 24px 76px rgba(0, 0, 0, 0.38);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-width: 320px;
+      background: var(--bg);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 12% -2%, rgba(240, 198, 106, 0.18), transparent 20rem),
+        radial-gradient(circle at 90% 10%, rgba(139, 199, 163, 0.16), transparent 18rem),
+        linear-gradient(150deg, #11100e 0%, #201916 46%, #10191a 100%);
+      color: var(--text);
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1.5;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    a {
+      color: #ffe6aa;
+    }
+
+    .page {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+      padding: 16px 14px 46px;
+    }
+
+    .hero,
+    .panel,
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .hero {
+      display: grid;
+      gap: 16px;
+      margin: 12px 0 14px;
+      padding: 18px;
+    }
+
+    .panel {
+      display: grid;
+      gap: 12px;
+      margin: 14px 0;
+      padding: 14px;
+    }
+
+    .eyebrow {
+      width: fit-content;
+      margin: 0;
+      padding: 7px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 8px;
+      font-size: clamp(2.35rem, 11vw, 4.8rem);
+      line-height: 0.96;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 8px;
+      font-size: clamp(1.35rem, 6vw, 2.15rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+      letter-spacing: 0;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .fine {
+      color: var(--soft);
+      font-size: 0.86rem;
+    }
+
+    .button-row,
+    .filters {
+      display: grid;
+      gap: 10px;
+    }
+
+    .button-row {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .btn {
+      display: grid;
+      min-height: 46px;
+      place-items: center;
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      touch-action: manipulation;
+    }
+
+    .btn.primary,
+    .btn.active {
+      border-color: rgba(240, 198, 106, 0.62);
+      background: linear-gradient(135deg, var(--gold), var(--copper));
+      color: #291809;
+      font-weight: 800;
+    }
+
+    .search {
+      width: 100%;
+      min-height: 50px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      outline: none;
+    }
+
+    .search:focus {
+      border-color: rgba(240, 198, 106, 0.72);
+      box-shadow: 0 0 0 3px rgba(240, 198, 106, 0.12);
+    }
+
+    .filters {
+      grid-auto-flow: column;
+      grid-auto-columns: max-content;
+      margin: 0 -14px;
+      padding: 0 14px 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .filters::-webkit-scrollbar {
+      display: none;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .stat {
+      min-width: 0;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .stat strong {
+      display: block;
+      color: var(--gold);
+      font-size: 1.35rem;
+      line-height: 1;
+    }
+
+    .cards {
+      display: grid;
+      gap: 12px;
+    }
+
+    .card {
+      display: grid;
+      gap: 12px;
+      padding: 12px;
+      overflow: hidden;
+    }
+
+    .card figure {
+      margin: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(0, 0, 0, 0.18);
+    }
+
+    .card img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 3 / 5;
+      object-fit: contain;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .card-body {
+      display: grid;
+      gap: 8px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      padding: 5px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .note {
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.055);
+    }
+
+    .note p {
+      margin-bottom: 0;
+    }
+
+    .empty {
+      padding: 16px;
+      border: 1px dashed var(--line);
+      border-radius: 16px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    @media (min-width: 720px) {
+      .hero {
+        grid-template-columns: 1.2fr 0.8fr;
+        align-items: center;
+      }
+
+      .button-row {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .card {
+        grid-template-columns: 180px minmax(0, 1fr);
+      }
+    }
+
+    @media (min-width: 1020px) {
+      .cards {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .card {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Полная галерея</p>
+        <h1>Все карты Таро</h1>
+        <p class="muted">78 карт с изображениями Райдера-Уэйта, короткими описаниями, тенью и мягким советом. Это справочная страница к руководству: удобно искать карту, смотреть масть и быстро вспоминать смысл.</p>
+      </div>
+      <div class="button-row">
+        <a class="btn primary" href="manual_tarot.html">К руководству</a>
+        <a class="btn" href="index.html">В тренажер</a>
+        <a class="btn" href="#gallery">К картам</a>
+        <a class="btn" href="#sources">Источники</a>
+      </div>
+    </section>
+
+    <section class="panel" id="gallery">
+      <div class="stats">
+        <div class="stat"><strong id="totalCount">78</strong><span class="fine">всего карт</span></div>
+        <div class="stat"><strong>22</strong><span class="fine">старших</span></div>
+        <div class="stat"><strong>56</strong><span class="fine">младших</span></div>
+      </div>
+      <input class="search" id="search" type="search" placeholder="Поиск: Шут, Кубки, совет, напряжение..." autocomplete="off">
+      <div class="filters" aria-label="Фильтры карт">
+        <button class="btn active" type="button" data-filter="all">Все</button>
+        <button class="btn" type="button" data-filter="major">Старшие</button>
+        <button class="btn" type="button" data-filter="wands">Жезлы</button>
+        <button class="btn" type="button" data-filter="cups">Кубки</button>
+        <button class="btn" type="button" data-filter="swords">Мечи</button>
+        <button class="btn" type="button" data-filter="pentacles">Пентакли</button>
+        <button class="btn" type="button" data-filter="court">Придворные</button>
+      </div>
+      <p class="fine" id="resultCount"></p>
+    </section>
+
+    <section class="cards" id="cards"></section>
+
+    <section class="panel" id="sources">
+      <p class="eyebrow">Источники изображений</p>
+      <h2>Wikimedia Commons</h2>
+      <p class="muted">Изображения подгружаются с Wikimedia Commons через `Special:FilePath`. Описания на странице написаны как авторская учебная адаптация для новичка.</p>
+      <a href="https://commons.wikimedia.org/wiki/Category:Rider-Waite_Tarot_deck" target="_blank" rel="noopener noreferrer">Wikimedia Commons: Rider-Waite Tarot deck</a>
+      <p class="fine">Материалы предназначены для обучения, самоанализа и развлечения. Они не являются медицинской, юридической или финансовой рекомендацией.</p>
+    </section>
+  </main>
+
+  <script>
+    const imageBase = "https://commons.wikimedia.org/wiki/Special:FilePath/";
+
+    const majors = [
+      ["00", "Шут", "Fool", "начало, доверие, первый шаг", "Начало пути, открытость опыту и смелость пробовать без полной готовности.", "легкомыслие, уход от ответственности, отсутствие опоры", "Сделай первый небольшой шаг и оставь место обучению."],
+      ["01", "Маг", "Magician", "воля, действие, инструменты", "Ресурсы уже на столе: пора собрать внимание и начать действовать.", "манипуляция, самоуверенность, иллюзия всемогущества", "Посмотри, какие инструменты уже есть у тебя в руках."],
+      ["02", "Жрица", "High Priestess", "интуиция, тайна, пауза", "Тихое знание, скрытый слой ситуации и необходимость услышать внутренний голос.", "пассивность, закрытость, жизнь намеками", "Не торопи вывод: дай ответу проявиться спокойно."],
+      ["03", "Императрица", "Empress", "рост, забота, изобилие", "Питание, создание, телесность и процесс, которому нужно время для роста.", "излишняя опека, лень, растворение в комфорте", "Поддержи то, что хочет расти, заботой и регулярностью."],
+      ["04", "Император", "Emperor", "структура, границы, порядок", "Опора, правила, ответственность и способность превратить хаос в систему.", "жесткость, контроль, страх беспорядка", "Построй ясную рамку, но не превращай ее в клетку."],
+      ["05", "Иерофант", "Hierophant", "учитель, традиция, школа", "Передача знания, обучение, традиция и поиск системы, которая поддерживает.", "догматизм, зависимость от авторитета", "Возьми у традиции опору, но оставь себе живой вопрос."],
+      ["06", "Влюбленные", "Lovers", "выбор, ценности, союз", "Выбор по сердцу и ценностям, честное согласие и тема отношений.", "сомнение, зависимость, выбор из страха", "Назови, что для тебя действительно важно."],
+      ["07", "Колесница", "Chariot", "курс, воля, движение", "Направление, управление силами и движение к цели.", "напор, борьба ради победы, потеря баланса", "Выбери курс и держи управление без лишней войны."],
+      ["08", "Сила", "Strength", "мягкая власть, терпение, смелость", "Внутренняя сила, приручение импульса и уверенность без давления.", "подавление, гордость, борьба с собой", "Действуй мягко, но не отступай от главного."],
+      ["09", "Отшельник", "Hermit", "поиск, тишина, мудрость", "Уединение, внутренний свет и поиск собственного ответа.", "изоляция, холодность, уход от людей", "Замедлись и спроси себя, что правда освещает путь."],
+      ["10", "Колесо Фортуны", "Wheel of Fortune", "цикл, шанс, поворот", "Смена ритма, поворот событий и понимание, что все движется циклами.", "фатализм, суета, попытка контролировать все", "Заметь цикл и выбери, как войти в поворот осознанно."],
+      ["11", "Справедливость", "Justice", "факты, баланс, последствия", "Честный выбор, причинно-следственная связь и ответственность за решение.", "сухость, обвинение, жесткий приговор", "Сравни факты и выбери то, что выдержит честную проверку."],
+      ["12", "Повешенный", "Hanged Man", "пауза, новый взгляд, принятие", "Остановка, смена перспективы и добровольный отказ от старого способа.", "зависание, роль жертвы, бесконечное ожидание", "Посмотри на ситуацию с другой стороны."],
+      ["13", "Смерть", "Death", "завершение, переход, обновление", "Конец этапа, освобождение места и естественное обновление.", "страх перемен, цепляние, резкий обрыв", "Отпусти то, что уже завершилось, бережно и ясно."],
+      ["14", "Умеренность", "Temperance", "мера, смешивание, восстановление", "Поиск пропорции, соединение частей и мягкое восстановление ритма.", "размытость, затягивание, потеря вкуса", "Смешай крайности в рабочую меру."],
+      ["15", "Дьявол", "Devil", "привязка, соблазн, тень", "Честный взгляд на зависимость, желание, страх или удобную несвободу.", "стыд, добровольная цепь, отказ видеть выбор", "Назови привязку без самонаказания и верни себе право выбора."],
+      ["16", "Башня", "Tower", "кризис, правда, освобождение", "Крушение иллюзии, резкая правда и освобождение от непрочной конструкции.", "шок, сопротивление, разрушение ради разрушения", "Сохрани главное и отпусти то, что больше не держит."],
+      ["17", "Звезда", "Star", "надежда, исцеление, доверие", "Тихая надежда, восстановление и возвращение веры после напряжения.", "наивность, ожидание спасения извне", "Иди к свету маленькими бережными шагами."],
+      ["18", "Луна", "Moon", "туман, страхи, интуиция", "Неясность, сны, тревоги и глубокие образы, которые требуют проверки.", "иллюзии, самообман, тревожные фантазии", "Отдели страх от интуиции и не спеши с выводом."],
+      ["19", "Солнце", "Sun", "ясность, радость, открытость", "Тепло, простота, проявленность и ясное понимание ситуации.", "самодовольство, слепота к сложности", "Выбери ясность и скажи проще."],
+      ["20", "Суд", "Judgement", "пробуждение, зов, итог", "Пробуждение, переоценка опыта и переход на новый уровень.", "самоосуждение, вина, страх оценки", "Услышь зов опыта без наказания себя."],
+      ["21", "Мир", "World", "целостность, завершение, цикл", "Завершение цикла, интеграция опыта и чувство собранной картины.", "страх нового цикла, застревание в финале", "Признай завершение и подготовься к следующему кругу."]
+    ].map(([num, name, file, keywords, meaning, shadow, advice]) => ({
+      id: `major-${num}`,
+      name,
+      group: "Старшие арканы",
+      filter: "major",
+      keywords,
+      meaning,
+      shadow,
+      advice,
+      image: `RWS Tarot ${num} ${file}.jpg`
+    }));
+
+    const suits = [
+      { filter: "wands", label: "Жезлы", of: "Жезлов", prefix: "Wands", element: "Огонь", sphere: "действие, энергия, инициатива", light: "смелость и вдохновение", shadow: "спешка или выгорание" },
+      { filter: "cups", label: "Кубки", of: "Кубков", prefix: "Cups", element: "Вода", sphere: "чувства, отношения, близость", light: "эмоциональная честность", shadow: "иллюзии или обида" },
+      { filter: "swords", label: "Мечи", of: "Мечей", prefix: "Swords", element: "Воздух", sphere: "мысли, слова, решения", light: "ясность и правда", shadow: "тревожность или жесткость" },
+      { filter: "pentacles", label: "Пентакли", of: "Пентаклей", prefix: "Pents", element: "Земля", sphere: "тело, работа, ресурсы", light: "практичность и устойчивость", shadow: "застой или страх потери" }
+    ];
+
+    const ranks = [
+      ["01", "Туз", "начало, шанс, искра", "Новая возможность появляется в сфере масти.", "искра может погаснуть без действия", "Сделай первый простой шаг."],
+      ["02", "2", "выбор, баланс, два полюса", "Есть две силы или два варианта, между которыми нужно найти отношение.", "колебание может заменить решение", "Назови, между чем ты выбираешь."],
+      ["03", "3", "рост, взаимодействие, первые результаты", "Процесс начинает развиваться и показывает первые плоды.", "можно рассеяться среди возможностей", "Поддержи то, что уже растет."],
+      ["04", "4", "структура, стабильность, пауза", "Нужна опора, рамка или остановка для закрепления.", "стабильность может стать тесной", "Укрепи основу, но оставь место жизни."],
+      ["05", "5", "напряжение, конфликт, проверка", "Видно слабое место, нехватку или урок через трение.", "можно застрять в борьбе", "Ищи урок, а не виноватого."],
+      ["06", "6", "восстановление, обмен, гармония", "Баланс возвращается через помощь, движение или теплый обмен.", "комфорт может усыпить внимание", "Прими поддержку и восстанови равновесие."],
+      ["07", "7", "испытание, стратегия, защита", "Нужно проверить намерение и выбрать более осознанную стратегию.", "защита может стать недоверием", "Действуй осторожно, но не теряй цель."],
+      ["08", "8", "процесс, навык, повторение", "Ситуация требует ритма, тренировки или движения.", "процесс может стать суетой", "Продолжай маленькими регулярными шагами."],
+      ["09", "9", "зрелость, итог, самостоятельность", "Опыт почти созрел и показывает личный результат.", "можно закрыться или устать", "Признай пройденный путь и береги силы."],
+      ["10", "10", "завершение, полнота, переход", "Цикл подходит к завершению и готовит новую форму.", "перегруз или цепляние за старое", "Заверши главное и освободи место."],
+      ["11", "Паж", "ученик, сигнал, любопытство", "Качество масти только осваивается: через интерес, новость или первую пробу.", "неопытность может выглядеть как уверенность", "Учись и задавай простые вопросы."],
+      ["12", "Рыцарь", "движение, импульс, поиск", "Качество масти выходит в действие и показывает стиль движения.", "порыв может стать крайностью", "Двигайся, но сверяйся с направлением."],
+      ["13", "Королева", "внутренняя зрелость, атмосфера", "Качество масти проживается глубоко и создает пространство вокруг.", "мягкая сила может стать скрытым контролем", "Прояви зрелость и сохрани границы."],
+      ["14", "Король", "управление, мастерство, ответственность", "Качество масти становится решением, влиянием и внешней ответственностью.", "контроль может заменить мудрость", "Управляй спокойно и отвечай за курс."]
+    ].map(([num, label, keywords, meaning, shadow, advice]) => ({ num, label, keywords, meaning, shadow, advice }));
+
+    const minorDeck = suits.flatMap((suit) => ranks.map((rank) => {
+      const name = `${rank.label} ${suit.of}`;
+      return {
+        id: `${suit.filter}-${rank.num}`,
+        name,
+        group: suit.label,
+        filter: suit.filter,
+        isCourt: Number(rank.num) >= 11,
+        keywords: `${rank.keywords}, ${suit.sphere}`,
+        meaning: `${name} соединяет ${suit.sphere} и этап «${rank.keywords}». ${rank.meaning}`,
+        shadow: `${rank.shadow}; в этой масти это может проявиться как ${suit.shadow}.`,
+        advice: `${rank.advice} Помни про ресурс масти: ${suit.light}.`,
+        image: `${suit.prefix}${rank.num}.jpg`,
+        chips: [suit.element, suit.label, rank.label]
+      };
+    }));
+
+    const deck = [...majors, ...minorDeck];
+    let currentFilter = "all";
+    let query = "";
+
+    const cardsEl = document.querySelector("#cards");
+    const searchEl = document.querySelector("#search");
+    const resultCountEl = document.querySelector("#resultCount");
+    const totalCountEl = document.querySelector("#totalCount");
+
+    function imageUrl(file) {
+      return `${imageBase}${encodeURIComponent(file)}`;
+    }
+
+    function matches(card) {
+      const inFilter = currentFilter === "all"
+        || card.filter === currentFilter
+        || (currentFilter === "court" && card.isCourt);
+      const haystack = [card.name, card.group, card.keywords, card.meaning, card.shadow, card.advice].join(" ").toLowerCase();
+      return inFilter && (!query || haystack.includes(query));
+    }
+
+    function renderCard(card) {
+      const chips = card.chips || [card.group, "Старший аркан"];
+      return `
+        <article class="card">
+          <figure>
+            <img src="${imageUrl(card.image)}" alt="${card.name}" loading="lazy">
+          </figure>
+          <div class="card-body">
+            <div>
+              <p class="eyebrow">${card.group}</p>
+              <h2>${card.name}</h2>
+            </div>
+            <div class="chips">
+              ${chips.map((chip) => `<span class="chip">${chip}</span>`).join("")}
+            </div>
+            <div class="note"><h3>Ключи</h3><p class="muted">${card.keywords}</p></div>
+            <div class="note"><h3>Значение</h3><p class="muted">${card.meaning}</p></div>
+            <div class="note"><h3>Тень</h3><p class="muted">${card.shadow}</p></div>
+            <div class="note"><h3>Совет</h3><p class="muted">${card.advice}</p></div>
+          </div>
+        </article>
+      `;
+    }
+
+    function render() {
+      const filtered = deck.filter(matches);
+      totalCountEl.textContent = deck.length;
+      resultCountEl.textContent = `Показано карт: ${filtered.length}`;
+      cardsEl.innerHTML = filtered.length
+        ? filtered.map(renderCard).join("")
+        : `<div class="empty">Ничего не найдено. Попробуй другое слово или сбрось фильтр.</div>`;
+    }
+
+    document.querySelectorAll("[data-filter]").forEach((button) => {
+      button.addEventListener("click", () => {
+        currentFilter = button.dataset.filter;
+        document.querySelectorAll("[data-filter]").forEach((item) => item.classList.toggle("active", item === button));
+        render();
+      });
+    });
+
+    searchEl.addEventListener("input", () => {
+      query = searchEl.value.trim().toLowerCase();
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>
