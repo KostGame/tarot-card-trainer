@@ -254,6 +254,8 @@
 
     .card {
       display: grid;
+      grid-template-columns: 82px minmax(0, 1fr);
+      align-items: start;
       gap: 12px;
       padding: 12px;
     }
@@ -263,7 +265,7 @@
       display: grid;
       place-items: center;
       aspect-ratio: 2.5 / 3.5;
-      min-height: 160px;
+      min-height: 112px;
       border: 1px solid rgba(255, 248, 236, 0.24);
       border-radius: 16px;
       background:
@@ -274,18 +276,46 @@
       overflow: hidden;
     }
 
-    .playing-card img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      background: #f7efe2;
+    .hero > .playing-card {
+      width: min(58vw, 190px);
+      justify-self: center;
     }
 
-    .fallback-face {
-      position: absolute;
-      inset: 0;
-      display: grid;
-      place-items: center;
+    .playing-card svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: inherit;
+    }
+
+    .svg-fallback {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: inherit;
+    }
+
+    .playing-card img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: inherit;
+      object-fit: contain;
+      background: #fff8ec;
+    }
+
+    .card-preview {
+      display: block;
+      width: 100%;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .card-preview:focus-visible {
+      outline: 3px solid rgba(240, 198, 106, 0.65);
+      outline-offset: 3px;
     }
 
     .playing-card.red {
@@ -293,7 +323,7 @@
     }
 
     .playing-card.small {
-      min-height: 104px;
+      min-height: 78px;
       border-radius: 12px;
     }
 
@@ -341,6 +371,12 @@
       padding: 10px 12px;
     }
 
+    .filter-selects {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
     .spread-board {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -370,7 +406,7 @@
 
     .slot-card {
       display: grid;
-      grid-template-columns: 70px minmax(0, 1fr);
+      grid-template-columns: 58px minmax(0, 1fr);
       gap: 10px;
       align-items: center;
     }
@@ -418,7 +454,7 @@
 
     .choice-card {
       display: grid;
-      grid-template-columns: 76px minmax(0, 1fr);
+      grid-template-columns: 62px minmax(0, 1fr);
       gap: 10px;
       align-items: center;
       min-height: 108px;
@@ -429,6 +465,50 @@
       color: var(--text);
       text-align: left;
       cursor: pointer;
+    }
+
+    .image-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 135;
+      display: none;
+      padding: calc(18px + env(safe-area-inset-top)) 12px calc(18px + env(safe-area-inset-bottom));
+      background: rgba(8, 6, 10, 0.82);
+      overflow-y: auto;
+    }
+
+    .image-modal.open {
+      display: grid;
+      place-items: center;
+    }
+
+    .image-sheet {
+      display: grid;
+      gap: 12px;
+      width: min(100%, 560px);
+      max-height: 94vh;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--panel-strong);
+      box-shadow: var(--shadow);
+    }
+
+    .image-full {
+      display: grid;
+      place-items: center;
+      min-height: 0;
+    }
+
+    .image-full .playing-card {
+      width: min(76vw, 300px);
+      min-height: min(106vw, 420px);
+    }
+
+    .image-nav {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
     }
 
     .formula {
@@ -615,9 +695,16 @@
         </div>
       </div>
       <div class="playing-card red" aria-hidden="true">
-        <span class="rank">Т</span>
-        <span class="suit">♥</span>
-        <span class="suit small-suit">♥</span>
+        <svg viewBox="0 0 120 168">
+          <rect x="4" y="4" width="112" height="160" rx="14" fill="#fff8ec" stroke="#1d1a18" stroke-width="2"></rect>
+          <text x="16" y="28" text-anchor="middle" font-size="20" font-weight="900" fill="#c83545">Т</text>
+          <text x="16" y="48" text-anchor="middle" font-size="19" fill="#c83545">♥</text>
+          <text x="60" y="99" text-anchor="middle" font-size="58" fill="#c83545">♥</text>
+          <g transform="rotate(180 60 84)">
+            <text x="16" y="28" text-anchor="middle" font-size="20" font-weight="900" fill="#c83545">Т</text>
+            <text x="16" y="48" text-anchor="middle" font-size="19" fill="#c83545">♥</text>
+          </g>
+        </svg>
       </div>
     </section>
 
@@ -652,6 +739,38 @@
       <p class="eyebrow">Справочник</p>
       <h2>Значения 36 карт</h2>
       <input id="cardSearch" type="search" placeholder="Поиск: черви, дорога, разговор, деньги..." autocomplete="off">
+      <div class="filter-selects">
+        <label>
+          Масть
+          <select id="suitFilter">
+            <option value="all">Все масти</option>
+            <option value="hearts">Черви</option>
+            <option value="diamonds">Бубны</option>
+            <option value="clubs">Трефы</option>
+            <option value="spades">Пики</option>
+            <option value="people">Люди</option>
+          </select>
+        </label>
+        <label>
+          Значение
+          <select id="valueFilter">
+            <option value="all">Все значения</option>
+            <option value="road">Дорога и движение</option>
+            <option value="talk">Разговор и встреча</option>
+            <option value="money">Деньги и дела</option>
+            <option value="relation">Чувства и отношения</option>
+            <option value="people">Люди и роли</option>
+            <option value="tension">Напряжение и границы</option>
+          </select>
+        </label>
+        <label>
+          Вид карт
+          <select id="cardViewMode">
+            <option value="image">Картинки</option>
+            <option value="svg">SVG</option>
+          </select>
+        </label>
+      </div>
       <div class="filters" aria-label="Фильтры карт">
         <button class="btn active" type="button" data-filter="all">Все</button>
         <button class="btn" type="button" data-filter="hearts">Черви</button>
@@ -691,9 +810,8 @@
     </section>
 
     <section class="panel">
-      <p class="eyebrow">Изображения</p>
-      <p class="muted">Картинки игральных карт загружаются с Wikimedia Commons из набора «Atlas deck» Дмитрия Фомина, опубликованного под CC0. Если сеть недоступна, страница все равно остается рабочей: вместо картинки показывается простая CSS-карта.</p>
-      <a class="btn" href="https://commons.wikimedia.org/wiki/Category:SVG_Atlasnye_playing_cards" target="_blank" rel="noopener">Открыть источник изображений</a>
+      <p class="eyebrow">Карты</p>
+      <p class="muted">В справочнике можно выбрать вид карт: реальные картинки с Wikimedia Commons или компактные встроенные SVG. Если внешняя картинка не загрузится, страница автоматически покажет SVG-вариант.</p>
     </section>
 
     <section class="panel">
@@ -711,6 +829,22 @@
       <input id="modalSearch" type="search" placeholder="Найти карту..." autocomplete="off">
       <div class="filters" id="modalFilters"></div>
       <div class="choice-list" id="choiceList"></div>
+    </div>
+  </section>
+
+  <section class="image-modal" id="imageModal" aria-label="Просмотр карты">
+    <div class="image-sheet">
+      <div>
+        <p class="eyebrow" id="previewGroup">36 карт</p>
+        <h2 id="previewTitle">Карта</h2>
+      </div>
+      <div class="image-full" id="previewVisual"></div>
+      <div class="image-nav">
+        <button class="btn" type="button" data-preview-prev>Назад</button>
+        <button class="btn warn" type="button" data-preview-close>Закрыть</button>
+        <button class="btn" type="button" data-preview-next>Дальше</button>
+      </div>
+      <p class="fine">Листай свайпом влево или вправо. Свайп вниз закрывает просмотр.</p>
     </div>
   </section>
 
@@ -906,6 +1040,16 @@
       trend: "тенденция: куда может двигаться процесс, если ничего не менять"
     };
 
+    const valueMatchers = {
+      all: () => true,
+      road: (card) => /дорог|движ|путь|перемещ/i.test([card.keywords.join(" "), card.meaning, card.detail, card.theme].join(" ")),
+      talk: (card) => /разговор|встреч|весть|новость|сообщ/i.test([card.keywords.join(" "), card.meaning, card.detail, card.theme].join(" ")),
+      money: (card) => /деньг|дел|выгод|работ|ресурс|документ|обмен/i.test([card.keywords.join(" "), card.meaning, card.detail, card.theme].join(" ")),
+      relation: (card) => /чувств|сердц|отнош|симпат|близ|радост/i.test([card.keywords.join(" "), card.meaning, card.detail, card.theme].join(" ")),
+      people: (card) => ["Валет", "Дама", "Король"].includes(card.rank),
+      tension: (card) => /напряж|тревог|границ|задерж|сложн|спор|страх|риск/i.test([card.keywords.join(" "), card.meaning, card.detail, card.shadow, card.theme].join(" "))
+    };
+
     const combinationHints = [
       ["Много червей", "В раскладе сильна тема чувств, близости, симпатий или ожидания тепла."],
       ["Много бубен", "Фокус на деньгах, новостях, обмене, договоренностях и практической выгоде."],
@@ -918,6 +1062,8 @@
 
     const state = {
       filter: "all",
+      valueFilter: "all",
+      cardViewMode: "image",
       query: "",
       modalQuery: "",
       modalFilter: "all",
@@ -936,6 +1082,9 @@
     const cardsList = document.querySelector("#cardsList");
     const cardCount = document.querySelector("#cardCount");
     const cardSearch = document.querySelector("#cardSearch");
+    const suitFilter = document.querySelector("#suitFilter");
+    const valueFilter = document.querySelector("#valueFilter");
+    const cardViewMode = document.querySelector("#cardViewMode");
     const spreadSelect = document.querySelector("#spreadSelect");
     const questionSelect = document.querySelector("#questionSelect");
     const spreadHint = document.querySelector("#spreadHint");
@@ -946,10 +1095,20 @@
     const modalSearch = document.querySelector("#modalSearch");
     const modalFilters = document.querySelector("#modalFilters");
     const choiceList = document.querySelector("#choiceList");
+    const imageModal = document.querySelector("#imageModal");
+    const previewTitle = document.querySelector("#previewTitle");
+    const previewGroup = document.querySelector("#previewGroup");
+    const previewVisual = document.querySelector("#previewVisual");
+    let visibleCards = [];
+    let previewIndex = 0;
+    let touchStartX = 0;
+    let touchStartY = 0;
 
     function saveState() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
         filter: state.filter,
+        valueFilter: state.valueFilter,
+        cardViewMode: state.cardViewMode,
         query: state.query,
         spread: state.spread,
         question: state.question,
@@ -972,16 +1131,32 @@
       });
     }
 
-    function cardFace(card, small = false) {
+    function cardSvg(card) {
       const suit = suitMeanings[card.suit];
+      const cornerRank = card.rank === "Валет" ? "В" : card.rank === "Дама" ? "Д" : card.rank === "Король" ? "К" : card.rank === "Туз" ? "Т" : card.rank;
+      const color = suit.color === "red" ? "#c83545" : "#1d1a18";
+      return `
+        <svg viewBox="0 0 120 168" role="img" aria-label="${card.name}">
+          <rect x="4" y="4" width="112" height="160" rx="14" fill="#fff8ec" stroke="#1d1a18" stroke-width="2"></rect>
+          <text x="16" y="28" text-anchor="middle" font-size="20" font-weight="900" fill="${color}">${cornerRank}</text>
+          <text x="16" y="48" text-anchor="middle" font-size="19" fill="${color}">${suit.symbol}</text>
+          <text x="60" y="99" text-anchor="middle" font-size="58" fill="${color}">${suit.symbol}</text>
+          <g transform="rotate(180 60 84)">
+            <text x="16" y="28" text-anchor="middle" font-size="20" font-weight="900" fill="${color}">${cornerRank}</text>
+            <text x="16" y="48" text-anchor="middle" font-size="19" fill="${color}">${suit.symbol}</text>
+          </g>
+        </svg>
+      `;
+    }
+
+    function cardFace(card, small = false, mode = state.cardViewMode) {
+      const suit = suitMeanings[card.suit];
+      const visual = mode === "image"
+        ? `<img src="${card.image}" alt="${card.name}" loading="lazy" onerror="this.hidden=true; this.nextElementSibling.hidden=false;"><span class="svg-fallback" hidden>${cardSvg(card)}</span>`
+        : cardSvg(card);
       return `
         <div class="playing-card ${suit.color === "red" ? "red" : ""} ${small ? "small" : ""}">
-          <img src="${card.image}" alt="${card.name}" loading="lazy" onerror="this.hidden=true; this.nextElementSibling.hidden=false;">
-          <div class="fallback-face" hidden>
-            <span class="rank">${card.rank}</span>
-            <span class="suit">${suit.symbol}</span>
-            <span class="suit small-suit">${suit.symbol}</span>
-          </div>
+          ${visual}
         </div>
       `;
     }
@@ -1022,20 +1197,24 @@
       `).join("");
     }
 
-    function matchesCard(card, filter, query) {
+    function matchesCard(card, filter, query, value = "all") {
       const text = `${card.name} ${card.keywords.join(" ")} ${card.meaning} ${card.shadow} ${card.advice}`.toLowerCase();
       const filterOk = filter === "all"
         || card.suit === filter
         || (filter === "people" && ["Валет", "Дама", "Король"].includes(card.rank));
-      return filterOk && text.includes(query.toLowerCase());
+      const valueOk = (valueMatchers[value] || valueMatchers.all)(card);
+      return filterOk && valueOk && text.includes(query.toLowerCase());
     }
 
     function renderCards() {
-      const filtered = deck36.filter((card) => matchesCard(card, state.filter, state.query));
+      const filtered = deck36.filter((card) => matchesCard(card, state.filter, state.query, state.valueFilter));
+      visibleCards = filtered;
       cardCount.textContent = `Показано карт: ${filtered.length} из ${deck36.length}`;
       cardsList.innerHTML = filtered.map((card) => `
         <article class="card">
-          ${cardFace(card)}
+          <button class="card-preview" type="button" data-preview-card="${card.id}" aria-label="Открыть ${card.name} на весь экран">
+            ${cardFace(card)}
+          </button>
           <div>
             <p class="eyebrow">${suitMeanings[card.suit].name} · ${rankMeanings[card.rank]}</p>
             <h3>${card.name}</h3>
@@ -1171,13 +1350,53 @@
       `).join("");
     }
 
+    function showPreview(index) {
+      if (!visibleCards.length) return;
+      previewIndex = (index + visibleCards.length) % visibleCards.length;
+      const card = visibleCards[previewIndex];
+      previewTitle.textContent = card.name;
+      previewGroup.textContent = suitMeanings[card.suit].name;
+      previewVisual.innerHTML = cardFace(card, false, state.cardViewMode);
+      imageModal.classList.add("open");
+    }
+
+    function closePreview() {
+      imageModal.classList.remove("open");
+    }
+
+    function movePreview(step) {
+      showPreview(previewIndex + step);
+    }
+
     document.querySelectorAll("[data-filter]").forEach((button) => {
       button.addEventListener("click", () => {
         state.filter = button.dataset.filter;
+        suitFilter.value = state.filter;
         document.querySelectorAll("[data-filter]").forEach((item) => item.classList.toggle("active", item === button));
         renderCards();
         saveState();
       });
+    });
+
+    suitFilter.addEventListener("change", () => {
+      state.filter = suitFilter.value;
+      document.querySelectorAll("[data-filter]").forEach((item) => item.classList.toggle("active", item.dataset.filter === state.filter));
+      renderCards();
+      saveState();
+    });
+
+    valueFilter.addEventListener("change", () => {
+      state.valueFilter = valueFilter.value;
+      renderCards();
+      saveState();
+    });
+
+    cardViewMode.addEventListener("change", () => {
+      state.cardViewMode = cardViewMode.value;
+      renderCards();
+      renderSpread();
+      if (imageModal.classList.contains("open")) showPreview(previewIndex);
+      saveState();
     });
 
     cardSearch.addEventListener("input", () => {
@@ -1200,6 +1419,17 @@
     });
 
     document.addEventListener("click", (event) => {
+      const previewButton = event.target.closest("[data-preview-card]");
+      if (previewButton) {
+        const index = visibleCards.findIndex((card) => card.id === previewButton.dataset.previewCard);
+        showPreview(index >= 0 ? index : 0);
+        return;
+      }
+
+      if (event.target.closest("[data-preview-close]") || event.target === imageModal) closePreview();
+      if (event.target.closest("[data-preview-prev]")) movePreview(-1);
+      if (event.target.closest("[data-preview-next]")) movePreview(1);
+
       const slot = event.target.closest("[data-open-slot]");
       if (slot) openModal(Number(slot.dataset.openSlot));
 
@@ -1247,6 +1477,27 @@
       renderModal();
     });
 
+    imageModal.addEventListener("touchstart", (event) => {
+      const touch = event.changedTouches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+    }, { passive: true });
+
+    imageModal.addEventListener("touchend", (event) => {
+      const touch = event.changedTouches[0];
+      const dx = touch.clientX - touchStartX;
+      const dy = touch.clientY - touchStartY;
+      if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy)) movePreview(dx < 0 ? 1 : -1);
+      if (dy > 70 && Math.abs(dy) > Math.abs(dx)) closePreview();
+    }, { passive: true });
+
+    document.addEventListener("keydown", (event) => {
+      if (!imageModal.classList.contains("open")) return;
+      if (event.key === "Escape") closePreview();
+      if (event.key === "ArrowLeft") movePreview(-1);
+      if (event.key === "ArrowRight") movePreview(1);
+    });
+
     showReading.addEventListener("click", () => {
       state.showReading = true;
       renderReading();
@@ -1258,6 +1509,9 @@
     renderStaticGuides();
     renderControls();
     cardSearch.value = state.query;
+    suitFilter.value = state.filter;
+    valueFilter.value = state.valueFilter;
+    cardViewMode.value = state.cardViewMode;
     document.querySelectorAll("[data-filter]").forEach((item) => item.classList.toggle("active", item.dataset.filter === state.filter));
     renderCards();
     renderSpread();

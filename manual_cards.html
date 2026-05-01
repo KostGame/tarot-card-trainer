@@ -187,6 +187,31 @@
       box-shadow: 0 0 0 3px rgba(240, 198, 106, 0.12);
     }
 
+    .filter-selects {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .filter-selects label {
+      display: grid;
+      gap: 7px;
+      color: var(--muted);
+      font-weight: 760;
+    }
+
+    .filter-selects select {
+      width: 100%;
+      min-height: 46px;
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--panel-strong);
+      color: var(--text);
+      color-scheme: dark;
+      outline: none;
+    }
+
     .filters {
       grid-auto-flow: column;
       grid-auto-columns: max-content;
@@ -228,6 +253,8 @@
 
     .card {
       display: grid;
+      grid-template-columns: 92px minmax(0, 1fr);
+      align-items: start;
       gap: 12px;
       padding: 12px;
       overflow: hidden;
@@ -241,16 +268,85 @@
       background: rgba(0, 0, 0, 0.18);
     }
 
+    .card-preview {
+      display: block;
+      width: 100%;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .card-preview:focus-visible {
+      outline: 3px solid rgba(240, 198, 106, 0.65);
+      outline-offset: 3px;
+    }
+
     .card img {
       display: block;
       width: 100%;
-      aspect-ratio: 3 / 5;
+      height: 138px;
       object-fit: contain;
       background: rgba(255, 255, 255, 0.04);
     }
 
     .card-body {
       display: grid;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .card-body h2 {
+      font-size: 1.2rem;
+      line-height: 1.12;
+    }
+
+    .image-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 130;
+      display: none;
+      padding: calc(18px + env(safe-area-inset-top)) 12px calc(18px + env(safe-area-inset-bottom));
+      background: rgba(8, 6, 10, 0.82);
+      overflow-y: auto;
+    }
+
+    .image-modal.open {
+      display: grid;
+      place-items: center;
+    }
+
+    .image-sheet {
+      display: grid;
+      gap: 12px;
+      width: min(100%, 560px);
+      max-height: 94vh;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--panel-strong);
+      box-shadow: var(--shadow);
+    }
+
+    .image-full {
+      display: grid;
+      place-items: center;
+      min-height: 0;
+    }
+
+    .image-full img {
+      display: block;
+      max-width: min(82vw, 360px);
+      max-height: 68vh;
+      object-fit: contain;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .image-nav {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 8px;
     }
 
@@ -303,17 +399,17 @@
       }
 
       .card {
-        grid-template-columns: 180px minmax(0, 1fr);
+        grid-template-columns: 116px minmax(0, 1fr);
+      }
+
+      .card img {
+        height: 172px;
       }
     }
 
     @media (min-width: 1020px) {
       .cards {
         grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-
-      .card {
-        grid-template-columns: 1fr;
       }
     }
 
@@ -483,6 +579,33 @@
         <div class="stat"><strong>56</strong><span class="fine">младших</span></div>
       </div>
       <input class="search" id="search" type="search" placeholder="Поиск: Шут, Кубки, совет, напряжение..." autocomplete="off">
+      <div class="filter-selects">
+        <label>
+          Масть
+          <select id="suitFilter">
+            <option value="all">Все карты</option>
+            <option value="major">Старшие арканы</option>
+            <option value="wands">Жезлы</option>
+            <option value="cups">Кубки</option>
+            <option value="swords">Мечи</option>
+            <option value="pentacles">Пентакли</option>
+            <option value="court">Придворные</option>
+          </select>
+        </label>
+        <label>
+          Значение
+          <select id="meaningFilter">
+            <option value="all">Все значения</option>
+            <option value="start">Начало и шанс</option>
+            <option value="choice">Выбор и баланс</option>
+            <option value="feeling">Чувства и отношения</option>
+            <option value="action">Действие и энергия</option>
+            <option value="challenge">Напряжение и урок</option>
+            <option value="resource">Ресурсы и результат</option>
+            <option value="people">Люди и роли</option>
+          </select>
+        </label>
+      </div>
       <div class="filters" aria-label="Фильтры карт">
         <button class="btn active" type="button" data-filter="all">Все</button>
         <button class="btn" type="button" data-filter="major">Старшие</button>
@@ -505,6 +628,24 @@
       <p class="fine">Материалы предназначены для обучения, самоанализа и развлечения. Они не являются медицинской, юридической или финансовой рекомендацией.</p>
     </section>
   </main>
+
+  <section class="image-modal" id="imageModal" aria-label="Просмотр карты">
+    <div class="image-sheet">
+      <div>
+        <p class="eyebrow" id="previewGroup">Карта</p>
+        <h2 id="previewTitle">Карта</h2>
+      </div>
+      <div class="image-full">
+        <img id="previewImage" alt="">
+      </div>
+      <div class="image-nav">
+        <button class="btn" type="button" data-preview-prev>Назад</button>
+        <button class="btn warn" type="button" data-preview-close>Закрыть</button>
+        <button class="btn" type="button" data-preview-next>Дальше</button>
+      </div>
+      <p class="fine">Листай свайпом влево или вправо. Свайп вниз закрывает просмотр.</p>
+    </div>
+  </section>
 
   <script>
     const imageBase = "https://commons.wikimedia.org/wiki/Special:FilePath/";
@@ -587,12 +728,34 @@
 
     const deck = [...majors, ...minorDeck];
     let currentFilter = "all";
+    let currentMeaning = "all";
     let query = "";
 
     const cardsEl = document.querySelector("#cards");
     const searchEl = document.querySelector("#search");
+    const suitFilterEl = document.querySelector("#suitFilter");
+    const meaningFilterEl = document.querySelector("#meaningFilter");
     const resultCountEl = document.querySelector("#resultCount");
     const totalCountEl = document.querySelector("#totalCount");
+    const imageModal = document.querySelector("#imageModal");
+    const previewImage = document.querySelector("#previewImage");
+    const previewTitle = document.querySelector("#previewTitle");
+    const previewGroup = document.querySelector("#previewGroup");
+    let visibleCards = [];
+    let previewIndex = 0;
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    const meaningMatchers = {
+      all: () => true,
+      start: (card) => /начало|шанс|искра|новая|первый|старт/i.test([card.keywords, card.meaning, card.advice].join(" ")),
+      choice: (card) => /выбор|баланс|два|решение|ценности/i.test([card.keywords, card.meaning, card.advice].join(" ")),
+      feeling: (card) => /чувств|отнош|сердц|любов|эмоц|близость|Кубк/i.test([card.name, card.group, card.keywords, card.meaning].join(" ")),
+      action: (card) => /действ|энерг|движ|воля|смел|Жезл/i.test([card.name, card.group, card.keywords, card.meaning, card.advice].join(" ")),
+      challenge: (card) => /напряж|конфликт|тень|страх|кризис|проверка|урок/i.test([card.keywords, card.meaning, card.shadow].join(" ")),
+      resource: (card) => /ресурс|работ|деньг|тело|результат|устойчив|Пентак/i.test([card.name, card.group, card.keywords, card.meaning].join(" ")),
+      people: (card) => card.isCourt || /Дама|Король|Королева|Рыцарь|Паж|Влюбленные|Император|Императрица|Иерофант/i.test(card.name)
+    };
 
     function imageUrl(file) {
       return `${imageBase}${encodeURIComponent(file)}`;
@@ -602,8 +765,9 @@
       const inFilter = currentFilter === "all"
         || card.filter === currentFilter
         || (currentFilter === "court" && card.isCourt);
+      const inMeaning = (meaningMatchers[currentMeaning] || meaningMatchers.all)(card);
       const haystack = [card.name, card.group, card.keywords, card.meaning, card.shadow, card.advice].join(" ").toLowerCase();
-      return inFilter && (!query || haystack.includes(query));
+      return inFilter && inMeaning && (!query || haystack.includes(query));
     }
 
     function renderCard(card) {
@@ -611,7 +775,9 @@
       return `
         <article class="card">
           <figure>
-            <img src="${imageUrl(card.image)}" alt="${card.name}" loading="lazy">
+            <button class="card-preview" type="button" data-preview-card="${card.id}" aria-label="Открыть ${card.name} на весь экран">
+              <img src="${imageUrl(card.image)}" alt="${card.name}" loading="lazy">
+            </button>
           </figure>
           <div class="card-body">
             <div>
@@ -632,6 +798,7 @@
 
     function render() {
       const filtered = deck.filter(matches);
+      visibleCards = filtered;
       totalCountEl.textContent = deck.length;
       resultCountEl.textContent = `Показано карт: ${filtered.length}`;
       cardsEl.innerHTML = filtered.length
@@ -639,17 +806,82 @@
         : `<div class="empty">Ничего не найдено. Попробуй другое слово или сбрось фильтр.</div>`;
     }
 
+    function showPreview(index) {
+      if (!visibleCards.length) return;
+      previewIndex = (index + visibleCards.length) % visibleCards.length;
+      const card = visibleCards[previewIndex];
+      previewTitle.textContent = card.name;
+      previewGroup.textContent = card.group;
+      previewImage.src = imageUrl(card.image);
+      previewImage.alt = card.name;
+      imageModal.classList.add("open");
+    }
+
+    function closePreview() {
+      imageModal.classList.remove("open");
+    }
+
+    function movePreview(step) {
+      showPreview(previewIndex + step);
+    }
+
     document.querySelectorAll("[data-filter]").forEach((button) => {
       button.addEventListener("click", () => {
         currentFilter = button.dataset.filter;
+        suitFilterEl.value = currentFilter;
         document.querySelectorAll("[data-filter]").forEach((item) => item.classList.toggle("active", item === button));
         render();
       });
     });
 
+    suitFilterEl.addEventListener("change", () => {
+      currentFilter = suitFilterEl.value;
+      document.querySelectorAll("[data-filter]").forEach((item) => item.classList.toggle("active", item.dataset.filter === currentFilter));
+      render();
+    });
+
+    meaningFilterEl.addEventListener("change", () => {
+      currentMeaning = meaningFilterEl.value;
+      render();
+    });
+
     searchEl.addEventListener("input", () => {
       query = searchEl.value.trim().toLowerCase();
       render();
+    });
+
+    document.addEventListener("click", (event) => {
+      const previewButton = event.target.closest("[data-preview-card]");
+      if (previewButton) {
+        const index = visibleCards.findIndex((card) => card.id === previewButton.dataset.previewCard);
+        showPreview(index >= 0 ? index : 0);
+        return;
+      }
+
+      if (event.target.closest("[data-preview-close]") || event.target === imageModal) closePreview();
+      if (event.target.closest("[data-preview-prev]")) movePreview(-1);
+      if (event.target.closest("[data-preview-next]")) movePreview(1);
+    });
+
+    imageModal.addEventListener("touchstart", (event) => {
+      const touch = event.changedTouches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+    }, { passive: true });
+
+    imageModal.addEventListener("touchend", (event) => {
+      const touch = event.changedTouches[0];
+      const dx = touch.clientX - touchStartX;
+      const dy = touch.clientY - touchStartY;
+      if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy)) movePreview(dx < 0 ? 1 : -1);
+      if (dy > 70 && Math.abs(dy) > Math.abs(dx)) closePreview();
+    }, { passive: true });
+
+    document.addEventListener("keydown", (event) => {
+      if (!imageModal.classList.contains("open")) return;
+      if (event.key === "Escape") closePreview();
+      if (event.key === "ArrowLeft") movePreview(-1);
+      if (event.key === "ArrowRight") movePreview(1);
     });
 
     function setupSiteMenu() {
