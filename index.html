@@ -907,9 +907,149 @@
         font-size: 1.2rem;
       }
     }
+
+    .with-site-menu .app-shell {
+      padding-top: calc(70px + env(safe-area-inset-top));
+    }
+
+    .site-menu-toggle {
+      position: fixed;
+      top: calc(12px + env(safe-area-inset-top));
+      left: 12px;
+      z-index: 70;
+      width: 48px;
+      height: 48px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(35, 29, 38, 0.92);
+      color: var(--text);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35), 0 0 20px rgba(240, 198, 106, 0.12);
+      font-family: inherit;
+      font-size: 1.35rem;
+      font-weight: 900;
+      line-height: 1;
+      cursor: pointer;
+      backdrop-filter: blur(14px);
+    }
+
+    .site-menu-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      background: rgba(8, 6, 10, 0.62);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .site-menu-drawer {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 90;
+      width: min(86vw, 340px);
+      padding: calc(18px + env(safe-area-inset-top)) 16px calc(22px + env(safe-area-inset-bottom));
+      overflow-y: auto;
+      background: radial-gradient(circle at 18% 0%, rgba(240, 198, 106, 0.14), transparent 36%), linear-gradient(180deg, #241d29 0%, #171216 100%);
+      border-right: 1px solid var(--line);
+      box-shadow: 28px 0 70px rgba(0, 0, 0, 0.5);
+      transform: translateX(-105%);
+      transition: transform 0.24s ease;
+    }
+
+    body.site-menu-open .site-menu-backdrop {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    body.site-menu-open .site-menu-drawer {
+      transform: translateX(0);
+    }
+
+    .site-menu-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .site-menu-head h2 {
+      margin: 4px 0 0;
+      font-size: 1.65rem;
+    }
+
+    .site-menu-close {
+      min-height: 42px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 248, 236, 0.07);
+      color: var(--text);
+      font-family: inherit;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .site-menu-links {
+      display: grid;
+      gap: 10px;
+    }
+
+    .site-menu-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 48px;
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid rgba(255, 248, 236, 0.12);
+      border-radius: 16px;
+      background: rgba(255, 248, 236, 0.06);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.98rem;
+      font-weight: 800;
+      text-align: left;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .site-menu-link:hover,
+    .site-menu-link:focus-visible {
+      border-color: rgba(240, 198, 106, 0.6);
+      background: rgba(240, 198, 106, 0.14);
+      outline: none;
+    }
+
+    .site-menu-note {
+      margin: 18px 4px 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
   </style>
 </head>
-<body>
+<body class="with-site-menu">
+  <button class="site-menu-toggle" type="button" data-site-menu-open aria-label="Открыть меню">☰</button>
+  <div class="site-menu-backdrop" data-site-menu-close></div>
+  <aside class="site-menu-drawer" aria-label="Навигация по страницам">
+    <div class="site-menu-head">
+      <div>
+        <p class="eyebrow">Навигация</p>
+        <h2>Таро</h2>
+      </div>
+      <button class="site-menu-close" type="button" data-site-menu-close>Закрыть</button>
+    </div>
+    <nav class="site-menu-links">
+      <a class="site-menu-link" href="index.html">Главная и тренировки</a>
+      <a class="site-menu-link" href="manual_tarot.html">Руководство по Таро</a>
+      <a class="site-menu-link" href="manual_cards.html">Все карты с картинками</a>
+      <a class="site-menu-link" href="spread_trainer.html">Тренажер раскладов</a>
+    </nav>
+    <p class="site-menu-note">Единое меню открывается слева и помогает быстро переходить между страницами самоучителя.</p>
+  </aside>
   <main id="app" class="app-shell" aria-live="polite"></main>
 
   <nav class="bottom-nav" aria-label="Нижняя навигация">
@@ -917,6 +1057,24 @@
   </nav>
 
   <script>
+    function setupSiteMenu() {
+      const openButton = document.querySelector("[data-site-menu-open]");
+      const closeTargets = document.querySelectorAll("[data-site-menu-close]");
+      const closeMenu = () => document.body.classList.remove("site-menu-open");
+      const openMenu = () => document.body.classList.add("site-menu-open");
+
+      openButton?.addEventListener("click", openMenu);
+      closeTargets.forEach((target) => target.addEventListener("click", closeMenu));
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeMenu();
+      });
+      document.addEventListener("click", (event) => {
+        if (event.target.closest(".site-menu-link")) closeMenu();
+      });
+    }
+
+    setupSiteMenu();
+
     const STORAGE_KEY = "tarotTrainerProgress.v1";
     const DAILY_FOCUS_KEY = "tarotTrainerDailyFocus.v2";
 
