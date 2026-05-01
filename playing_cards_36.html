@@ -30,6 +30,10 @@
       box-sizing: border-box;
     }
 
+    [hidden] {
+      display: none !important;
+    }
+
     html {
       min-width: 320px;
       background: var(--bg);
@@ -774,11 +778,14 @@
       </div>
     </details>
 
-    <section class="panel" id="suits">
-      <p class="eyebrow">Масти</p>
-      <h2>Четыре сферы обычной колоды</h2>
-      <div class="grid" id="suitGuide"></div>
-    </section>
+    <details id="suits" open>
+      <summary>Масти</summary>
+      <div class="details-body">
+        <p class="eyebrow">Масти</p>
+        <h2>Четыре сферы обычной колоды</h2>
+        <div class="grid" id="suitGuide"></div>
+      </div>
+    </details>
 
     <details open>
       <summary>Как читать расклад спокойно</summary>
@@ -790,11 +797,13 @@
       </div>
     </details>
 
-    <section class="panel" id="meanings">
-      <p class="eyebrow">Справочник</p>
-      <h2>Значения 36 карт</h2>
-      <input id="cardSearch" type="search" placeholder="Поиск: черви, дорога, разговор, деньги..." autocomplete="off">
-      <div class="filter-selects">
+    <details id="meanings" open>
+      <summary>Значения 36 карт</summary>
+      <div class="details-body">
+        <p class="eyebrow">Справочник</p>
+        <h2>Значения 36 карт</h2>
+        <input id="cardSearch" type="search" placeholder="Поиск: черви, дорога, разговор, деньги..." autocomplete="off">
+        <div class="filter-selects">
         <label>
           Масть
           <select id="suitFilter">
@@ -825,68 +834,84 @@
             <option value="svg">SVG</option>
           </select>
         </label>
-      </div>
-      <div class="filters" aria-label="Фильтры карт">
+        </div>
+        <div class="filters" aria-label="Фильтры карт">
         <button class="btn active" type="button" data-filter="all">Все</button>
         <button class="btn" type="button" data-filter="hearts">Черви</button>
         <button class="btn" type="button" data-filter="diamonds">Бубны</button>
         <button class="btn" type="button" data-filter="clubs">Трефы</button>
         <button class="btn" type="button" data-filter="spades">Пики</button>
         <button class="btn" type="button" data-filter="people">Люди</button>
+        </div>
+        <p class="fine" id="cardCount"></p>
+        <div class="cards" id="cardsList"></div>
       </div>
-      <p class="fine" id="cardCount"></p>
-      <div class="cards" id="cardsList"></div>
-    </section>
+    </details>
 
-    <section class="panel" id="quiz36">
-      <p class="eyebrow">Викторина</p>
-      <h2>Угадай значение карты</h2>
-      <p class="muted">Смотри на карту и выбирай, о чем она говорит. Если сомневаешься, возьми подсказку 50/50 или мягкую подсказку по масти и рангу.</p>
-      <div class="quiz-card" id="quizCard"></div>
-      <div class="quiz-options" id="quizOptions"></div>
-      <div class="button-row">
-        <button class="btn" type="button" data-quiz-fifty>50/50</button>
-        <button class="btn" type="button" data-quiz-hint>Подсказка</button>
-        <button class="btn primary" type="button" data-quiz-next>Следующая карта</button>
+    <details id="quiz36" open>
+      <summary>Викторина: угадай значение карты</summary>
+      <div class="details-body">
+        <p class="eyebrow">Викторина</p>
+        <h2>Угадай значение карты</h2>
+        <p class="muted">Смотри на карту и выбирай, о чем она говорит. Если сомневаешься, возьми подсказку 50/50 или мягкую подсказку по масти и рангу.</p>
+        <div class="quiz-card" id="quizCard"></div>
+        <div class="quiz-options" id="quizOptions"></div>
+        <div class="button-row">
+          <button class="btn" type="button" data-quiz-fifty>50/50</button>
+          <button class="btn" type="button" data-quiz-hint>Подсказка</button>
+          <button class="btn primary" type="button" data-quiz-next>Следующая карта</button>
+        </div>
+        <div class="quiz-result" id="quizResult">Выбери вариант ответа.</div>
       </div>
-      <div class="quiz-result" id="quizResult">Выбери вариант ответа.</div>
-    </section>
+    </details>
 
     <details open>
       <summary>Сочетания и повторения</summary>
       <div class="details-body grid" id="combinationGuide"></div>
     </details>
 
-    <section class="panel" id="trainer">
-      <p class="eyebrow">Тренажер расклада</p>
-      <h2>Повтори расклад на экране</h2>
-      <div class="controls">
+    <details id="trainer" open>
+      <summary>Тренажер расклада</summary>
+      <div class="details-body">
+        <p class="eyebrow">Тренажер расклада</p>
+        <h2>Повтори расклад на экране</h2>
+        <div class="controls">
         <label>Тип расклада<select id="spreadSelect"></select></label>
         <label>Тип вопроса<select id="questionSelect"></select></label>
-      </div>
-      <div class="button-row">
+        </div>
+        <div class="button-row">
         <button class="btn warn" type="button" data-reset>Сбросить расклад</button>
         <button class="btn primary" type="button" id="showReading" disabled>Показать толкование</button>
+        </div>
+        <p class="fine" id="spreadHint"></p>
+        <div class="spread-board" id="spreadBoard"></div>
       </div>
-      <p class="fine" id="spreadHint"></p>
-      <div class="spread-board" id="spreadBoard"></div>
-    </section>
+    </details>
 
-    <section class="panel">
-      <p class="eyebrow">Толкование</p>
-      <h2>Учебный разбор</h2>
-      <div id="reading" class="stack"></div>
-    </section>
+    <details open>
+      <summary>Учебный разбор</summary>
+      <div class="details-body">
+        <p class="eyebrow">Толкование</p>
+        <h2>Учебный разбор</h2>
+        <div id="reading" class="stack"></div>
+      </div>
+    </details>
 
-    <section class="panel">
-      <p class="eyebrow">Карты</p>
-      <p class="muted">В справочнике можно выбрать вид карт: реальные картинки с Wikimedia Commons или компактные встроенные SVG. Если внешняя картинка не загрузится, страница автоматически покажет SVG-вариант.</p>
-    </section>
+    <details>
+      <summary>Карты и изображения</summary>
+      <div class="details-body">
+        <p class="eyebrow">Карты</p>
+        <p class="muted">В справочнике можно выбрать вид карт: реальные картинки с Wikimedia Commons или компактные встроенные SVG. Если внешняя картинка не загрузится, страница автоматически покажет SVG-вариант.</p>
+      </div>
+    </details>
 
-    <section class="panel">
-      <p class="eyebrow">Этика</p>
-      <p class="muted">Материалы страницы предназначены для обучения, самоанализа и развлечения. Они не являются медицинской, юридической или финансовой рекомендацией. Не пугай человека картами, не обещай неизбежных событий и используй расклад как повод подумать спокойнее.</p>
-    </section>
+    <details>
+      <summary>Этика чтения</summary>
+      <div class="details-body">
+        <p class="eyebrow">Этика</p>
+        <p class="muted">Материалы страницы предназначены для обучения, самоанализа и развлечения. Они не являются медицинской, юридической или финансовой рекомендацией. Не пугай человека картами, не обещай неизбежных событий и используй расклад как повод подумать спокойнее.</p>
+      </div>
+    </details>
   </main>
 
   <section class="modal" id="cardModal" aria-label="Выбор карты">

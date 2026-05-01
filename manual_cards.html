@@ -30,6 +30,10 @@
       box-sizing: border-box;
     }
 
+    [hidden] {
+      display: none !important;
+    }
+
     html {
       min-width: 320px;
       background: var(--bg);
@@ -86,6 +90,26 @@
       gap: 12px;
       margin: 14px 0;
       padding: 14px;
+    }
+
+    details.panel {
+      display: block;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    details.panel summary {
+      cursor: pointer;
+      padding: 14px;
+      color: var(--gold);
+      font-weight: 850;
+      list-style-position: inside;
+    }
+
+    details.panel .details-body {
+      display: grid;
+      gap: 12px;
+      padding: 0 14px 14px;
     }
 
     .eyebrow {
@@ -644,7 +668,9 @@
       </div>
     </section>
 
-    <section class="panel" id="gallery">
+    <details class="panel" id="gallery" open>
+      <summary>Галерея и фильтры</summary>
+      <div class="details-body">
       <div class="stats">
         <div class="stat"><strong id="totalCount">78</strong><span class="fine">всего карт</span></div>
         <div class="stat"><strong>22</strong><span class="fine">старших</span></div>
@@ -688,31 +714,38 @@
         <button class="btn" type="button" data-filter="court">Придворные</button>
       </div>
       <p class="fine" id="resultCount"></p>
-    </section>
-
-    <section class="panel" id="quiz">
-      <p class="eyebrow">Викторина</p>
-      <h2>Угадай значение карты</h2>
-      <p class="muted">Смотри на карту и выбирай, о чем она говорит. Можно взять подсказку 50/50 или открыть мягкую подсказку по группе и ключам.</p>
-      <div class="quiz-card" id="quizCard"></div>
-      <div class="quiz-options" id="quizOptions"></div>
-      <div class="button-row">
-        <button class="btn" type="button" data-quiz-fifty>50/50</button>
-        <button class="btn" type="button" data-quiz-hint>Подсказка</button>
-        <button class="btn primary" type="button" data-quiz-next>Следующая карта</button>
       </div>
-      <div class="quiz-result" id="quizResult">Выбери вариант ответа.</div>
-    </section>
+    </details>
+
+    <details class="panel" id="quiz" open>
+      <summary>Викторина: угадай значение карты</summary>
+      <div class="details-body">
+        <p class="eyebrow">Викторина</p>
+        <h2>Угадай значение карты</h2>
+        <p class="muted">Смотри на карту и выбирай, о чем она говорит. Можно взять подсказку 50/50 или открыть мягкую подсказку по группе и ключам.</p>
+        <div class="quiz-card" id="quizCard"></div>
+        <div class="quiz-options" id="quizOptions"></div>
+        <div class="button-row">
+          <button class="btn" type="button" data-quiz-fifty>50/50</button>
+          <button class="btn" type="button" data-quiz-hint>Подсказка</button>
+          <button class="btn primary" type="button" data-quiz-next>Следующая карта</button>
+        </div>
+        <div class="quiz-result" id="quizResult">Выбери вариант ответа.</div>
+      </div>
+    </details>
 
     <section class="cards" id="cards"></section>
 
-    <section class="panel" id="sources">
-      <p class="eyebrow">Источники изображений</p>
-      <h2>Wikimedia Commons</h2>
-      <p class="muted">Изображения подгружаются с Wikimedia Commons через `Special:FilePath`. Описания на странице написаны как авторская учебная адаптация для новичка.</p>
-      <a href="https://commons.wikimedia.org/wiki/Category:Rider-Waite_Tarot_deck" target="_blank" rel="noopener noreferrer">Wikimedia Commons: Rider-Waite Tarot deck</a>
-      <p class="fine">Материалы предназначены для обучения, самоанализа и развлечения. Они не являются медицинской, юридической или финансовой рекомендацией.</p>
-    </section>
+    <details class="panel" id="sources">
+      <summary>Источники изображений</summary>
+      <div class="details-body">
+        <p class="eyebrow">Источники изображений</p>
+        <h2>Wikimedia Commons</h2>
+        <p class="muted">Изображения подгружаются с Wikimedia Commons через `Special:FilePath`. Описания на странице написаны как авторская учебная адаптация для новичка.</p>
+        <a href="https://commons.wikimedia.org/wiki/Category:Rider-Waite_Tarot_deck" target="_blank" rel="noopener noreferrer">Wikimedia Commons: Rider-Waite Tarot deck</a>
+        <p class="fine">Материалы предназначены для обучения, самоанализа и развлечения. Они не являются медицинской, юридической или финансовой рекомендацией.</p>
+      </div>
+    </details>
   </main>
 
   <section class="image-modal" id="imageModal" aria-label="Просмотр карты">
