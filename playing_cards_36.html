@@ -532,11 +532,32 @@
       display: grid;
       place-items: center;
       min-height: 0;
+      cursor: pointer;
     }
 
     .image-full .playing-card {
       width: min(76vw, 300px);
       min-height: min(106vw, 420px);
+    }
+
+    .preview-text {
+      width: min(100%, 440px);
+      max-height: 68vh;
+      overflow-y: auto;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.055);
+      color: var(--muted);
+    }
+
+    .preview-text h3 {
+      margin: 0 0 8px;
+      color: var(--text);
+    }
+
+    .preview-text p {
+      margin: 8px 0 0;
     }
 
     .image-nav {
@@ -886,13 +907,13 @@
         <p class="eyebrow" id="previewGroup">36 карт</p>
         <h2 id="previewTitle">Карта</h2>
       </div>
-      <div class="image-full" id="previewVisual"></div>
+      <div class="image-full" id="previewVisual" data-preview-toggle></div>
       <div class="image-nav">
         <button class="btn" type="button" data-preview-prev>Назад</button>
         <button class="btn warn" type="button" data-preview-close>Закрыть</button>
         <button class="btn" type="button" data-preview-next>Дальше</button>
       </div>
-      <p class="fine">Листай свайпом влево или вправо. Свайп вниз закрывает просмотр.</p>
+      <p class="fine">Листай свайпом влево или вправо. Нажми на карту, чтобы увидеть описание; нажми на текст, чтобы вернуть карту.</p>
     </div>
   </section>
 
@@ -1152,8 +1173,10 @@
     const quizResultEl = document.querySelector("#quizResult");
     let visibleCards = [];
     let previewIndex = 0;
+    let previewMode = "image";
     let touchStartX = 0;
     let touchStartY = 0;
+    let didSwipePreview = false;
     const quizState = {
       card: null,
       options: [],
@@ -1492,12 +1515,33 @@
       const card = visibleCards[previewIndex];
       previewTitle.textContent = card.name;
       previewGroup.textContent = suitMeanings[card.suit].name;
-      previewVisual.innerHTML = cardFace(card, false, state.cardViewMode);
+      renderPreviewContent(card);
       imageModal.classList.add("open");
+    }
+
+    function renderPreviewContent(card) {
+      previewVisual.innerHTML = previewMode === "image"
+        ? cardFace(card, false, state.cardViewMode)
+        : `
+          <div class="preview-text">
+            <h3>${card.name}</h3>
+            <p><strong>Ключи:</strong> ${card.keywords.join(", ")}</p>
+            <p><strong>Значение:</strong> ${card.meaning}. ${card.detail}.</p>
+            <p><strong>Тень:</strong> ${card.shadow}.</p>
+            <p><strong>Совет:</strong> ${card.advice}.</p>
+          </div>
+        `;
+    }
+
+    function togglePreviewMode() {
+      if (!visibleCards.length) return;
+      previewMode = previewMode === "image" ? "text" : "image";
+      renderPreviewContent(visibleCards[previewIndex]);
     }
 
     function showPreviewById(cardId) {
       const index = visibleCards.findIndex((card) => card.id === cardId);
+      previewMode = "image";
       if (index >= 0) {
         showPreview(index);
         return;
@@ -1510,6 +1554,7 @@
 
     function closePreview() {
       imageModal.classList.remove("open");
+      previewMode = "image";
     }
 
     function movePreview(step) {
@@ -1577,6 +1622,7 @@
       if (event.target.closest("[data-preview-close]") || event.target === imageModal) closePreview();
       if (event.target.closest("[data-preview-prev]")) movePreview(-1);
       if (event.target.closest("[data-preview-next]")) movePreview(1);
+      if (event.target.closest("[data-preview-toggle]") && !didSwipePreview) togglePreviewMode();
 
       const quizAnswer = event.target.closest("[data-quiz-answer]");
       if (quizAnswer) answerQuiz(quizAnswer.dataset.quizAnswer);
@@ -1641,8 +1687,15 @@
       const touch = event.changedTouches[0];
       const dx = touch.clientX - touchStartX;
       const dy = touch.clientY - touchStartY;
-      if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy)) movePreview(dx < 0 ? 1 : -1);
-      if (dy > 70 && Math.abs(dy) > Math.abs(dx)) closePreview();
+      if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy)) {
+        didSwipePreview = true;
+        movePreview(dx < 0 ? 1 : -1);
+      }
+      if (dy > 70 && Math.abs(dy) > Math.abs(dx)) {
+        didSwipePreview = true;
+        closePreview();
+      }
+      if (didSwipePreview) setTimeout(() => { didSwipePreview = false; }, 250);
     }, { passive: true });
 
     document.addEventListener("keydown", (event) => {
