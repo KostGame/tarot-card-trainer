@@ -151,6 +151,47 @@
       padding: 16px;
     }
 
+    details.collapsible-section {
+      display: block !important;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    details.collapsible-section > summary {
+      display: flex;
+      min-height: 52px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 14px 16px;
+      color: var(--gold);
+      cursor: pointer;
+      font-weight: 850;
+      list-style: none;
+    }
+
+    details.collapsible-section > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    details.collapsible-section > summary::after {
+      color: var(--muted);
+      content: "скрыть";
+      flex: 0 0 auto;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    details.collapsible-section:not([open]) > summary::after {
+      content: "раскрыть";
+    }
+
+    .collapsible-content {
+      display: grid;
+      gap: 12px;
+      padding: 0 16px 16px;
+    }
+
     .magic-card {
       position: relative;
       overflow: hidden;
@@ -2585,6 +2626,30 @@
         guide: renderGuide
       };
       app.innerHTML = `${renderReaderFloat()}${(views[state.route] || renderHome)()}`;
+      makePanelsCollapsible(app);
+    }
+
+    function makePanelsCollapsible(root) {
+      root.querySelectorAll("section.panel").forEach((section) => {
+        if (section.closest("details")) return;
+        const summaryText = section.dataset.summary
+          || section.querySelector("h2")?.textContent?.trim()
+          || section.querySelector("h3")?.textContent?.trim()
+          || section.querySelector(".eyebrow")?.textContent?.trim()
+          || "Раздел";
+        const details = document.createElement("details");
+        details.open = true;
+        details.className = `${section.className} collapsible-section`;
+        if (section.id) details.id = section.id;
+        if (section.getAttribute("style")) details.setAttribute("style", section.getAttribute("style"));
+        const summary = document.createElement("summary");
+        summary.textContent = summaryText;
+        const content = document.createElement("div");
+        content.className = "collapsible-content";
+        while (section.firstChild) content.appendChild(section.firstChild);
+        details.append(summary, content);
+        section.replaceWith(details);
+      });
     }
 
     function renderReaderFloat() {

@@ -96,6 +96,11 @@
       padding: 14px;
     }
 
+    details.collapsible-section {
+      display: block;
+      padding: 0;
+    }
+
     .eyebrow {
       width: fit-content;
       margin: 0;
@@ -1330,7 +1335,28 @@
     }
 
     setupSiteMenu();
+    makePageSectionsCollapsible();
     render();
+
+    function makePageSectionsCollapsible() {
+      document.querySelectorAll("main.page > section.panel").forEach((section) => {
+        const summaryText = section.querySelector("h2")?.textContent?.trim()
+          || section.querySelector("h3")?.textContent?.trim()
+          || section.querySelector(".eyebrow")?.textContent?.trim()
+          || "Раздел";
+        const details = document.createElement("details");
+        details.open = true;
+        details.className = `${section.className} collapsible-section`;
+        if (section.id) details.id = section.id;
+        const summary = document.createElement("summary");
+        summary.textContent = summaryText;
+        const body = document.createElement("div");
+        body.className = "details-body";
+        while (section.firstChild) body.appendChild(section.firstChild);
+        details.append(summary, body);
+        section.replaceWith(details);
+      });
+    }
   </script>
 </body>
 </html>
