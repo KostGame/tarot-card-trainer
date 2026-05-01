@@ -1,0 +1,1266 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#12100f">
+  <title>Гадание на 36 картах</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #12100f;
+      --bg-2: #19131d;
+      --panel: rgba(35, 29, 38, 0.84);
+      --panel-strong: #261f2b;
+      --panel-soft: rgba(255, 255, 255, 0.07);
+      --text: #fff8ec;
+      --muted: #d9cbbb;
+      --soft: #a99ba8;
+      --line: rgba(255, 248, 236, 0.16);
+      --gold: #f0c66a;
+      --mint: #83d6c8;
+      --rose: #e68ba4;
+      --violet: #9a8be6;
+      --green: #a8d672;
+      --shadow: 0 24px 76px rgba(0, 0, 0, 0.38);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-width: 320px;
+      background: var(--bg);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 15% -4%, rgba(240, 198, 106, 0.18), transparent 18rem),
+        radial-gradient(circle at 92% 12%, rgba(131, 214, 200, 0.16), transparent 18rem),
+        linear-gradient(155deg, #12100f 0%, #1d1722 48%, #101819 100%);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    button {
+      color: inherit;
+    }
+
+    a {
+      color: #ffe6aa;
+    }
+
+    .page {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+      padding: 16px 14px 48px;
+    }
+
+    .hero,
+    .panel,
+    .card,
+    .mini-card,
+    .slot,
+    .reading-card,
+    details {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .hero {
+      display: grid;
+      gap: 16px;
+      margin: 12px 0 14px;
+      padding: 18px;
+    }
+
+    .panel,
+    details {
+      margin: 14px 0;
+      padding: 14px;
+    }
+
+    details summary {
+      cursor: pointer;
+      color: var(--gold);
+      font-weight: 850;
+    }
+
+    .details-body {
+      padding-top: 12px;
+    }
+
+    .eyebrow {
+      width: fit-content;
+      margin: 0;
+      padding: 7px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 8px;
+      font-size: clamp(2.35rem, 11vw, 4.8rem);
+      line-height: 0.96;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 8px;
+      font-size: clamp(1.35rem, 6vw, 2.15rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+      letter-spacing: 0;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .fine {
+      color: var(--soft);
+      font-size: 0.86rem;
+    }
+
+    .button-row,
+    .grid,
+    .controls,
+    .cards,
+    .reading-grid,
+    .stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .button-row,
+    .controls {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .btn {
+      display: grid;
+      min-height: 48px;
+      place-items: center;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 750;
+      line-height: 1.2;
+      text-align: center;
+      text-decoration: none;
+      touch-action: manipulation;
+    }
+
+    .btn.primary,
+    .btn.active {
+      border-color: rgba(240, 198, 106, 0.62);
+      background: linear-gradient(135deg, var(--gold), var(--mint));
+      color: #291809;
+      font-weight: 850;
+    }
+
+    .btn.warn {
+      border-color: rgba(227, 160, 160, 0.58);
+      background: rgba(227, 160, 160, 0.12);
+    }
+
+    .btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    input,
+    select {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--panel-strong);
+      color: var(--text);
+      color-scheme: dark;
+      outline: none;
+    }
+
+    option {
+      background-color: var(--panel-strong);
+      color: var(--text);
+    }
+
+    label {
+      display: grid;
+      gap: 8px;
+      color: var(--muted);
+      font-weight: 760;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .mini-card,
+    .reading-card {
+      padding: 12px;
+    }
+
+    .card {
+      display: grid;
+      gap: 12px;
+      padding: 12px;
+    }
+
+    .playing-card {
+      position: relative;
+      display: grid;
+      place-items: center;
+      aspect-ratio: 2.5 / 3.5;
+      min-height: 160px;
+      border: 1px solid rgba(255, 248, 236, 0.24);
+      border-radius: 16px;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(255, 248, 236, 0.14), transparent 32%),
+        linear-gradient(145deg, #fff8ec 0%, #e9dcc8 100%);
+      color: #1c1715;
+      box-shadow: 0 16px 42px rgba(0, 0, 0, 0.28);
+      overflow: hidden;
+    }
+
+    .playing-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #f7efe2;
+    }
+
+    .fallback-face {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+    }
+
+    .playing-card.red {
+      color: #b42e3d;
+    }
+
+    .playing-card.small {
+      min-height: 104px;
+      border-radius: 12px;
+    }
+
+    .rank {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 1.25rem;
+      font-weight: 950;
+      line-height: 1;
+    }
+
+    .suit {
+      font-size: clamp(2.6rem, 15vw, 4.4rem);
+      line-height: 1;
+    }
+
+    .suit.small-suit {
+      position: absolute;
+      right: 10px;
+      bottom: 8px;
+      font-size: 1.45rem;
+    }
+
+    .reversed .playing-card {
+      transform: rotate(180deg);
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      margin: 10px -2px;
+      padding: 2px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .filters::-webkit-scrollbar {
+      display: none;
+    }
+
+    .filters .btn {
+      min-width: max-content;
+      min-height: 42px;
+      padding: 10px 12px;
+    }
+
+    .spread-board {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .slot {
+      display: grid;
+      gap: 9px;
+      min-height: 172px;
+      padding: 10px;
+      text-align: left;
+    }
+
+    .slot button {
+      width: 100%;
+    }
+
+    .slot-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 800;
+    }
+
+    .slot-card {
+      display: grid;
+      grid-template-columns: 70px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+    }
+
+    .empty {
+      padding: 16px;
+      border: 1px dashed rgba(255, 248, 236, 0.24);
+      border-radius: 16px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 120;
+      display: none;
+      padding: 18px 12px;
+      background: rgba(8, 6, 10, 0.72);
+      overflow-y: auto;
+    }
+
+    .modal.open {
+      display: grid;
+      align-items: end;
+    }
+
+    .sheet {
+      width: min(100%, 760px);
+      max-height: min(88vh, 760px);
+      margin: 0 auto;
+      overflow-y: auto;
+      border: 1px solid var(--line);
+      border-radius: 24px 24px 18px 18px;
+      background: #1a141d;
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+
+    .choice-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .choice-card {
+      display: grid;
+      grid-template-columns: 76px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+      min-height: 108px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .formula {
+      padding: 12px;
+      border: 1px solid rgba(240, 198, 106, 0.25);
+      border-radius: 16px;
+      background: rgba(240, 198, 106, 0.1);
+      color: var(--muted);
+    }
+
+    .with-site-menu .page {
+      padding-top: calc(70px + env(safe-area-inset-top));
+    }
+
+    .site-menu-toggle {
+      position: fixed;
+      top: calc(12px + env(safe-area-inset-top));
+      left: 12px;
+      z-index: 70;
+      width: 48px;
+      height: 48px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(35, 29, 38, 0.92);
+      color: var(--text);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35), 0 0 20px rgba(240, 198, 106, 0.12);
+      font-size: 1.35rem;
+      font-weight: 900;
+      line-height: 1;
+      cursor: pointer;
+      backdrop-filter: blur(14px);
+    }
+
+    .site-menu-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      background: rgba(8, 6, 10, 0.62);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .site-menu-drawer {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 90;
+      width: min(86vw, 340px);
+      padding: calc(18px + env(safe-area-inset-top)) 16px calc(22px + env(safe-area-inset-bottom));
+      overflow-y: auto;
+      background: radial-gradient(circle at 18% 0%, rgba(240, 198, 106, 0.14), transparent 36%), linear-gradient(180deg, #241d29 0%, #171216 100%);
+      border-right: 1px solid var(--line);
+      box-shadow: 28px 0 70px rgba(0, 0, 0, 0.5);
+      transform: translateX(-105%);
+      transition: transform 0.24s ease;
+    }
+
+    body.site-menu-open .site-menu-backdrop {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    body.site-menu-open .site-menu-drawer {
+      transform: translateX(0);
+    }
+
+    .site-menu-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .site-menu-head h2 {
+      margin: 4px 0 0;
+      font-size: 1.65rem;
+    }
+
+    .site-menu-close {
+      min-height: 42px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 248, 236, 0.07);
+      color: var(--text);
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .site-menu-links {
+      display: grid;
+      gap: 10px;
+    }
+
+    .site-menu-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 48px;
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid rgba(255, 248, 236, 0.12);
+      border-radius: 16px;
+      background: rgba(255, 248, 236, 0.06);
+      color: var(--text);
+      font-size: 0.98rem;
+      font-weight: 800;
+      text-align: left;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .site-menu-link:hover,
+    .site-menu-link:focus-visible {
+      border-color: rgba(240, 198, 106, 0.6);
+      background: rgba(240, 198, 106, 0.14);
+      outline: none;
+    }
+
+    .site-menu-note {
+      margin: 18px 4px 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    @media (min-width: 720px) {
+      .hero {
+        grid-template-columns: 1.2fr 0.8fr;
+        align-items: center;
+      }
+
+      .grid,
+      .cards,
+      .reading-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .spread-board {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+
+      .choice-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body class="with-site-menu">
+  <button class="site-menu-toggle" type="button" data-site-menu-open aria-label="Открыть меню">☰</button>
+  <div class="site-menu-backdrop" data-site-menu-close></div>
+  <aside class="site-menu-drawer" aria-label="Навигация по страницам">
+    <div class="site-menu-head">
+      <div>
+        <p class="eyebrow">Навигация</p>
+        <h2>Таро</h2>
+      </div>
+      <button class="site-menu-close" type="button" data-site-menu-close>Закрыть</button>
+    </div>
+    <nav class="site-menu-links">
+      <a class="site-menu-link" href="index.html">Главная и тренировки</a>
+      <a class="site-menu-link" href="manual_tarot.html">Руководство по Таро</a>
+      <a class="site-menu-link" href="manual_cards.html">Все карты с картинками</a>
+      <a class="site-menu-link" href="spread_trainer.html">Тренажер раскладов</a>
+      <a class="site-menu-link" href="playing_cards_36.html">36 карт</a>
+    </nav>
+    <p class="site-menu-note">Единое меню открывается слева и помогает быстро переходить между страницами самоучителя.</p>
+  </aside>
+
+  <main class="page">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Обычная колода</p>
+        <h1>Гадание на 36 картах</h1>
+        <p class="muted">Самодостаточный учебный раздел для обычной игральной колоды: масти, значения карт, сочетания и тренажер раскладов. Это способ учиться символическому мышлению и самоанализу, а не обещание точного будущего.</p>
+        <div class="button-row">
+          <a class="btn primary" href="#trainer">Открыть тренажер</a>
+          <a class="btn" href="#meanings">Значения карт</a>
+          <a class="btn" href="#suits">Масти</a>
+          <a class="btn" href="index.html">В Таро-тренажер</a>
+        </div>
+      </div>
+      <div class="playing-card red" aria-hidden="true">
+        <span class="rank">Т</span>
+        <span class="suit">♥</span>
+        <span class="suit small-suit">♥</span>
+      </div>
+    </section>
+
+    <details open>
+      <summary>Как устроена колода 36 карт</summary>
+      <div class="details-body stack">
+        <div class="formula"><strong>Формула чтения:</strong> масть показывает сферу, ранг показывает тип события или роль, позиция в раскладе показывает, куда применить смысл.</div>
+        <div class="grid">
+          <article class="mini-card"><h3>Масти</h3><p class="muted">Черви, бубны, трефы и пики описывают четыре языка ситуации: чувства, дела, обязанности и напряжение.</p></article>
+          <article class="mini-card"><h3>Ранги</h3><p class="muted">6, 7, 8, 9, 10, Валет, Дама, Король и Туз показывают движение от дороги и разговора к итогам, людям и главным темам.</p></article>
+        </div>
+      </div>
+    </details>
+
+    <section class="panel" id="suits">
+      <p class="eyebrow">Масти</p>
+      <h2>Четыре сферы обычной колоды</h2>
+      <div class="grid" id="suitGuide"></div>
+    </section>
+
+    <details open>
+      <summary>Как читать расклад спокойно</summary>
+      <div class="details-body stack">
+        <div class="reading-card"><strong>1. Сначала вопрос.</strong><p class="muted">Спроси не «что точно случится», а «на что обратить внимание» или «какой шаг будет бережным».</p></div>
+        <div class="reading-card"><strong>2. Затем позиция.</strong><p class="muted">Одна и та же карта звучит по-разному в позиции ресурса, риска или совета.</p></div>
+        <div class="reading-card"><strong>3. Потом карта.</strong><p class="muted">Собери значение через масть и ранг, а затем скажи вывод человеческим языком.</p></div>
+        <div class="reading-card"><strong>4. Без запугивания.</strong><p class="muted">Пики и сложные карты показывают напряжение или границу, но не приговор.</p></div>
+      </div>
+    </details>
+
+    <section class="panel" id="meanings">
+      <p class="eyebrow">Справочник</p>
+      <h2>Значения 36 карт</h2>
+      <input id="cardSearch" type="search" placeholder="Поиск: черви, дорога, разговор, деньги..." autocomplete="off">
+      <div class="filters" aria-label="Фильтры карт">
+        <button class="btn active" type="button" data-filter="all">Все</button>
+        <button class="btn" type="button" data-filter="hearts">Черви</button>
+        <button class="btn" type="button" data-filter="diamonds">Бубны</button>
+        <button class="btn" type="button" data-filter="clubs">Трефы</button>
+        <button class="btn" type="button" data-filter="spades">Пики</button>
+        <button class="btn" type="button" data-filter="people">Люди</button>
+      </div>
+      <p class="fine" id="cardCount"></p>
+      <div class="cards" id="cardsList"></div>
+    </section>
+
+    <details open>
+      <summary>Сочетания и повторения</summary>
+      <div class="details-body grid" id="combinationGuide"></div>
+    </details>
+
+    <section class="panel" id="trainer">
+      <p class="eyebrow">Тренажер расклада</p>
+      <h2>Повтори расклад на экране</h2>
+      <div class="controls">
+        <label>Тип расклада<select id="spreadSelect"></select></label>
+        <label>Тип вопроса<select id="questionSelect"></select></label>
+      </div>
+      <div class="button-row">
+        <button class="btn warn" type="button" data-reset>Сбросить расклад</button>
+        <button class="btn primary" type="button" id="showReading" disabled>Показать толкование</button>
+      </div>
+      <p class="fine" id="spreadHint"></p>
+      <div class="spread-board" id="spreadBoard"></div>
+    </section>
+
+    <section class="panel">
+      <p class="eyebrow">Толкование</p>
+      <h2>Учебный разбор</h2>
+      <div id="reading" class="stack"></div>
+    </section>
+
+    <section class="panel">
+      <p class="eyebrow">Изображения</p>
+      <p class="muted">Картинки игральных карт загружаются с Wikimedia Commons из набора «Atlas deck» Дмитрия Фомина, опубликованного под CC0. Если сеть недоступна, страница все равно остается рабочей: вместо картинки показывается простая CSS-карта.</p>
+      <a class="btn" href="https://commons.wikimedia.org/wiki/Category:SVG_Atlasnye_playing_cards" target="_blank" rel="noopener">Открыть источник изображений</a>
+    </section>
+
+    <section class="panel">
+      <p class="eyebrow">Этика</p>
+      <p class="muted">Материалы страницы предназначены для обучения, самоанализа и развлечения. Они не являются медицинской, юридической или финансовой рекомендацией. Не пугай человека картами, не обещай неизбежных событий и используй расклад как повод подумать спокойнее.</p>
+    </section>
+  </main>
+
+  <section class="modal" id="cardModal" aria-label="Выбор карты">
+    <div class="sheet">
+      <div class="button-row">
+        <button class="btn" type="button" data-close-modal>Закрыть</button>
+        <button class="btn warn" type="button" data-toggle-reversed>Прямая / перевернутая</button>
+      </div>
+      <input id="modalSearch" type="search" placeholder="Найти карту..." autocomplete="off">
+      <div class="filters" id="modalFilters"></div>
+      <div class="choice-list" id="choiceList"></div>
+    </div>
+  </section>
+
+  <script>
+    const STORAGE_KEY = "playingCards36Trainer.v1";
+
+    const suitMeanings = {
+      hearts: {
+        name: "Черви",
+        symbol: "♥",
+        color: "red",
+        sphere: "чувства, близость, радость, дом сердца",
+        light: "тепло, симпатия, поддержка, примирение",
+        shadow: "обида, зависимость от эмоций, ожидание внимания",
+        question: "что чувствует сердце и где нужна мягкость?"
+      },
+      diamonds: {
+        name: "Бубны",
+        symbol: "♦",
+        color: "red",
+        sphere: "деньги, новости, дела, обмен, практические возможности",
+        light: "выгода, ясная договоренность, полезная весть",
+        shadow: "суета, расчетливость, мелочные тревоги",
+        question: "какой обмен или практический шаг важен?"
+      },
+      clubs: {
+        name: "Трефы",
+        symbol: "♣",
+        color: "black",
+        sphere: "работа, обязанности, планы, связи, усилие",
+        light: "организация, настойчивость, деловой рост",
+        shadow: "перегруз, давление делами, сухой расчет",
+        question: "что нужно сделать и как выстроить план?"
+      },
+      spades: {
+        name: "Пики",
+        symbol: "♠",
+        color: "black",
+        sphere: "напряжение, препятствия, границы, тревоги, трезвый взгляд",
+        light: "ясность, осторожность, умение вовремя остановиться",
+        shadow: "страх, холодность, конфликт, ощущение тупика",
+        question: "где нужна граница и честный взгляд?"
+      }
+    };
+
+    const rankMeanings = {
+      "6": "дорога, движение, направление",
+      "7": "разговор, встреча, маленькая проверка",
+      "8": "развитие темы, бытовой процесс, ожидание",
+      "9": "личное состояние, желание, эмоциональный итог",
+      "10": "результат, событие, заметный поворот",
+      "Валет": "весть, хлопоты, молодой импульс, посредник",
+      "Дама": "женская роль, атмосфера, внутренний мотив",
+      "Король": "мужская роль, решение, внешнее влияние",
+      "Туз": "главная тема масти, дом, ключевой знак"
+    };
+
+    const baseByRank = {
+      "6": ["дорога", "направление", "путь", "перемещение"],
+      "7": ["разговор", "встреча", "жест", "проверка"],
+      "8": ["процесс", "ожидание", "развитие", "повтор"],
+      "9": ["желание", "состояние", "личный итог", "настрой"],
+      "10": ["результат", "поворот", "событие", "итог"],
+      "Валет": ["весть", "хлопоты", "сигнал", "посланник"],
+      "Дама": ["женская роль", "атмосфера", "мотив", "влияние"],
+      "Король": ["мужская роль", "решение", "влияние", "ответственность"],
+      "Туз": ["главная тема", "дом", "ключ", "сильный знак"]
+    };
+
+    const suitCardText = {
+      hearts: {
+        "6": ["приятная дорога или движение навстречу", "путь к теплу, примирению или сердечному контакту", "не идти только за настроением", "сделай шаг туда, где больше живого отклика", "личная жизнь"],
+        "7": ["душевный разговор", "встреча, где важны мягкость и честность чувств", "обещания без глубины", "говори проще и теплее", "отношения"],
+        "8": ["развитие симпатии", "эмоциональный процесс, который еще созревает", "ожидание внимания вместо действия", "дай чувствам время, но не теряй себя", "чувства"],
+        "9": ["сердечное желание", "радость, надежда, теплое личное состояние", "идеализация", "проверь, что желание опирается на реальность", "желание"],
+        "10": ["радость и круг близких", "событие, которое приносит тепло или поддержку", "ожидание идеальной гармонии", "заметь тех, кто уже рядом", "дом сердца"],
+        "Валет": ["весть от сердца", "молодой импульс, сообщение, знак внимания", "легкомысленная симпатия", "принимай знак, но не строй на нем все сразу", "новость"],
+        "Дама": ["женщина сердца", "мягкая, эмоциональная, поддерживающая роль", "обидчивость или растворение в чувствах", "держи тепло без потери границ", "персона"],
+        "Король": ["мужчина сердца", "зрелая симпатия, защита, доброжелательное влияние", "пассивность под видом доброты", "соединяй мягкость с ясным поступком", "персона"],
+        "Туз": ["дом и сердце", "главная тема любви, семьи, близости или радости", "слишком сильное ожидание счастья", "создай место, где чувствам безопасно", "дом"]
+      },
+      diamonds: {
+        "6": ["деловая дорога", "движение по практическому вопросу, поездка по делу", "суета без результата", "уточни цель дороги или задачи", "дела"],
+        "7": ["разговор о выгоде", "переговоры, мелкие деньги, практичная встреча", "торг ради торга", "договорись конкретно", "обмен"],
+        "8": ["деловой процесс", "оформление, ожидание ответа, развитие денежной темы", "застревание в мелочах", "разбей задачу на понятные шаги", "работа"],
+        "9": ["личная выгода", "желание результата, деньги на себя, полезная возможность", "жадность или тревога за выгоду", "считай ресурсы спокойно", "деньги"],
+        "10": ["заметные деньги или новость", "итог по делу, платеж, покупка, важная практическая весть", "перегруз ожиданиями", "проверь цифры и условия", "результат"],
+        "Валет": ["весть о деле", "сообщение, документ, звонок, маленькое поручение", "пустая суета", "отдели факт от шума", "новость"],
+        "Дама": ["практичная женщина", "деловая, расчетливая или полезная женская роль", "мелочный контроль", "говори с ней на языке фактов", "персона"],
+        "Король": ["деловой мужчина", "человек результата, денег, переговоров или помощи", "выгода выше чувств", "смотри на поступки и условия", "персона"],
+        "Туз": ["важная бумага или шанс", "деньги, документ, предложение, материальный ключ", "зацикленность на выгоде", "закрепи шанс конкретным действием", "шанс"]
+      },
+      clubs: {
+        "6": ["рабочая дорога", "путь по обязанностям, планам или деловой связи", "дорога из чувства долга", "выбери маршрут, который реально ведет к цели", "работа"],
+        "7": ["деловой разговор", "обсуждение планов, обязанностей или условий", "сухой спор", "держи тон спокойным и конструктивным", "переговоры"],
+        "8": ["рабочая рутина", "процесс, расписание, повторение и постепенный рост", "усталость от однообразия", "наведи порядок в повторяющихся делах", "процесс"],
+        "9": ["надежда на успех", "личная ставка в работе, планах или социальном положении", "упрямство", "проверь, что цель стоит усилий", "план"],
+        "10": ["нагрузка и результат", "много дел, ответственность, итог работы", "перегруз обязанностями", "сними лишнее и оставь главное", "обязанности"],
+        "Валет": ["рабочие хлопоты", "поручение, помощник, мелкое дело, практичный сигнал", "много движений без пользы", "доведи одно дело до конца", "хлопоты"],
+        "Дама": ["деловая женщина", "строгая, собранная или полезная роль в делах", "сухость, критика, давление", "соблюдай уважение и границы", "персона"],
+        "Король": ["деловой авторитет", "руководитель, наставник, человек структуры", "жесткий контроль", "говори через план и ответственность", "персона"],
+        "Туз": ["дело или казенный дом", "работа, организация, официальный вопрос, важная задача", "холодная формальность", "оформи ситуацию правильно", "структура"]
+      },
+      spades: {
+        "6": ["трудная дорога", "движение через сомнения, усталость или необходимость уйти", "уход от решения", "не спеши, но не игнорируй сигнал", "граница"],
+        "7": ["напряженный разговор", "неприятная беседа, тревожная мысль или проверка слов", "накручивание", "отдели факты от страхов", "разговор"],
+        "8": ["задержка", "пауза, ограничение, неприятный процесс, необходимость терпения", "ощущение тупика", "ищи маленькое доступное действие", "задержка"],
+        "9": ["тревога", "личное напряжение, бессонная мысль, переживание", "страх сильнее фактов", "поддержи себя и не принимай решение на пике эмоций", "напряжение"],
+        "10": ["сложный итог", "завершение тяжелой темы, усталость, точка напряжения", "катастрофизация", "закрывай цикл бережно и по шагам", "завершение"],
+        "Валет": ["неприятная весть", "сигнал о споре, тревоге, проверке или мелкой помехе", "слухи и подозрения", "проверяй информацию", "новость"],
+        "Дама": ["строгая женщина", "холодная, тревожная или очень принципиальная роль", "обида, резкость, закрытость", "не отвечай жесткостью на жесткость", "персона"],
+        "Король": ["строгий мужчина", "человек власти, дистанции, правил или жесткого решения", "давление и холодность", "держи границу и говори ясно", "персона"],
+        "Туз": ["сильная граница", "главная тема напряжения, разрыва, решения или резкой ясности", "страх перед точкой", "назови правду спокойно и без драматизации", "решение"]
+      }
+    };
+
+    const ranks = ["6", "7", "8", "9", "10", "Валет", "Дама", "Король", "Туз"];
+    const rankFiles = {
+      "6": "6",
+      "7": "7",
+      "8": "8",
+      "9": "9",
+      "10": "10",
+      "Валет": "jack",
+      "Дама": "queen",
+      "Король": "king",
+      "Туз": "ace"
+    };
+    const suitFiles = {
+      hearts: "hearts",
+      diamonds: "diamonds",
+      clubs: "clubs",
+      spades: "spades"
+    };
+
+    function cardImage(rank, suit) {
+      const file = `Atlas deck ${rankFiles[rank]} of ${suitFiles[suit]}.svg`;
+      return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(file)}`;
+    }
+
+    const deck36 = Object.entries(suitCardText).flatMap(([suit, cards]) =>
+      ranks.map((rank) => {
+        const [meaning, detail, shadow, advice, theme] = cards[rank];
+        return {
+          id: `${suit}-${rank.toLowerCase()}`,
+          name: `${rank} ${suitMeanings[suit].name}`,
+          suit,
+          rank,
+          image: cardImage(rank, suit),
+          keywords: [...baseByRank[rank], theme],
+          meaning,
+          detail,
+          shadow,
+          advice,
+          theme
+        };
+      })
+    );
+
+    const spreadTypes = {
+      day: {
+        name: "Карта дня",
+        hint: "Одна карта как мягкий фокус дня.",
+        positions: ["Фокус дня"]
+      },
+      three: {
+        name: "Три карты",
+        hint: "Быстрый расклад: что есть, что влияет и какой шаг поддержит.",
+        positions: ["Ситуация", "Влияние", "Совет"]
+      },
+      question: {
+        name: "На вопрос",
+        hint: "Подходит для конкретного вопроса без категоричных обещаний.",
+        positions: ["Что важно", "Что мешает", "Что поможет", "Итоговая подсказка"]
+      },
+      relation: {
+        name: "Отношения",
+        hint: "Для разбора динамики контакта без попытки читать человека как приговор.",
+        positions: ["Я", "Другой человек", "Между нами", "Риск", "Ресурс"]
+      },
+      horseshoe: {
+        name: "Подкова",
+        hint: "Пять позиций для спокойного обзора процесса.",
+        positions: ["Прошлое", "Настоящее", "Скрытое", "Совет", "Тенденция"]
+      }
+    };
+
+    const questionTypes = {
+      self: "самоанализ: что понять о себе и ситуации",
+      advice: "совет: какое действие будет бережным",
+      relation: "отношения: как читать контакт и динамику",
+      business: "дела и деньги: где ресурс, обмен и практический шаг",
+      trend: "тенденция: куда может двигаться процесс, если ничего не менять"
+    };
+
+    const combinationHints = [
+      ["Много червей", "В раскладе сильна тема чувств, близости, симпатий или ожидания тепла."],
+      ["Много бубен", "Фокус на деньгах, новостях, обмене, договоренностях и практической выгоде."],
+      ["Много треф", "Ситуация требует работы, структуры, плана и честного отношения к обязанностям."],
+      ["Много пик", "Есть напряжение или граница. Читай это как сигнал осторожности, а не как угрозу."],
+      ["Несколько тузов", "Тема важная и крупная: несколько сфер одновременно требуют внимания."],
+      ["Несколько фигур", "В раскладе много людей, ролей, мнений или социальных влияний."],
+      ["Соседство мастей", "Одна карта уточняет другую: например, бубны рядом с червями переводят чувство в конкретный поступок."]
+    ];
+
+    const state = {
+      filter: "all",
+      query: "",
+      modalQuery: "",
+      modalFilter: "all",
+      activeSlot: null,
+      spread: "three",
+      question: "self",
+      showReading: false,
+      picks: []
+    };
+
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+    if (saved) Object.assign(state, saved);
+
+    const suitGuide = document.querySelector("#suitGuide");
+    const combinationGuide = document.querySelector("#combinationGuide");
+    const cardsList = document.querySelector("#cardsList");
+    const cardCount = document.querySelector("#cardCount");
+    const cardSearch = document.querySelector("#cardSearch");
+    const spreadSelect = document.querySelector("#spreadSelect");
+    const questionSelect = document.querySelector("#questionSelect");
+    const spreadHint = document.querySelector("#spreadHint");
+    const spreadBoard = document.querySelector("#spreadBoard");
+    const showReading = document.querySelector("#showReading");
+    const reading = document.querySelector("#reading");
+    const cardModal = document.querySelector("#cardModal");
+    const modalSearch = document.querySelector("#modalSearch");
+    const modalFilters = document.querySelector("#modalFilters");
+    const choiceList = document.querySelector("#choiceList");
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        filter: state.filter,
+        query: state.query,
+        spread: state.spread,
+        question: state.question,
+        picks: state.picks
+      }));
+    }
+
+    function setupSiteMenu() {
+      const openButton = document.querySelector("[data-site-menu-open]");
+      const closeTargets = document.querySelectorAll("[data-site-menu-close]");
+      const closeMenu = () => document.body.classList.remove("site-menu-open");
+      const openMenu = () => document.body.classList.add("site-menu-open");
+      openButton?.addEventListener("click", openMenu);
+      closeTargets.forEach((target) => target.addEventListener("click", closeMenu));
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeMenu();
+      });
+      document.addEventListener("click", (event) => {
+        if (event.target.closest(".site-menu-link")) closeMenu();
+      });
+    }
+
+    function cardFace(card, small = false) {
+      const suit = suitMeanings[card.suit];
+      return `
+        <div class="playing-card ${suit.color === "red" ? "red" : ""} ${small ? "small" : ""}">
+          <img src="${card.image}" alt="${card.name}" loading="lazy" onerror="this.hidden=true; this.nextElementSibling.hidden=false;">
+          <div class="fallback-face" hidden>
+            <span class="rank">${card.rank}</span>
+            <span class="suit">${suit.symbol}</span>
+            <span class="suit small-suit">${suit.symbol}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function ensurePicks() {
+      const needed = spreadTypes[state.spread].positions.length;
+      state.picks = Array.from({ length: needed }, (_, index) => state.picks[index] || { cardId: "", reversed: false });
+    }
+
+    function getCard(id) {
+      return deck36.find((card) => card.id === id);
+    }
+
+    function reversedText(card) {
+      return `В перевернутом виде карта скорее говорит не об угрозе, а о задержке или перекосе темы: ${card.shadow.toLowerCase()}.`;
+    }
+
+    function positionReading(position, card, reversed) {
+      const suit = suitMeanings[card.suit];
+      const base = reversed ? reversedText(card) : `${card.meaning}: ${card.detail}.`;
+      return `В позиции «${position}» ${card.name} подсвечивает сферу «${suit.sphere}». ${base} Мягкий совет: ${card.advice}.`;
+    }
+
+    function renderStaticGuides() {
+      suitGuide.innerHTML = Object.entries(suitMeanings).map(([key, suit]) => `
+        <article class="mini-card">
+          <div class="chip-row"><span class="chip">${suit.symbol}</span><span class="chip">${suit.name}</span></div>
+          <h3>${suit.name}</h3>
+          <p class="muted"><strong>Сфера:</strong> ${suit.sphere}.</p>
+          <p class="muted"><strong>Свет:</strong> ${suit.light}.</p>
+          <p class="muted"><strong>Тень:</strong> ${suit.shadow}.</p>
+          <p class="fine">Главный вопрос: ${suit.question}</p>
+        </article>
+      `).join("");
+
+      combinationGuide.innerHTML = combinationHints.map(([title, text]) => `
+        <article class="mini-card"><h3>${title}</h3><p class="muted">${text}</p></article>
+      `).join("");
+    }
+
+    function matchesCard(card, filter, query) {
+      const text = `${card.name} ${card.keywords.join(" ")} ${card.meaning} ${card.shadow} ${card.advice}`.toLowerCase();
+      const filterOk = filter === "all"
+        || card.suit === filter
+        || (filter === "people" && ["Валет", "Дама", "Король"].includes(card.rank));
+      return filterOk && text.includes(query.toLowerCase());
+    }
+
+    function renderCards() {
+      const filtered = deck36.filter((card) => matchesCard(card, state.filter, state.query));
+      cardCount.textContent = `Показано карт: ${filtered.length} из ${deck36.length}`;
+      cardsList.innerHTML = filtered.map((card) => `
+        <article class="card">
+          ${cardFace(card)}
+          <div>
+            <p class="eyebrow">${suitMeanings[card.suit].name} · ${rankMeanings[card.rank]}</p>
+            <h3>${card.name}</h3>
+            <div class="chip-row">${card.keywords.map((word) => `<span class="chip">${word}</span>`).join("")}</div>
+            <p class="muted"><strong>Значение:</strong> ${card.meaning}. ${card.detail}.</p>
+            <p class="muted"><strong>Тень:</strong> ${card.shadow}.</p>
+            <p class="muted"><strong>Совет:</strong> ${card.advice}.</p>
+          </div>
+        </article>
+      `).join("") || `<div class="empty">Ничего не найдено. Попробуй другой запрос или фильтр.</div>`;
+    }
+
+    function renderControls() {
+      spreadSelect.innerHTML = Object.entries(spreadTypes).map(([key, spread]) => `<option value="${key}">${spread.name}</option>`).join("");
+      questionSelect.innerHTML = Object.entries(questionTypes).map(([key, text]) => `<option value="${key}">${text}</option>`).join("");
+      spreadSelect.value = state.spread;
+      questionSelect.value = state.question;
+    }
+
+    function renderSpread() {
+      ensurePicks();
+      const spread = spreadTypes[state.spread];
+      spreadHint.textContent = spread.hint;
+      const complete = state.picks.every((pick) => pick.cardId);
+      showReading.disabled = !complete;
+      spreadBoard.innerHTML = spread.positions.map((position, index) => {
+        const pick = state.picks[index];
+        const card = getCard(pick.cardId);
+        return `
+          <article class="slot ${pick.reversed ? "reversed" : ""}">
+            <div class="slot-title"><span>${index + 1}. ${position}</span><span>${pick.reversed ? "перевернута" : "прямая"}</span></div>
+            ${card ? `
+              <div class="slot-card">
+                ${cardFace(card, true)}
+                <div>
+                  <strong>${card.name}</strong>
+                  <p class="fine">${card.meaning}</p>
+                </div>
+              </div>
+            ` : `<div class="empty">Выбери карту</div>`}
+            <button class="btn" type="button" data-open-slot="${index}">${card ? "Изменить карту" : "Выбрать карту"}</button>
+            <button class="btn" type="button" data-reverse-slot="${index}">Прямая / перевернутая</button>
+          </article>
+        `;
+      }).join("");
+      renderReading();
+      saveState();
+    }
+
+    function renderReading() {
+      const spread = spreadTypes[state.spread];
+      const complete = state.picks.every((pick) => pick.cardId);
+      if (!complete) {
+        reading.innerHTML = `<div class="empty">Заполни все позиции, и здесь появится учебное толкование.</div>`;
+        return;
+      }
+
+      if (!state.showReading) {
+        reading.innerHTML = `<div class="empty">Расклад заполнен. Нажми «Показать толкование», когда будешь готов разобрать связку.</div>`;
+        return;
+      }
+
+      const cards = state.picks.map((pick) => getCard(pick.cardId));
+      const suits = cards.reduce((acc, card) => ({ ...acc, [card.suit]: (acc[card.suit] || 0) + 1 }), {});
+      const dominantSuit = Object.entries(suits).sort((a, b) => b[1] - a[1])[0];
+      const reversedCount = state.picks.filter((pick) => pick.reversed).length;
+      const positions = spread.positions;
+      const positionCards = state.picks.map((pick, index) => {
+        const card = getCard(pick.cardId);
+        return `
+          <article class="reading-card">
+            <p class="eyebrow">${positions[index]}</p>
+            <h3>${card.name}${pick.reversed ? " · перевернута" : ""}</h3>
+            <p class="muted">${positionReading(positions[index], card, pick.reversed)}</p>
+          </article>
+        `;
+      }).join("");
+      const first = cards[0];
+      const last = cards[cards.length - 1];
+      const human = `Если сказать по-человечески: расклад начинается с темы «${first.meaning.toLowerCase()}», а практический вывод приходит через «${last.meaning.toLowerCase()}». Для вопроса «${questionTypes[state.question]}» это можно читать как приглашение не угадывать судьбу, а заметить главный акцент, слабое место и один спокойный шаг.`;
+
+      reading.innerHTML = `
+        <div class="reading-grid">${positionCards}</div>
+        <article class="reading-card">
+          <h3>Главная тема</h3>
+          <p class="muted">Сильнее всего звучит масть ${suitMeanings[dominantSuit[0]].name}: ${suitMeanings[dominantSuit[0]].sphere}. Это не отменяет остальные карты, но показывает общий фон.</p>
+        </article>
+        <article class="reading-card">
+          <h3>Что усиливает расклад</h3>
+          <p class="muted">${cards.filter((card) => ["Туз", "Король", "Дама", "Валет"].includes(card.rank)).length ? "Фигуры и тузы показывают людей, роли или крупные темы, поэтому важно учитывать контекст вопроса." : "Числовые карты делают расклад практичным: смотри на этапы, действия и последовательность."}</p>
+        </article>
+        <article class="reading-card">
+          <h3>Риски</h3>
+          <p class="muted">${reversedCount ? `Перевернутых карт: ${reversedCount}. Читай их как задержку, внутренний перекос или тему, которую стоит прожить внимательнее.` : "Перевернутых карт нет: расклад читается прямее, но все равно избегай категоричных выводов."}</p>
+        </article>
+        <article class="reading-card">
+          <h3>Пример человеческой трактовки</h3>
+          <p class="muted">${human}</p>
+        </article>
+      `;
+    }
+
+    function openModal(index) {
+      state.activeSlot = index;
+      state.modalQuery = "";
+      state.modalFilter = "all";
+      modalSearch.value = "";
+      cardModal.classList.add("open");
+      renderModal();
+    }
+
+    function closeModal() {
+      cardModal.classList.remove("open");
+      state.activeSlot = null;
+    }
+
+    function renderModal() {
+      modalFilters.innerHTML = [
+        ["all", "Все"],
+        ["hearts", "Черви"],
+        ["diamonds", "Бубны"],
+        ["clubs", "Трефы"],
+        ["spades", "Пики"],
+        ["people", "Люди"]
+      ].map(([key, label]) => `<button class="btn ${state.modalFilter === key ? "active" : ""}" type="button" data-modal-filter="${key}">${label}</button>`).join("");
+
+      const filtered = deck36.filter((card) => matchesCard(card, state.modalFilter, state.modalQuery));
+      choiceList.innerHTML = filtered.map((card) => `
+        <button class="choice-card" type="button" data-pick-card="${card.id}">
+          ${cardFace(card, true)}
+          <span><strong>${card.name}</strong><br><span class="fine">${card.meaning}. ${card.advice}.</span></span>
+        </button>
+      `).join("");
+    }
+
+    document.querySelectorAll("[data-filter]").forEach((button) => {
+      button.addEventListener("click", () => {
+        state.filter = button.dataset.filter;
+        document.querySelectorAll("[data-filter]").forEach((item) => item.classList.toggle("active", item === button));
+        renderCards();
+        saveState();
+      });
+    });
+
+    cardSearch.addEventListener("input", () => {
+      state.query = cardSearch.value.trim();
+      renderCards();
+      saveState();
+    });
+
+    spreadSelect.addEventListener("change", () => {
+      state.spread = spreadSelect.value;
+      state.picks = [];
+      state.showReading = false;
+      renderSpread();
+    });
+
+    questionSelect.addEventListener("change", () => {
+      state.question = questionSelect.value;
+      state.showReading = false;
+      renderSpread();
+    });
+
+    document.addEventListener("click", (event) => {
+      const slot = event.target.closest("[data-open-slot]");
+      if (slot) openModal(Number(slot.dataset.openSlot));
+
+      const reverse = event.target.closest("[data-reverse-slot]");
+      if (reverse) {
+        const index = Number(reverse.dataset.reverseSlot);
+        ensurePicks();
+        state.picks[index].reversed = !state.picks[index].reversed;
+        state.showReading = false;
+        renderSpread();
+      }
+
+      const pick = event.target.closest("[data-pick-card]");
+      if (pick && state.activeSlot !== null) {
+        ensurePicks();
+        state.picks[state.activeSlot].cardId = pick.dataset.pickCard;
+        state.showReading = false;
+        closeModal();
+        renderSpread();
+      }
+
+      const modalFilter = event.target.closest("[data-modal-filter]");
+      if (modalFilter) {
+        state.modalFilter = modalFilter.dataset.modalFilter;
+        renderModal();
+      }
+
+      if (event.target.closest("[data-toggle-reversed]") && state.activeSlot !== null) {
+        ensurePicks();
+        state.picks[state.activeSlot].reversed = !state.picks[state.activeSlot].reversed;
+        renderSpread();
+      }
+
+      if (event.target.closest("[data-close-modal]") || event.target === cardModal) closeModal();
+
+      if (event.target.closest("[data-reset]") && confirm("Сбросить текущий расклад?")) {
+        state.picks = [];
+        state.showReading = false;
+        renderSpread();
+      }
+    });
+
+    modalSearch.addEventListener("input", () => {
+      state.modalQuery = modalSearch.value.trim();
+      renderModal();
+    });
+
+    showReading.addEventListener("click", () => {
+      state.showReading = true;
+      renderReading();
+      document.querySelector("#reading").scrollIntoView({ behavior: "smooth", block: "start" });
+      saveState();
+    });
+
+    setupSiteMenu();
+    renderStaticGuides();
+    renderControls();
+    cardSearch.value = state.query;
+    document.querySelectorAll("[data-filter]").forEach((item) => item.classList.toggle("active", item.dataset.filter === state.filter));
+    renderCards();
+    renderSpread();
+  </script>
+</body>
+</html>
