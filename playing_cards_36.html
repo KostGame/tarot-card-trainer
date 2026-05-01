@@ -467,6 +467,40 @@
       cursor: pointer;
     }
 
+    .quiz-card,
+    .quiz-options {
+      display: grid;
+      gap: 10px;
+    }
+
+    .quiz-card {
+      grid-template-columns: 86px minmax(0, 1fr);
+      align-items: start;
+    }
+
+    .quiz-option.correct {
+      border-color: rgba(168, 214, 114, 0.72);
+      background: rgba(168, 214, 114, 0.16);
+    }
+
+    .quiz-option.wrong {
+      border-color: rgba(230, 139, 164, 0.72);
+      background: rgba(230, 139, 164, 0.14);
+    }
+
+    .quiz-result {
+      min-height: 44px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.055);
+      color: var(--muted);
+    }
+
+    .quiz-hint {
+      color: var(--gold);
+    }
+
     .image-modal {
       position: fixed;
       inset: 0;
@@ -781,6 +815,20 @@
       </div>
       <p class="fine" id="cardCount"></p>
       <div class="cards" id="cardsList"></div>
+    </section>
+
+    <section class="panel" id="quiz36">
+      <p class="eyebrow">Викторина</p>
+      <h2>Угадай значение карты</h2>
+      <p class="muted">Смотри на карту и выбирай, о чем она говорит. Если сомневаешься, возьми подсказку 50/50 или мягкую подсказку по масти и рангу.</p>
+      <div class="quiz-card" id="quizCard"></div>
+      <div class="quiz-options" id="quizOptions"></div>
+      <div class="button-row">
+        <button class="btn" type="button" data-quiz-fifty>50/50</button>
+        <button class="btn" type="button" data-quiz-hint>Подсказка</button>
+        <button class="btn primary" type="button" data-quiz-next>Следующая карта</button>
+      </div>
+      <div class="quiz-result" id="quizResult">Выбери вариант ответа.</div>
     </section>
 
     <details open>
@@ -1099,10 +1147,21 @@
     const previewTitle = document.querySelector("#previewTitle");
     const previewGroup = document.querySelector("#previewGroup");
     const previewVisual = document.querySelector("#previewVisual");
+    const quizCardEl = document.querySelector("#quizCard");
+    const quizOptionsEl = document.querySelector("#quizOptions");
+    const quizResultEl = document.querySelector("#quizResult");
     let visibleCards = [];
     let previewIndex = 0;
     let touchStartX = 0;
     let touchStartY = 0;
+    const quizState = {
+      card: null,
+      options: [],
+      answered: false,
+      selected: "",
+      hint: "",
+      hidden: new Set()
+    };
 
     function saveState() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
@@ -1350,6 +1409,83 @@
       `).join("");
     }
 
+    function shuffle(items) {
+      return [...items].sort(() => Math.random() - 0.5);
+    }
+
+    function startQuizQuestion() {
+      const pool = visibleCards.length >= 4 ? visibleCards : deck36;
+      const card = pool[Math.floor(Math.random() * pool.length)];
+      const wrong = shuffle(deck36.filter((item) => item.id !== card.id)).slice(0, 3);
+      quizState.card = card;
+      quizState.options = shuffle([card, ...wrong]).map((item) => ({
+        id: item.id,
+        text: item.meaning,
+        detail: item.detail
+      }));
+      quizState.answered = false;
+      quizState.selected = "";
+      quizState.hint = "";
+      quizState.hidden = new Set();
+      renderQuiz();
+    }
+
+    function renderQuiz() {
+      const card = quizState.card;
+      if (!card) return;
+      quizCardEl.innerHTML = `
+        <button class="card-preview" type="button" data-preview-card="${card.id}" aria-label="Открыть ${card.name} на весь экран">
+          ${cardFace(card)}
+        </button>
+        <div>
+          <p class="eyebrow">${suitMeanings[card.suit].name} · ${card.rank}</p>
+          <h3>${card.name}</h3>
+          <div class="chip-row">${card.keywords.map((word) => `<span class="chip">${word}</span>`).join("")}</div>
+          <p class="fine">Выбери самое близкое учебное значение карты.</p>
+        </div>
+      `;
+      quizOptionsEl.innerHTML = quizState.options.map((option) => {
+        const isCorrect = option.id === card.id;
+        const isSelected = option.id === quizState.selected;
+        const answerClass = quizState.answered && isCorrect ? "correct" : quizState.answered && isSelected ? "wrong" : "";
+        return `
+          <button class="btn quiz-option ${answerClass}" type="button" data-quiz-answer="${option.id}" ${quizState.hidden.has(option.id) ? "hidden" : ""}>
+            ${option.text}
+          </button>
+        `;
+      }).join("");
+      if (quizState.answered) {
+        const correct = quizState.selected === card.id;
+        quizResultEl.innerHTML = `<strong>${correct ? "Верно." : "Почти."}</strong> ${card.name}: ${card.meaning}. ${card.detail}. <span class="quiz-hint">Совет: ${card.advice}.</span>`;
+      } else if (quizState.hint) {
+        quizResultEl.innerHTML = `<span class="quiz-hint">${quizState.hint}</span>`;
+      } else {
+        quizResultEl.textContent = "Выбери вариант ответа.";
+      }
+    }
+
+    function useFiftyHint() {
+      if (!quizState.card || quizState.answered) return;
+      const wrong = quizState.options.filter((option) => option.id !== quizState.card.id && !quizState.hidden.has(option.id));
+      shuffle(wrong).slice(0, 2).forEach((option) => quizState.hidden.add(option.id));
+      quizState.hint = "Остались два варианта: один точный, второй похожий по настроению.";
+      renderQuiz();
+    }
+
+    function useTextHint() {
+      if (!quizState.card || quizState.answered) return;
+      const card = quizState.card;
+      quizState.hint = `Подсказка: ${suitMeanings[card.suit].name} отвечает за сферу «${suitMeanings[card.suit].sphere}», а ранг ${card.rank} часто читается как «${rankMeanings[card.rank].toLowerCase()}». Ключи: ${card.keywords.join(", ")}.`;
+      renderQuiz();
+    }
+
+    function answerQuiz(cardId) {
+      if (!quizState.card || quizState.answered) return;
+      quizState.answered = true;
+      quizState.selected = cardId;
+      renderQuiz();
+    }
+
     function showPreview(index) {
       if (!visibleCards.length) return;
       previewIndex = (index + visibleCards.length) % visibleCards.length;
@@ -1358,6 +1494,18 @@
       previewGroup.textContent = suitMeanings[card.suit].name;
       previewVisual.innerHTML = cardFace(card, false, state.cardViewMode);
       imageModal.classList.add("open");
+    }
+
+    function showPreviewById(cardId) {
+      const index = visibleCards.findIndex((card) => card.id === cardId);
+      if (index >= 0) {
+        showPreview(index);
+        return;
+      }
+      const card = deck36.find((item) => item.id === cardId);
+      if (!card) return;
+      visibleCards = [card];
+      showPreview(0);
     }
 
     function closePreview() {
@@ -1395,6 +1543,7 @@
       state.cardViewMode = cardViewMode.value;
       renderCards();
       renderSpread();
+      renderQuiz();
       if (imageModal.classList.contains("open")) showPreview(previewIndex);
       saveState();
     });
@@ -1421,14 +1570,19 @@
     document.addEventListener("click", (event) => {
       const previewButton = event.target.closest("[data-preview-card]");
       if (previewButton) {
-        const index = visibleCards.findIndex((card) => card.id === previewButton.dataset.previewCard);
-        showPreview(index >= 0 ? index : 0);
+        showPreviewById(previewButton.dataset.previewCard);
         return;
       }
 
       if (event.target.closest("[data-preview-close]") || event.target === imageModal) closePreview();
       if (event.target.closest("[data-preview-prev]")) movePreview(-1);
       if (event.target.closest("[data-preview-next]")) movePreview(1);
+
+      const quizAnswer = event.target.closest("[data-quiz-answer]");
+      if (quizAnswer) answerQuiz(quizAnswer.dataset.quizAnswer);
+      if (event.target.closest("[data-quiz-fifty]")) useFiftyHint();
+      if (event.target.closest("[data-quiz-hint]")) useTextHint();
+      if (event.target.closest("[data-quiz-next]")) startQuizQuestion();
 
       const slot = event.target.closest("[data-open-slot]");
       if (slot) openModal(Number(slot.dataset.openSlot));
@@ -1515,6 +1669,7 @@
     document.querySelectorAll("[data-filter]").forEach((item) => item.classList.toggle("active", item.dataset.filter === state.filter));
     renderCards();
     renderSpread();
+    startQuizQuestion();
   </script>
 </body>
 </html>

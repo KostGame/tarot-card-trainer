@@ -350,6 +350,57 @@
       gap: 8px;
     }
 
+    .quiz-card {
+      display: grid;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .quiz-card figure {
+      width: min(46vw, 150px);
+      margin: 0 auto;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(0, 0, 0, 0.18);
+    }
+
+    .quiz-card img {
+      display: block;
+      width: 100%;
+      height: 220px;
+      object-fit: contain;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .quiz-options {
+      display: grid;
+      gap: 10px;
+    }
+
+    .quiz-option.correct {
+      border-color: rgba(168, 214, 114, 0.72);
+      background: rgba(168, 214, 114, 0.16);
+    }
+
+    .quiz-option.wrong {
+      border-color: rgba(230, 139, 164, 0.72);
+      background: rgba(230, 139, 164, 0.14);
+    }
+
+    .quiz-result {
+      min-height: 44px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.055);
+      color: var(--muted);
+    }
+
+    .quiz-hint {
+      color: var(--gold);
+    }
+
     .chips {
       display: flex;
       flex-wrap: wrap;
@@ -618,6 +669,20 @@
       <p class="fine" id="resultCount"></p>
     </section>
 
+    <section class="panel" id="quiz">
+      <p class="eyebrow">Викторина</p>
+      <h2>Угадай значение карты</h2>
+      <p class="muted">Смотри на карту и выбирай, о чем она говорит. Можно взять подсказку 50/50 или открыть мягкую подсказку по группе и ключам.</p>
+      <div class="quiz-card" id="quizCard"></div>
+      <div class="quiz-options" id="quizOptions"></div>
+      <div class="button-row">
+        <button class="btn" type="button" data-quiz-fifty>50/50</button>
+        <button class="btn" type="button" data-quiz-hint>Подсказка</button>
+        <button class="btn primary" type="button" data-quiz-next>Следующая карта</button>
+      </div>
+      <div class="quiz-result" id="quizResult">Выбери вариант ответа.</div>
+    </section>
+
     <section class="cards" id="cards"></section>
 
     <section class="panel" id="sources">
@@ -741,10 +806,21 @@
     const previewImage = document.querySelector("#previewImage");
     const previewTitle = document.querySelector("#previewTitle");
     const previewGroup = document.querySelector("#previewGroup");
+    const quizCardEl = document.querySelector("#quizCard");
+    const quizOptionsEl = document.querySelector("#quizOptions");
+    const quizResultEl = document.querySelector("#quizResult");
     let visibleCards = [];
     let previewIndex = 0;
     let touchStartX = 0;
     let touchStartY = 0;
+    const quizState = {
+      card: null,
+      options: [],
+      answered: false,
+      selected: "",
+      hint: "",
+      hidden: new Set()
+    };
 
     const meaningMatchers = {
       all: () => true,
@@ -817,12 +893,103 @@
       imageModal.classList.add("open");
     }
 
+    function showPreviewById(cardId) {
+      const index = visibleCards.findIndex((card) => card.id === cardId);
+      if (index >= 0) {
+        showPreview(index);
+        return;
+      }
+      const card = deck.find((item) => item.id === cardId);
+      if (!card) return;
+      visibleCards = [card];
+      showPreview(0);
+    }
+
     function closePreview() {
       imageModal.classList.remove("open");
     }
 
     function movePreview(step) {
       showPreview(previewIndex + step);
+    }
+
+    function shuffle(items) {
+      return [...items].sort(() => Math.random() - 0.5);
+    }
+
+    function startQuizQuestion() {
+      const pool = visibleCards.length >= 4 ? visibleCards : deck;
+      const card = pool[Math.floor(Math.random() * pool.length)];
+      const wrong = shuffle(deck.filter((item) => item.id !== card.id)).slice(0, 3);
+      quizState.card = card;
+      quizState.options = shuffle([card, ...wrong]).map((item) => ({
+        cardId: item.id,
+        text: item.meaning
+      }));
+      quizState.answered = false;
+      quizState.selected = "";
+      quizState.hint = "";
+      quizState.hidden = new Set();
+      renderQuiz();
+    }
+
+    function renderQuiz() {
+      const card = quizState.card;
+      if (!card) return;
+      const chips = card.chips || [card.group, "Старший аркан"];
+      quizCardEl.innerHTML = `
+        <figure>
+          <button class="card-preview" type="button" data-preview-card="${card.id}" aria-label="Открыть ${card.name} на весь экран">
+            <img src="${imageUrl(card.image)}" alt="${card.name}" loading="lazy">
+          </button>
+        </figure>
+        <div>
+          <p class="eyebrow">${card.group}</p>
+          <h3>${card.name}</h3>
+          <div class="chips">${chips.map((chip) => `<span class="chip">${chip}</span>`).join("")}</div>
+        </div>
+      `;
+      quizOptionsEl.innerHTML = quizState.options.map((option, index) => {
+        const isCorrect = option.cardId === card.id;
+        const isSelected = quizState.selected === option.cardId;
+        const className = quizState.answered
+          ? isCorrect ? "correct" : isSelected ? "wrong" : ""
+          : "";
+        return `
+          <button class="btn quiz-option ${className}" type="button" data-quiz-answer="${option.cardId}" ${quizState.answered ? "disabled" : ""} ${quizState.hidden.has(index) ? "hidden" : ""}>
+            ${option.text}
+          </button>
+        `;
+      }).join("");
+      quizResultEl.innerHTML = quizState.answered
+        ? quizState.selected === card.id
+          ? `<strong>Верно.</strong> ${card.name}: ${card.meaning}`
+          : `<strong>Почти.</strong> Правильный ответ: ${card.meaning}`
+        : quizState.hint || "Выбери вариант ответа.";
+    }
+
+    function useFiftyHint() {
+      if (!quizState.card || quizState.answered || quizState.hidden.size) return;
+      const wrongIndexes = quizState.options
+        .map((option, index) => ({ option, index }))
+        .filter(({ option }) => option.cardId !== quizState.card.id)
+        .map(({ index }) => index);
+      shuffle(wrongIndexes).slice(0, 2).forEach((index) => quizState.hidden.add(index));
+      quizState.hint = `<span class="quiz-hint">50/50:</span> два неподходящих варианта убраны.`;
+      renderQuiz();
+    }
+
+    function useTextHint() {
+      if (!quizState.card || quizState.answered) return;
+      quizState.hint = `<span class="quiz-hint">Подсказка:</span> ${quizState.card.group}; ключи: ${quizState.card.keywords}.`;
+      renderQuiz();
+    }
+
+    function answerQuiz(cardId) {
+      if (!quizState.card || quizState.answered) return;
+      quizState.answered = true;
+      quizState.selected = cardId;
+      renderQuiz();
     }
 
     document.querySelectorAll("[data-filter]").forEach((button) => {
@@ -853,14 +1020,19 @@
     document.addEventListener("click", (event) => {
       const previewButton = event.target.closest("[data-preview-card]");
       if (previewButton) {
-        const index = visibleCards.findIndex((card) => card.id === previewButton.dataset.previewCard);
-        showPreview(index >= 0 ? index : 0);
+        showPreviewById(previewButton.dataset.previewCard);
         return;
       }
 
       if (event.target.closest("[data-preview-close]") || event.target === imageModal) closePreview();
       if (event.target.closest("[data-preview-prev]")) movePreview(-1);
       if (event.target.closest("[data-preview-next]")) movePreview(1);
+
+      const quizAnswer = event.target.closest("[data-quiz-answer]");
+      if (quizAnswer) answerQuiz(quizAnswer.dataset.quizAnswer);
+      if (event.target.closest("[data-quiz-fifty]")) useFiftyHint();
+      if (event.target.closest("[data-quiz-hint]")) useTextHint();
+      if (event.target.closest("[data-quiz-next]")) startQuizQuestion();
     });
 
     imageModal.addEventListener("touchstart", (event) => {
@@ -902,6 +1074,7 @@
 
     setupSiteMenu();
     render();
+    startQuizQuestion();
   </script>
 </body>
 </html>
