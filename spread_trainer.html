@@ -702,6 +702,9 @@
         <button class="btn warn" type="button" data-reset-spread>Очистить расклад</button>
       </div>
       <p class="fine" id="spreadHint"></p>
+      <div class="formula">
+        <strong>Учебная формула:</strong> тип вопроса → расклад → позиции → карты → история. Карта не имеет фиксированного значения: смысл меняется вместе с позицией и вопросом.
+      </div>
     </section>
 
     <section class="panel">
@@ -828,48 +831,61 @@
     const byId = new Map(deck.map((card) => [card.id, card]));
 
     const questionTypes = {
-      self: {
-        title: "Самоанализ",
-        lens: "что понять о ситуации",
-        advice: "собирай ответ как спокойное наблюдение о себе и процессе",
-        examplePrefix: "Если читать это как самоанализ"
-      },
-      advice: {
-        title: "Совет",
-        lens: "что делать",
-        advice: "переводи карты в маленькие действия, а не в категоричные решения",
-        examplePrefix: "Если читать это как совет"
+      diagnosis: {
+        title: "Диагностика ситуации",
+        lens: "что происходит и почему",
+        advice: "читай карту как суть, причину или вектор ситуации",
+        examplePrefix: "Если читать это как диагностику",
+        spreadIds: ["day", "three", "threeAdvice"]
       },
       relation: {
         title: "Отношения",
-        lens: "как читать контакт",
-        advice: "смотри на динамику между людьми, границы и эмоциональный тон",
-        examplePrefix: "Если читать это про отношения"
+        lens: "как устроен контакт между людьми",
+        advice: "смотри на состояние, динамику и границы, а не только на действия",
+        examplePrefix: "Если читать это про отношения",
+        spreadIds: ["relation", "threeAdvice"]
       },
       choice: {
         title: "Выбор",
         lens: "как сравнить варианты",
-        advice: "сравнивай не только выгоду, но и цену, ресурс и честность каждого пути",
-        examplePrefix: "Если читать это как выбор"
+        advice: "сравнивай каждый вариант отдельно и не смешивай их в один вывод",
+        examplePrefix: "Если читать это как выбор",
+        spreadIds: ["choice"]
+      },
+      action: {
+        title: "Действие",
+        lens: "что делать или не делать",
+        advice: "сопоставляй сценарий шага, паузы и мягкой рекомендации",
+        examplePrefix: "Если читать это как действие",
+        spreadIds: ["threeAdvice", "day"]
       },
       trend: {
-        title: "Тенденция",
+        title: "Прогноз",
         lens: "куда движется процесс",
-        advice: "говори о вероятном направлении, не обещая точного будущего",
-        examplePrefix: "Если читать это как тенденцию"
+        advice: "говори о вероятном направлении, а не о неизбежной судьбе",
+        examplePrefix: "Если читать это как прогноз",
+        spreadIds: ["three", "threeAdvice", "cross"]
       },
-      hidden: {
-        title: "Скрытое",
-        lens: "что неочевидно",
-        advice: "ищи фон, мотив или слепую зону, но не превращай догадку в факт",
-        examplePrefix: "Если читать это как скрытый слой"
+      inner: {
+        title: "Внутреннее состояние",
+        lens: "что происходит внутри",
+        advice: "ищи осознанное, скрытое и ресурс, который поможет выйти из петли",
+        examplePrefix: "Если читать это как внутреннее состояние",
+        spreadIds: ["three", "threeAdvice", "cross"]
       }
+    };
+
+    const questionAliases = {
+      self: "diagnosis",
+      advice: "action",
+      hidden: "inner"
     };
 
     const spreadTypes = {
       day: {
         title: "Карта дня",
         hint: "Одна карта для мягкого фокуса дня.",
+        questionKinds: ["diagnosis", "action", "inner"],
         positions: [
           { title: "Фокус дня", role: "что сегодня стоит заметить", kind: "focus" }
         ]
@@ -877,6 +893,7 @@
       three: {
         title: "Три карты",
         hint: "Быстрая история: откуда идет тема, что активно сейчас и куда движется.",
+        questionKinds: ["diagnosis", "trend", "inner"],
         positions: [
           { title: "Фон", role: "откуда идет тема", kind: "context" },
           { title: "Сейчас", role: "что активно", kind: "present" },
@@ -886,6 +903,7 @@
       threeAdvice: {
         title: "Три карты + совет",
         hint: "Учебный формат для связного рассказа и практического шага.",
+        questionKinds: ["diagnosis", "action", "trend", "inner", "relation"],
         positions: [
           { title: "Что происходит", role: "главная тема момента", kind: "present" },
           { title: "Что влияет", role: "фон или скрытый фактор", kind: "context" },
@@ -896,6 +914,7 @@
       choice: {
         title: "Выбор",
         hint: "Для сравнения двух вариантов без давления на один правильный ответ.",
+        questionKinds: ["choice"],
         positions: [
           { title: "Вариант А", role: "суть первого пути", kind: "optionA" },
           { title: "Вариант Б", role: "суть второго пути", kind: "optionB" },
@@ -906,6 +925,7 @@
       relation: {
         title: "Отношения",
         hint: "Для чтения контакта, динамики и мягких границ.",
+        questionKinds: ["relation"],
         positions: [
           { title: "Я", role: "моя роль и состояние", kind: "self" },
           { title: "Другой человек", role: "роль или состояние другого", kind: "other" },
@@ -917,6 +937,7 @@
       cross: {
         title: "Кельтский крест",
         hint: "Продвинутый расклад на 10 позиций. Подходит для большого вопроса.",
+        questionKinds: ["trend", "inner"],
         positions: [
           { title: "Суть", role: "центр вопроса", kind: "present" },
           { title: "Перекрывает", role: "главный вызов", kind: "risk" },
@@ -953,6 +974,27 @@
       summary: "читай карту как итоговую тенденцию, а не жесткий приговор"
     };
 
+    const universalRoleText = {
+      focus: "Суть",
+      context: "Причина / фон",
+      present: "Сейчас",
+      future: "Итог / вектор",
+      advice: "Совет",
+      optionA: "Потенциал варианта А",
+      optionB: "Потенциал варианта Б",
+      criterion: "Критерий выбора",
+      self: "Я / мое состояние",
+      other: "Другой человек",
+      connection: "Связь",
+      resource: "Ресурс",
+      risk: "Риск",
+      root: "Корень",
+      past: "Прошлое",
+      goal: "Цель / верхний слой",
+      hidden: "Скрытое",
+      summary: "Итог"
+    };
+
     const suitSignals = {
       major: "много старших арканов: вопрос может быть крупнее бытового уровня",
       wands: "много Жезлов: важны энергия, темп, инициатива и риск выгорания",
@@ -973,7 +1015,7 @@
 
     const defaultState = {
       spread: "threeAdvice",
-      questionType: "self",
+      questionType: "diagnosis",
       questionText: "",
       activeSlot: 0,
       picks: [],
@@ -1020,7 +1062,13 @@
     }
 
     function currentQuestion() {
-      return questionTypes[state.questionType] || questionTypes.self;
+      const key = questionAliases[state.questionType] || state.questionType || "diagnosis";
+      return questionTypes[key] || questionTypes.diagnosis;
+    }
+
+    function normalizeQuestionType() {
+      state.questionType = questionAliases[state.questionType] || state.questionType || "diagnosis";
+      if (!questionTypes[state.questionType]) state.questionType = "diagnosis";
     }
 
     function currentPositions() {
@@ -1055,21 +1103,29 @@
     }
 
     function renderSelects() {
+      normalizeQuestionType();
+      const question = currentQuestion();
+      const allowedSpreadIds = new Set(question.spreadIds || Object.keys(spreadTypes));
+      if (!allowedSpreadIds.has(state.spread)) {
+        state.spread = question.spreadIds?.[0] || "threeAdvice";
+      }
       spreadSelect.innerHTML = Object.entries(spreadTypes).map(([id, spread]) => (
-        `<option value="${id}" ${state.spread === id ? "selected" : ""}>${spread.title}</option>`
+        `<option value="${id}" ${state.spread === id ? "selected" : ""} ${(allowedSpreadIds.has(id) && (!spread.questionKinds || spread.questionKinds.includes(state.questionType))) ? "" : "disabled"}>${spread.title}</option>`
       )).join("");
       questionSelect.innerHTML = Object.entries(questionTypes).map(([id, question]) => (
         `<option value="${id}" ${state.questionType === id ? "selected" : ""}>${question.title}</option>`
       )).join("");
       questionText.value = state.questionText;
+      spreadHint.textContent = `${question.title}: ${question.lens}. ${currentSpread().hint}`;
     }
 
     function renderBoard() {
       const spread = currentSpread();
+      const question = currentQuestion();
       const positions = currentPositions();
       const completeCount = state.picks.filter((pick) => pick.cardId).length;
       spreadTitle.textContent = spread.title;
-      spreadHint.textContent = `${spread.hint} Тип вопроса: ${currentQuestion().lens}.`;
+      spreadHint.textContent = `${spread.hint} Тип вопроса: ${question.title} — ${question.lens}.`;
       filledCount.textContent = `${completeCount}/${positions.length}`;
       spreadBoard.className = `spread-board ${state.spread === "cross" ? "cross" : ""}`;
       spreadBoard.innerHTML = positions.map((position, index) => {
@@ -1133,6 +1189,7 @@
       const last = items[items.length - 1];
       const question = currentQuestion();
       const userQuestion = state.questionText.trim() || "твой вопрос";
+      const roleLine = (kind) => universalRoleText[kind] || kind;
 
       reading.innerHTML = `
         <div class="reading-grid" style="margin-top: 12px;">
@@ -1140,7 +1197,7 @@
             <article class="reading-card">
               <p class="eyebrow">${index + 1}. ${item.position.title}</p>
               <h3>${item.card.name}${item.pick.reversed ? " · перевернута" : ""}</h3>
-              <p class="muted"><strong>Роль позиции:</strong> ${item.position.role}. ${positionHints[item.position.kind]}</p>
+              <p class="muted"><strong>Роль позиции:</strong> ${item.position.role}. <span class="fine">${roleLine(item.position.kind)}.</span> ${positionHints[item.position.kind]}</p>
               <p class="muted"><strong>Карта в позиции:</strong> ${cardLine(item.card, item.pick, item.position)}.</p>
               <p class="muted"><strong>Совет:</strong> ${item.pick.reversed ? "не дави на ситуацию; сначала найди блок или задержку" : item.card.advice}</p>
             </article>
@@ -1153,7 +1210,7 @@
           <div class="reading-grid">
             <div class="reading-card">
               <h3>Главная тема</h3>
-              <p class="muted">${first.card.name} в первой позиции задает вход в вопрос «${userQuestion}»: ${readingText(first.card, first.pick).toLowerCase()}</p>
+              <p class="muted">${first.card.name} в первой позиции задает вход в вопрос «${userQuestion}»: ${readingText(first.card, first.pick).toLowerCase()} Для типа вопроса «${question.title}» важно читать это как ${question.lens}.</p>
             </div>
             <div class="reading-card">
               <h3>Что усиливает расклад</h3>
@@ -1165,7 +1222,7 @@
             </div>
             <div class="reading-card">
               <h3>Практический вывод</h3>
-              <p class="muted">Для типа вопроса «${question.title}» ${question.advice}. Итоговая карта «${last.card.name}» предлагает завершить чтение так: ${last.pick.reversed ? last.card.shadow : last.card.advice}</p>
+              <p class="muted">Для типа вопроса «${question.title}» ${question.advice}. Итоговая карта «${last.card.name}» предлагает завершить чтение так: ${last.pick.reversed ? last.card.shadow : last.card.advice}. Здесь позиция читается как ${roleLine(last.position.kind)}.</p>
             </div>
           </div>
           <div class="formula">
