@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#12100f">
+  <title>Карта сайта</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #12100f;
+      --panel: rgba(35, 29, 38, 0.84);
+      --panel-strong: #261f2b;
+      --text: #fff8ec;
+      --muted: #d9cbbb;
+      --line: rgba(255, 248, 236, 0.16);
+      --gold: #f0c66a;
+      --mint: #83d6c8;
+      --shadow: 0 24px 76px rgba(0, 0, 0, 0.38);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-width: 320px;
+      background: var(--bg);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 15% -4%, rgba(240, 198, 106, 0.18), transparent 18rem),
+        radial-gradient(circle at 92% 12%, rgba(131, 214, 200, 0.16), transparent 18rem),
+        linear-gradient(155deg, #12100f 0%, #1d1722 48%, #101819 100%);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    a {
+      color: #ffe6aa;
+    }
+
+    .page {
+      width: min(100%, 920px);
+      margin: 0 auto;
+      padding: 86px 14px 48px;
+    }
+
+    .hero,
+    details,
+    .site-menu-drawer {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .hero {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 14px;
+      padding: 18px;
+    }
+
+    .eyebrow {
+      width: fit-content;
+      margin: 0;
+      padding: 7px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 8px;
+      font-size: clamp(2.4rem, 11vw, 4.8rem);
+      line-height: 0.96;
+    }
+
+    h2 {
+      margin-bottom: 8px;
+      font-size: clamp(1.35rem, 6vw, 2.1rem);
+      line-height: 1.08;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    details {
+      margin: 12px 0;
+      overflow: hidden;
+    }
+
+    summary {
+      min-height: 56px;
+      padding: 16px;
+      color: var(--gold);
+      cursor: pointer;
+      font-weight: 850;
+    }
+
+    .details-body {
+      display: grid;
+      gap: 10px;
+      padding: 0 16px 16px;
+    }
+
+    .link-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .site-link {
+      display: grid;
+      gap: 4px;
+      padding: 12px;
+      border: 1px solid rgba(255, 248, 236, 0.12);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.055);
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .site-link strong {
+      color: var(--gold);
+    }
+
+    .site-link span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--text);
+      font-weight: 800;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .btn.primary {
+      border-color: rgba(240, 198, 106, 0.8);
+      background: linear-gradient(135deg, #f0c66a, #d99a4b);
+      color: #261a10;
+    }
+
+    .site-menu-toggle {
+      position: fixed;
+      top: calc(12px + env(safe-area-inset-top));
+      left: 12px;
+      z-index: 70;
+      width: 48px;
+      height: 48px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(35, 29, 38, 0.92);
+      color: var(--text);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35), 0 0 20px rgba(240, 198, 106, 0.12);
+      font-size: 1.35rem;
+      font-weight: 900;
+      cursor: pointer;
+      backdrop-filter: blur(14px);
+    }
+
+    .site-menu-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      display: none;
+      background: rgba(8, 6, 10, 0.58);
+    }
+
+    .site-menu-drawer {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 90;
+      width: min(86vw, 340px);
+      padding: calc(18px + env(safe-area-inset-top)) 16px calc(18px + env(safe-area-inset-bottom));
+      border-radius: 0 22px 22px 0;
+      transform: translateX(-105%);
+      transition: transform 180ms ease;
+      overflow-y: auto;
+    }
+
+    .site-menu-open .site-menu-backdrop {
+      display: block;
+    }
+
+    .site-menu-open .site-menu-drawer {
+      transform: translateX(0);
+    }
+
+    .site-menu-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .site-menu-close {
+      min-height: 40px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--text);
+      font: inherit;
+      font-weight: 800;
+    }
+
+    .site-menu-links {
+      display: grid;
+      gap: 10px;
+    }
+
+    .site-menu-link {
+      min-height: 48px;
+      padding: 12px 14px;
+      border: 1px solid rgba(255, 248, 236, 0.12);
+      border-radius: 16px;
+      background: rgba(255, 248, 236, 0.06);
+      color: var(--text);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .site-menu-note {
+      margin: 18px 4px 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <button class="site-menu-toggle" type="button" data-site-menu-open aria-label="Открыть меню">☰</button>
+  <div class="site-menu-backdrop" data-site-menu-close></div>
+  <aside class="site-menu-drawer" aria-label="Навигация по страницам">
+    <div class="site-menu-head">
+      <div>
+        <p class="eyebrow">Навигация</p>
+        <h2>Таро</h2>
+      </div>
+      <button class="site-menu-close" type="button" data-site-menu-close>Закрыть</button>
+    </div>
+    <nav class="site-menu-links">
+      <a class="site-menu-link" href="index.html">Главная и тренировки</a>
+      <a class="site-menu-link" href="manual_tarot.html">Руководство по Таро</a>
+      <a class="site-menu-link" href="manual_cards.html">Все карты с картинками</a>
+      <a class="site-menu-link" href="spread_trainer.html">Тренажер раскладов</a>
+      <a class="site-menu-link" href="sitemap.html">Карта сайта</a>
+      <a class="site-menu-link" href="playing_cards_36.html">36 карт</a>
+    </nav>
+    <p class="site-menu-note">Карта сайта собирает основные страницы, секции и практические режимы самоучителя.</p>
+  </aside>
+
+  <main class="page">
+    <section class="hero">
+      <p class="eyebrow">Оглавление проекта</p>
+      <h1>Карта сайта</h1>
+      <p class="muted">Быстрый обзор всех страниц, режимов и учебных блоков. Раскрывай нужный раздел и переходи прямо к практике или справке.</p>
+      <div class="button-row">
+        <a class="btn primary" href="index.html">В тренажер</a>
+        <a class="btn" href="manual_tarot.html">Руководство</a>
+        <a class="btn" href="manual_cards.html">Все карты</a>
+      </div>
+    </section>
+
+    <details open>
+      <summary>Главная и тренировки</summary>
+      <div class="details-body link-grid">
+        <a class="site-link" href="index.html"><strong>Главный экран</strong><span>Прогресс, быстрые режимы и учебный фокус дня.</span></a>
+        <a class="site-link" href="index.html"><strong>Карты</strong><span>Справочник внутри приложения, фильтры, избранное и самооценка.</span></a>
+        <a class="site-link" href="index.html"><strong>Масти</strong><span>Жезлы, Кубки, Мечи, Пентакли, числа и придворные карты.</span></a>
+        <a class="site-link" href="index.html"><strong>Тренировка</strong><span>Викторины по значениям, мастям, числам, придворным картам и сложным вопросам.</span></a>
+        <a class="site-link" href="index.html"><strong>Путь Шута</strong><span>Старшие арканы как путь героя от Шута до Мира.</span></a>
+        <a class="site-link" href="index.html"><strong>Учебный маршрут</strong><span>7 дней для новичка: теория, маленькая практика и завершение дня.</span></a>
+        <a class="site-link" href="index.html"><strong>Расклад-тренажер</strong><span>Быстрый расклад 3 карты плюс совет.</span></a>
+        <a class="site-link" href="index.html"><strong>Прогресс</strong><span>Уровни знания, слабые карты, статистика и достижения.</span></a>
+        <a class="site-link" href="index.html"><strong>Справочник Таро</strong><span>Колода, структура, этика, алгоритм чтения и источники.</span></a>
+      </div>
+    </details>
+
+    <details open>
+      <summary>Отдельные страницы Таро</summary>
+      <div class="details-body link-grid">
+        <a class="site-link" href="manual_tarot.html"><strong>Руководство по Таро</strong><span>Что такое колода, история, структура, старшие и младшие арканы, практика и этика.</span></a>
+        <a class="site-link" href="manual_cards.html"><strong>Все карты с картинками</strong><span>Галерея 78 карт, фильтры, поиск, викторина, полноэкранное превью и описания по тапу.</span></a>
+        <a class="site-link" href="spread_trainer.html"><strong>Тренажер раскладов</strong><span>Повтори физический расклад на экране и получи учебный разбор комбинации.</span></a>
+      </div>
+    </details>
+
+    <details open>
+      <summary>36 карт</summary>
+      <div class="details-body link-grid">
+        <a class="site-link" href="playing_cards_36.html"><strong>Гадание на 36 картах</strong><span>Масти, значения, сочетания, викторина и тренажер раскладов для обычной колоды.</span></a>
+        <a class="site-link" href="playing_cards_36.html#suits"><strong>Масти 36 карт</strong><span>Черви, Бубны, Трефы и Пики как четыре сферы чтения.</span></a>
+        <a class="site-link" href="playing_cards_36.html#meanings"><strong>Значения 36 карт</strong><span>Поиск, фильтры, режим картинок или SVG.</span></a>
+        <a class="site-link" href="playing_cards_36.html#trainer"><strong>Тренажер 36 карт</strong><span>Карта дня, три карты, отношения, вопрос и подкова.</span></a>
+      </div>
+    </details>
+
+    <details>
+      <summary>Быстрые учебные сценарии</summary>
+      <div class="details-body link-grid">
+        <a class="site-link" href="manual_cards.html#quiz"><strong>Угадай значение карты</strong><span>Викторина по Таро: карта и четыре варианта смысла.</span></a>
+        <a class="site-link" href="playing_cards_36.html#quiz36"><strong>Угадай значение 36 карт</strong><span>Та же тренировка для обычной колоды.</span></a>
+        <a class="site-link" href="manual_cards.html#gallery"><strong>Найти карту</strong><span>Фильтры по масти и смыслу, поиск по названию и ключевым словам.</span></a>
+        <a class="site-link" href="spread_trainer.html#settings"><strong>Разобрать физический расклад</strong><span>Выбери тип расклада, повтори карты и прочитай связку.</span></a>
+      </div>
+    </details>
+  </main>
+
+  <script>
+    function setupSiteMenu() {
+      const openButton = document.querySelector("[data-site-menu-open]");
+      const closeTargets = document.querySelectorAll("[data-site-menu-close]");
+      const closeMenu = () => document.body.classList.remove("site-menu-open");
+      const openMenu = () => document.body.classList.add("site-menu-open");
+
+      openButton?.addEventListener("click", openMenu);
+      closeTargets.forEach((target) => target.addEventListener("click", closeMenu));
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeMenu();
+      });
+      document.addEventListener("click", (event) => {
+        if (event.target.closest(".site-menu-link")) closeMenu();
+      });
+    }
+
+    setupSiteMenu();
+  </script>
+</body>
+</html>

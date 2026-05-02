@@ -648,6 +648,7 @@
       <a class="site-menu-link" href="manual_tarot.html">Руководство по Таро</a>
       <a class="site-menu-link" href="manual_cards.html">Все карты с картинками</a>
       <a class="site-menu-link" href="spread_trainer.html">Тренажер раскладов</a>
+      <a class="site-menu-link" href="sitemap.html">Карта сайта</a>
       <a class="site-menu-link" href="playing_cards_36.html">36 карт</a>
     </nav>
     <p class="site-menu-note">Единое меню открывается слева и помогает быстро переходить между страницами самоучителя.</p>
@@ -1002,6 +1003,13 @@
       return [...items].sort(() => Math.random() - 0.5);
     }
 
+    function quizMeaningText(card) {
+      if (card.filter === "major") return card.meaning.replace(card.name, "Эта карта");
+      return card.meaning
+        .replace(`${card.name} соединяет `, "Сочетает ")
+        .replace(/^.+? соединяет /, "Сочетает ");
+    }
+
     function startQuizQuestion() {
       const pool = visibleCards.length >= 4 ? visibleCards : deck;
       const card = pool[Math.floor(Math.random() * pool.length)];
@@ -1009,7 +1017,7 @@
       quizState.card = card;
       quizState.options = shuffle([card, ...wrong]).map((item) => ({
         cardId: item.id,
-        text: item.meaning
+        text: quizMeaningText(item)
       }));
       quizState.answered = false;
       quizState.selected = "";
