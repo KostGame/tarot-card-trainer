@@ -670,51 +670,13 @@
     </section>
 
     <details class="panel" id="gallery" open>
-      <summary>Галерея и фильтры</summary>
+      <summary>Галерея</summary>
       <div class="details-body">
-      <div class="stats">
-        <div class="stat"><strong id="totalCount">78</strong><span class="fine">всего карт</span></div>
-        <div class="stat"><strong>22</strong><span class="fine">старших</span></div>
-        <div class="stat"><strong>56</strong><span class="fine">младших</span></div>
-      </div>
-      <input class="search" id="search" type="search" placeholder="Поиск: Шут, Кубки, совет, напряжение..." autocomplete="off">
-      <div class="filter-selects">
-        <label>
-          Масть
-          <select id="suitFilter">
-            <option value="all">Все карты</option>
-            <option value="major">Старшие арканы</option>
-            <option value="wands">Жезлы</option>
-            <option value="cups">Кубки</option>
-            <option value="swords">Мечи</option>
-            <option value="pentacles">Пентакли</option>
-            <option value="court">Придворные</option>
-          </select>
-        </label>
-        <label>
-          Значение
-          <select id="meaningFilter">
-            <option value="all">Все значения</option>
-            <option value="start">Начало и шанс</option>
-            <option value="choice">Выбор и баланс</option>
-            <option value="feeling">Чувства и отношения</option>
-            <option value="action">Действие и энергия</option>
-            <option value="challenge">Напряжение и урок</option>
-            <option value="resource">Ресурсы и результат</option>
-            <option value="people">Люди и роли</option>
-          </select>
-        </label>
-      </div>
-      <div class="filters" aria-label="Фильтры карт">
-        <button class="btn active" type="button" data-filter="all">Все</button>
-        <button class="btn" type="button" data-filter="major">Старшие</button>
-        <button class="btn" type="button" data-filter="wands">Жезлы</button>
-        <button class="btn" type="button" data-filter="cups">Кубки</button>
-        <button class="btn" type="button" data-filter="swords">Мечи</button>
-        <button class="btn" type="button" data-filter="pentacles">Пентакли</button>
-        <button class="btn" type="button" data-filter="court">Придворные</button>
-      </div>
-      <p class="fine" id="resultCount"></p>
+        <div class="stats">
+          <div class="stat"><strong id="totalCount">78</strong><span class="fine">всего карт</span></div>
+          <div class="stat"><strong>22</strong><span class="fine">старших</span></div>
+          <div class="stat"><strong>56</strong><span class="fine">младших</span></div>
+        </div>
       </div>
     </details>
 
@@ -738,6 +700,44 @@
     <details class="panel" id="cardsSection" open>
       <summary>Список карт</summary>
       <div class="details-body">
+        <input class="search" id="search" type="search" placeholder="Поиск: Шут, Кубки, совет, напряжение..." autocomplete="off">
+        <div class="filter-selects">
+          <label>
+            Масть
+            <select id="suitFilter">
+              <option value="all">Все карты</option>
+              <option value="major">Старшие арканы</option>
+              <option value="wands">Жезлы</option>
+              <option value="cups">Кубки</option>
+              <option value="swords">Мечи</option>
+              <option value="pentacles">Пентакли</option>
+              <option value="court">Придворные</option>
+            </select>
+          </label>
+          <label>
+            Значение
+            <select id="meaningFilter">
+              <option value="all">Все значения</option>
+              <option value="start">Начало и шанс</option>
+              <option value="choice">Выбор и баланс</option>
+              <option value="feeling">Чувства и отношения</option>
+              <option value="action">Действие и энергия</option>
+              <option value="challenge">Напряжение и урок</option>
+              <option value="resource">Ресурсы и результат</option>
+              <option value="people">Люди и роли</option>
+            </select>
+          </label>
+        </div>
+        <div class="filters" aria-label="Фильтры карт">
+          <button class="btn active" type="button" data-filter="all">Все</button>
+          <button class="btn" type="button" data-filter="major">Старшие</button>
+          <button class="btn" type="button" data-filter="wands">Жезлы</button>
+          <button class="btn" type="button" data-filter="cups">Кубки</button>
+          <button class="btn" type="button" data-filter="swords">Мечи</button>
+          <button class="btn" type="button" data-filter="pentacles">Пентакли</button>
+          <button class="btn" type="button" data-filter="court">Придворные</button>
+        </div>
+        <p class="fine" id="resultCount"></p>
         <section class="cards" id="cards"></section>
       </div>
     </details>
