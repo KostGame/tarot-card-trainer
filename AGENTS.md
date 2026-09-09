@@ -2,6 +2,19 @@
 
 Правила дальнейшей разработки проекта «Тренажер-самоучитель по картам Таро».
 
+## Codex-native workspace baseline
+
+- По умолчанию работать в изолированном Codex-managed worktree, если Codex его предоставляет.
+- Fresh clone на каждую задачу не требуется. Он используется только для provisioning, recovery или явно заданного task-specific flow.
+- До изменений доказать ожидаемый repository/origin, scope задачи, base commit если задан, Git worktree membership и то, что текущий каталог не является primary/canonical checkout.
+- Detached HEAD допустим для просмотра, редактирования, тестов и review.
+- Перед первым commit создать или переключиться на выделенную task branch. По умолчанию prefix `agent/`, если задача не задаёт другой разрешённый convention.
+- Не работать напрямую в `main`, primary/user checkout, control repo, чужом task workspace или неоднозначной копии.
+- Обычные локальные Git-операции выполняет Codex. При sandbox-блокировке точной Git metadata mutation использовать native approval/escalation только для этой операции, не расширяя ACL и не запуская Codex elevated.
+- Не использовать stash/reset/clean/force push/history rewrite для сокрытия неожиданного состояния.
+- PR по умолчанию Ready for Review. Merge требует отдельного разрешения.
+- Если repository/worktree/base/task identity не доказана, остановиться fail-closed.
+
 ## Общие правила
 
 - Интерфейс приложения должен быть на русском языке.
@@ -29,6 +42,7 @@
 
 - Основная ветка: `main`.
 - Деплой: GitHub Pages из ветки `main`, папка `/root`.
+- Никогда не push напрямую в `main`; task branch и PR используются для изменений.
 - Перед коммитом проверять, что `index.html` открывается как обычный статический файл.
 
 ## CHANGELOG
